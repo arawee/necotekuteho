@@ -57,6 +57,12 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        zichovec: {
+          green: "hsl(var(--zichovec-green))",
+          black: "hsl(var(--zichovec-black))",
+          white: "hsl(var(--zichovec-white))",
+          gray: "hsl(var(--zichovec-gray))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
