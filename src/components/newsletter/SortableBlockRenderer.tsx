@@ -12,7 +12,6 @@ import { HarmonogramBlock } from './blocks/HarmonogramBlock';
 import { EventBlock } from './blocks/EventBlock';
 import { PhotosBlock } from './blocks/PhotosBlock';
 import { SummaryBlock } from './blocks/SummaryBlock';
-
 import { QuoteBlock } from './blocks/QuoteBlock';
 import { FooterBlock } from './blocks/FooterBlock';
 import { PlainTextBlock } from './blocks/PlainTextBlock';
@@ -20,6 +19,15 @@ import { PromoWideBlock } from './blocks/PromoWideBlock';
 import { SinglePhotoBlock } from './blocks/SinglePhotoBlock';
 import { SinglePhotoSquareBlock } from './blocks/SinglePhotoSquareBlock';
 import { TextContentBlock } from './blocks/TextContentBlock';
+import { ZichovecHeaderBlock } from './blocks/ZichovecHeaderBlock';
+import { ZichovecFooterBlock } from './blocks/ZichovecFooterBlock';
+import { ProductListBlock } from './blocks/ProductListBlock';
+import { LocationsBlock } from './blocks/LocationsBlock';
+import { BlogPostsBlock } from './blocks/BlogPostsBlock';
+import { PromoBoxBlock } from './blocks/PromoBoxBlock';
+import { GalleryTrioBlock } from './blocks/GalleryTrioBlock';
+import { GalleryDuoBlock } from './blocks/GalleryDuoBlock';
+import { ArticleTextBlock } from './blocks/ArticleTextBlock';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { GripVertical, Trash2 } from 'lucide-react';
@@ -173,6 +181,24 @@ export function SortableBlockRenderer({ block, onUpdate, onDelete }: SortableBlo
             onUpdate={onUpdate}
           />
         );
+      case 'zichovec-header':
+        return <ZichovecHeaderBlock block={block} onUpdate={onUpdate} />;
+      case 'zichovec-footer':
+        return <ZichovecFooterBlock block={block} onUpdate={onUpdate} />;
+      case 'product-list':
+        return <ProductListBlock block={block} onUpdate={onUpdate} />;
+      case 'locations':
+        return <LocationsBlock block={block} onUpdate={onUpdate} />;
+      case 'blog-posts':
+        return <BlogPostsBlock block={block} onUpdate={onUpdate} />;
+      case 'promo-box':
+        return <PromoBoxBlock block={block} onUpdate={onUpdate} />;
+      case 'gallery-trio':
+        return <GalleryTrioBlock block={block} onUpdate={onUpdate} />;
+      case 'gallery-duo':
+        return <GalleryDuoBlock block={block} onUpdate={onUpdate} />;
+      case 'article-text':
+        return <ArticleTextBlock block={block} onUpdate={onUpdate} />;
       default:
         return <div>Unknown block type: {block.type}</div>;
     }
