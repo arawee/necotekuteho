@@ -14,69 +14,7 @@ export type Database = {
   }
   public: {
     Tables: {
-      newsletters: {
-        Row: {
-          blocks: Json
-          created_at: string
-          id: string
-          name: string
-          updated_at: string
-          user_id: string | null
-        }
-        Insert: {
-          blocks?: Json
-          created_at?: string
-          id?: string
-          name: string
-          updated_at?: string
-          user_id?: string | null
-        }
-        Update: {
-          blocks?: Json
-          created_at?: string
-          id?: string
-          name?: string
-          updated_at?: string
-          user_id?: string | null
-        }
-        Relationships: []
-      }
-      uploaded_images: {
-        Row: {
-          created_at: string
-          file_size: number
-          filename: string
-          id: string
-          mime_type: string
-          original_name: string
-          public_url: string
-          storage_path: string
-          user_id: string | null
-        }
-        Insert: {
-          created_at?: string
-          file_size: number
-          filename: string
-          id?: string
-          mime_type: string
-          original_name: string
-          public_url: string
-          storage_path: string
-          user_id?: string | null
-        }
-        Update: {
-          created_at?: string
-          file_size?: number
-          filename?: string
-          id?: string
-          mime_type?: string
-          original_name?: string
-          public_url?: string
-          storage_path?: string
-          user_id?: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Views: {
       [_ in never]: never
