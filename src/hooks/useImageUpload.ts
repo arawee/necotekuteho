@@ -68,9 +68,9 @@ export const useImageUpload = () => {
         throw new Error('Musíte být přihlášeni');
       }
 
-      // Save metadata to database
-      const { error: dbError } = await supabase
-        .from('uploaded_images')
+      // Save metadata to database (using type assertion as table exists but types may not be synced)
+      const { error: dbError } = await (supabase
+        .from('uploaded_images' as any)
         .insert({
           filename: fileName,
           original_name: file.name,
@@ -79,7 +79,7 @@ export const useImageUpload = () => {
           storage_path: filePath,
           public_url: urlData.publicUrl,
           user_id: user.id
-        });
+        }) as any);
 
       if (dbError) {
         console.warn('Failed to save image metadata:', dbError);
@@ -121,11 +121,11 @@ export const useImageUpload = () => {
         throw error;
       }
 
-      // Remove from database
-      await supabase
-        .from('uploaded_images')
+      // Remove from database (using type assertion as table exists but types may not be synced)
+      await (supabase
+        .from('uploaded_images' as any)
         .delete()
-        .eq('storage_path', path);
+        .eq('storage_path', path) as any);
 
       toast({
         title: "Image deleted",
