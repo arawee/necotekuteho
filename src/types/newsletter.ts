@@ -18,47 +18,12 @@ export interface NewsletterBlock {
     location?: string;
     subtitle?: string;
     url?: string;
-    benefits?: Array<{
-      title: string;
-      description: string;
-      icon: string;
-    }>;
-    reviews?: Array<{
-      text: string;
-      author: string;
-      position: string;
-    }>;
-    events?: Array<{
-      date: string;
-      title: string;
-      instructor: string;
-      buttonText?: string;
-      buttonUrl?: string;
-    }>;
-    // Event block
-    eventDate?: string;
-    eventTitle?: string;
-    instructor?: string;
-    description?: string;
-    // Photos block
+    // Photos/Gallery
     photos?: Array<{
       url: string;
       alt?: string;
     }>;
-    // Summary block
-    pairs?: Array<{
-      subheading: string;
-      text: string;
-    }>;
     backgroundColor?: string;
-    // Summary block additional fields
-    subheading1?: string;
-    text1?: string;
-    subheading2?: string;
-    text2?: string;
-    // Promo block
-    leftImage?: string;
-    headline?: string;
     // Quote block
     quote?: string;
     quoteSubheading?: string;
@@ -71,6 +36,26 @@ export interface NewsletterBlock {
     }>;
     copyright?: string;
     unsubscribeUrl?: string;
+    // Zichovec-specific
+    products?: Array<{
+      name: string;
+      price: string;
+      image?: string;
+    }>;
+    locations?: Array<{
+      name: string;
+      address: string;
+    }>;
+    posts?: Array<{
+      title: string;
+      date: string;
+      image?: string;
+    }>;
+    boxes?: Array<{
+      title: string;
+      subtitle: string;
+      color?: string;
+    }>;
   };
 }
 
@@ -89,11 +74,4 @@ export interface BlockTemplate {
   thumbnail: string;
   color: string;
   defaultContent: NewsletterBlock['content'];
-}
-
-export interface Benefit {
-  title?: string;
-  description?: string;
-  icon?: string;      // inline SVG for editor preview
-  iconUrl?: string;   // hosted PNG used in email/export
 }
