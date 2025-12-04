@@ -29,7 +29,7 @@ export const useNewsletter = () => {
 
       if (error) throw error;
 
-      const formattedNewsletters = (data || []).map(newsletter => ({
+      const formattedNewsletters = (data || []).map((newsletter: any) => ({
         ...newsletter,
         blocks: typeof newsletter.blocks === 'string' ? JSON.parse(newsletter.blocks) : newsletter.blocks
       }));
@@ -82,9 +82,9 @@ export const useNewsletter = () => {
 
       if (error) throw error;
 
-      const newNewsletter = {
-        ...data,
-        blocks: typeof data.blocks === 'string' ? JSON.parse(data.blocks) : data.blocks
+      const newNewsletter: Newsletter = {
+        ...(data as any),
+        blocks: typeof data?.blocks === 'string' ? JSON.parse(data.blocks as string) : data?.blocks
       };
 
       setNewsletters(prev => [newNewsletter, ...prev]);
@@ -135,9 +135,9 @@ export const useNewsletter = () => {
 
       if (error) throw error;
 
-      const updatedNewsletter = {
-        ...data,
-        blocks: typeof data.blocks === 'string' ? JSON.parse(data.blocks) : data.blocks
+      const updatedNewsletter: Newsletter = {
+        ...(data as any),
+        blocks: typeof data?.blocks === 'string' ? JSON.parse(data.blocks as string) : data?.blocks
       };
 
       setNewsletters(prev => 
@@ -209,9 +209,9 @@ export const useNewsletter = () => {
 
       if (error) throw error;
 
-      const newsletter = {
-        ...data,
-        blocks: typeof data.blocks === 'string' ? JSON.parse(data.blocks) : data.blocks
+      const newsletter: Newsletter = {
+        ...(data as any),
+        blocks: typeof data?.blocks === 'string' ? JSON.parse(data.blocks as string) : data?.blocks
       };
 
       setCurrentNewsletter(newsletter);
