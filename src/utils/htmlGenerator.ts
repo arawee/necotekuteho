@@ -27,6 +27,10 @@ export function generateHTMLFromBlocks(blocks: NewsletterBlock[]): string {
         return generateBenefitsHTML(block);
       case 'categories':
         return generateCategoriesHTML(block);
+      case 'pozice':
+        return generatePoziceHTML(block);
+      case 'product-text':
+        return generateProductTextHTML(block);
       default:
         return '';
     }
@@ -432,6 +436,59 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
       <tr>${catCells}</tr>
     </table>
   </td></tr>
+</table>`;
+}
+
+function generatePoziceHTML(block: NewsletterBlock): string {
+  const positions = (block.content as any).positions || [];
+  const positionCells = positions.slice(0, 4).map((p: any) => `
+    <td valign="top" width="25%" style="padding:8px;">
+      <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="background:${p.bgColor || '#FFFFFF'};border-radius:8px;">
+        <tr>
+          <td style="padding:16px;font-family:Arial,sans-serif;">
+            <h4 style="margin:0 0 8px;font-size:14px;color:#212121;">${p.title}</h4>
+            <p style="margin:0 0 12px;font-size:11px;color:#666;line-height:1.4;">${p.description}</p>
+            <a href="${p.buttonUrl || '#'}" style="font-size:11px;color:#212121;text-decoration:underline;">${p.buttonText}</a>
+          </td>
+        </tr>
+      </table>
+    </td>
+  `).join('');
+
+  return `<!-- Pozice -->
+<table role="presentation" border="0" width="100%" cellspacing="0" cellpadding="0">
+  <tr><td align="center" style="padding:32px 24px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" style="max-width:600px;">
+      <tr><td style="padding-bottom:16px;"><h2 style="margin:0;font-family:Arial,sans-serif;font-size:20px;color:#212121;">${block.content.title || 'Volné pozice'}</h2></td></tr>
+      <tr>${positionCells}</tr>
+    </table>
+  </td></tr>
+</table>`;
+}
+
+function generateProductTextHTML(block: NewsletterBlock): string {
+  const { content } = block;
+  
+  return `<!-- Produkt + text -->
+<table role="presentation" border="0" width="100%" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="center" style="padding:32px 24px;">
+      <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="400" style="max-width:400px;">
+        <tr>
+          <td style="text-align:center;">
+            ${content.image ? `<img src="${content.image}" width="300" height="400" alt="${content.title || ''}" style="display:block;margin:0 auto 24px;border:0;"/>` :
+              `<div style="width:300px;height:400px;background:#F5F5F5;margin:0 auto 24px;"></div>`}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <h2 style="margin:0 0 16px;font-family:Arial,sans-serif;font-size:24px;color:#212121;">${content.title || 'Magop'}</h2>
+            <p style="margin:0;font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#212121;">${content.text || ''}</p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
 </table>`;
 }
 

@@ -70,6 +70,7 @@ export interface NewsletterBlock {
     columns?: Array<{ title: string; links: string[] }>;
     viewAllText?: string;
     viewAllUrl?: string;
+    positions?: Array<{ title: string; description: string; buttonText: string; buttonUrl: string; bgColor: string }>;
   };
 }
 
