@@ -154,6 +154,37 @@ export const blockTemplates: BlockTemplate[] = [
     }
   },
   {
+    id: 'gallery-single',
+    name: 'Galerie one foto',
+    type: 'gallery-single',
+    thumbnail: '/api/placeholder/200/150',
+    color: 'red',
+    defaultContent: {
+      photos: []
+    }
+  },
+  {
+    id: 'text-two-columns',
+    name: 'Text',
+    type: 'text-two-columns',
+    thumbnail: '/api/placeholder/200/150',
+    color: 'yellow',
+    defaultContent: {
+      leftColumn: 'Slovníček',
+      rightColumn: 'NEIPA, neboli New England India Pale Ale, je moderní, svrchně kvašený styl piva.'
+    }
+  },
+  {
+    id: 'body-text-box',
+    name: 'Body text + box',
+    type: 'body-text-box',
+    thumbnail: '/api/placeholder/200/150',
+    color: 'yellow',
+    defaultContent: {
+      title: 'OPA: Jemná evoluce moderních ale'
+    }
+  },
+  {
     id: 'zichovec-footer',
     name: 'Patička',
     type: 'zichovec-footer',
