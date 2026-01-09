@@ -71,6 +71,16 @@ export interface NewsletterBlock {
     viewAllText?: string;
     viewAllUrl?: string;
     positions?: Array<{ title: string; description: string; buttonText: string; buttonUrl: string; bgColor: string }>;
+    // Text two columns
+    leftColumn?: string;
+    rightColumn?: string;
+    // Body text + box
+    introText?: string;
+    sections?: Array<{ heading: string; text: string }>;
+    metaDate?: string;
+    metaAuthor?: string;
+    metaTags?: string;
+    metaShare?: string;
   };
 }
 

@@ -31,6 +31,12 @@ export function generateHTMLFromBlocks(blocks: NewsletterBlock[]): string {
         return generatePoziceHTML(block);
       case 'product-text':
         return generateProductTextHTML(block);
+      case 'gallery-single':
+        return generateGallerySingleHTML(block);
+      case 'text-two-columns':
+        return generateTextTwoColumnsHTML(block);
+      case 'body-text-box':
+        return generateBodyTextBoxHTML(block);
       default:
         return '';
     }
@@ -484,6 +490,96 @@ function generateProductTextHTML(block: NewsletterBlock): string {
           <td>
             <h2 style="margin:0 0 16px;font-family:Arial,sans-serif;font-size:24px;color:#212121;">${content.title || 'Magop'}</h2>
             <p style="margin:0;font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#212121;">${content.text || ''}</p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>`;
+}
+
+function generateGallerySingleHTML(block: NewsletterBlock): string {
+  const photo = block.content.photos?.[0];
+  
+  return `<!-- Galerie single -->
+<table role="presentation" border="0" width="100%" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="center" style="padding:16px 24px;">
+      <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" style="max-width:600px;">
+        <tr>
+          <td>
+            ${photo?.url ? `<img src="${photo.url}" width="600" height="340" alt="${photo.alt || ''}" style="display:block;width:100%;height:auto;border-radius:16px;border:0;"/>` :
+              `<div style="width:100%;height:340px;background:#F5F5F5;border-radius:16px;"></div>`}
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>`;
+}
+
+function generateTextTwoColumnsHTML(block: NewsletterBlock): string {
+  const { content } = block;
+  
+  return `<!-- Text two columns -->
+<table role="presentation" border="0" width="100%" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="center" style="padding:32px 24px;">
+      <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" style="max-width:600px;">
+        <tr>
+          <td valign="top" width="100" style="font-family:Arial,sans-serif;font-size:14px;font-weight:500;color:#212121;">
+            ${content.leftColumn || 'Slovníček'}
+          </td>
+          <td valign="top" style="padding-left:24px;font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#212121;">
+            ${content.rightColumn || ''}
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>`;
+}
+
+function generateBodyTextBoxHTML(block: NewsletterBlock): string {
+  const { content } = block;
+  const sections = (content as any).sections || [];
+  
+  const sectionsHTML = sections.map((s: any) => `
+    <tr>
+      <td style="padding-bottom:24px;">
+        ${s.text ? 
+          `<h2 style="margin:0 0 12px;font-family:Arial,sans-serif;font-size:20px;font-weight:500;color:#212121;">${s.heading}</h2>
+           <p style="margin:0;font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#212121;">${s.text}</p>` :
+          `<p style="margin:0;padding-left:16px;border-left:3px solid #212121;font-family:Arial,sans-serif;font-size:18px;font-style:italic;line-height:1.4;color:#212121;">${s.heading}</p>`
+        }
+      </td>
+    </tr>
+  `).join('');
+  
+  return `<!-- Body text + box -->
+<table role="presentation" border="0" width="100%" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="center" style="padding:32px 24px;">
+      <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" style="max-width:600px;">
+        <tr>
+          <td style="padding-bottom:24px;">
+            <h1 style="margin:0;font-family:Arial,sans-serif;font-size:32px;font-weight:400;color:#212121;">${content.title || ''}</h1>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding-bottom:24px;font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#212121;">
+            ${(content as any).introText || ''}
+          </td>
+        </tr>
+        ${sectionsHTML}
+        <tr>
+          <td style="padding-top:24px;border-top:1px solid #E5E5E5;font-family:Arial,sans-serif;font-size:12px;color:#212121;">
+            <table role="presentation" border="0" cellspacing="0" cellpadding="0">
+              <tr><td style="padding:4px 0;"><strong>Datum →</strong> ${(content as any).metaDate || ''}</td></tr>
+              <tr><td style="padding:4px 0;"><strong>Autor →</strong> ${(content as any).metaAuthor || ''}</td></tr>
+              <tr><td style="padding:4px 0;"><strong>Tag →</strong> <span style="text-decoration:underline;">${(content as any).metaTags || ''}</span></td></tr>
+              <tr><td style="padding:4px 0;"><strong>Sdílet →</strong> <span style="text-decoration:underline;">${(content as any).metaShare || ''}</span></td></tr>
+            </table>
           </td>
         </tr>
       </table>
