@@ -10,10 +10,8 @@ interface Product {
   alcohol: string;
   volume: string;
   price: string;
-  originalPrice?: string;
-  tags?: string[];
-  isNew?: boolean;
-  isSale?: boolean;
+  salePrice?: string;
+  tags: string[];
 }
 
 interface ProductListBlockProps {
@@ -24,16 +22,38 @@ interface ProductListBlockProps {
 export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => {
   const defaultProducts: Product[] = [
     { image: '', name: 'Magor 15', alcohol: '5,9', volume: '750 ml', price: '113 Kč', tags: ['Polotmavé bock'] },
-    { image: '', name: 'Sour Passion Fruit', alcohol: '5,9', volume: '750 ml', price: '90 Kč', originalPrice: '167 Kč', tags: ['Relax', 'Poslední šance'], isSale: true },
-    { image: '', name: 'Milky', alcohol: '5,9', volume: '750 ml', price: '113 Kč', tags: ['Neipa', 'Novinka'], isNew: true },
-    { image: '', name: 'Juicy Lucy', alcohol: '5,9', volume: '750 ml', price: '113 Kč', tags: ['Relax', 'Poslední šance'] }
+    { image: '', name: 'Sour Passion Fruit', alcohol: '5,9', volume: '750 ml', price: '167 Kč', salePrice: '90 Kč', tags: ['Relax', 'Poslední šance'] },
+    { image: '', name: 'Milky', alcohol: '5,9', volume: '750 ml', price: '113 Kč', tags: ['Neipa', 'Novinka'] },
+    { image: '', name: 'Juicy Lucy', alcohol: '5,9', volume: '750 ml', price: '113 Kč', tags: ['Relax'] }
   ];
 
-  const products = (block.content as any).products || defaultProducts;
+  const products: Product[] = (block.content as any).products || defaultProducts;
 
   const updateProduct = (index: number, field: keyof Product, value: any) => {
     const newProducts = [...products];
     newProducts[index] = { ...newProducts[index], [field]: value };
+    onUpdate({ ...block.content, products: newProducts } as any);
+  };
+
+  const updateTag = (productIndex: number, tagIndex: number, value: string) => {
+    const newProducts = [...products];
+    const newTags = [...newProducts[productIndex].tags];
+    newTags[tagIndex] = value;
+    newProducts[productIndex] = { ...newProducts[productIndex], tags: newTags };
+    onUpdate({ ...block.content, products: newProducts } as any);
+  };
+
+  const addTag = (productIndex: number) => {
+    const newProducts = [...products];
+    const newTags = [...newProducts[productIndex].tags, 'Nový tag'];
+    newProducts[productIndex] = { ...newProducts[productIndex], tags: newTags };
+    onUpdate({ ...block.content, products: newProducts } as any);
+  };
+
+  const removeTag = (productIndex: number, tagIndex: number) => {
+    const newProducts = [...products];
+    const newTags = newProducts[productIndex].tags.filter((_, i) => i !== tagIndex);
+    newProducts[productIndex] = { ...newProducts[productIndex], tags: newTags };
     onUpdate({ ...block.content, products: newProducts } as any);
   };
 
@@ -70,29 +90,40 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
                   className="w-full h-full"
                   showBorder={false}
                 />
-                {/* Tags */}
-                <div className="absolute top-2 left-2 flex flex-wrap gap-1">
-                  {product.tags?.map((tag, tagIdx) => (
-                    <span 
-                      key={tagIdx}
-                      className="text-[10px] px-2 py-0.5 rounded-full"
-                      style={{ 
-                        backgroundColor: tag === 'Novinka' ? '#00D954' : '#F5F5F5',
-                        color: '#212121'
-                      }}
+              </div>
+
+              {/* Tags - below photo */}
+              <div className="flex flex-wrap gap-1 mb-2">
+                {product.tags.map((tag, tagIdx) => (
+                  <span 
+                    key={tagIdx}
+                    className="text-[10px] px-2 py-0.5 rounded-full cursor-text group/tag relative"
+                    style={{ 
+                      backgroundColor: tag.toLowerCase().includes('novinka') ? '#00D954' : '#F5F5F5',
+                      color: '#212121'
+                    }}
+                  >
+                    <span
+                      contentEditable
+                      suppressContentEditableWarning
+                      onBlur={(e) => updateTag(index, tagIdx, e.currentTarget.textContent || '')}
                     >
                       {tag}
                     </span>
-                  ))}
-                  {product.isSale && (
-                    <span 
-                      className="text-[10px] px-2 py-0.5 rounded-full"
-                      style={{ backgroundColor: '#00D954', color: '#212121' }}
+                    <button
+                      onClick={() => removeTag(index, tagIdx)}
+                      className="ml-1 opacity-0 group-hover/tag:opacity-100 text-red-500 hover:text-red-700"
                     >
-                      sleva 10 %
-                    </span>
-                  )}
-                </div>
+                      ×
+                    </button>
+                  </span>
+                ))}
+                <button
+                  onClick={() => addTag(index)}
+                  className="text-[10px] px-2 py-0.5 rounded-full border border-dashed border-gray-300 hover:border-green-500 text-gray-400 hover:text-green-500"
+                >
+                  +
+                </button>
               </div>
 
               {/* Product info */}
@@ -105,23 +136,59 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
               >
                 {product.name}
               </h3>
-              <p className="text-xs text-muted-foreground mb-2">
-                Alk. → {product.alcohol} % obj. <span className="ml-2">{product.volume}</span>
-              </p>
               
-              {/* Price */}
+              {/* Alcohol and volume - editable */}
+              <div className="text-xs text-muted-foreground mb-2 flex items-center gap-1">
+                <span>Alk. →</span>
+                <input
+                  type="text"
+                  value={product.alcohol}
+                  onChange={(e) => updateProduct(index, 'alcohol', e.target.value)}
+                  className="w-8 bg-transparent border-none focus:outline-none focus:ring-1 focus:ring-green-500 rounded text-center"
+                />
+                <span>% obj.</span>
+                <input
+                  type="text"
+                  value={product.volume}
+                  onChange={(e) => updateProduct(index, 'volume', e.target.value)}
+                  className="w-14 bg-transparent border-none focus:outline-none focus:ring-1 focus:ring-green-500 rounded text-center ml-2"
+                />
+              </div>
+              
+              {/* Price - editable with optional sale price */}
               <div className="flex items-center gap-2">
-                <span 
-                  className={`text-sm font-medium ${product.isSale ? 'text-green-600' : ''}`}
-                  style={{ color: product.isSale ? '#00D954' : '#212121' }}
-                >
-                  {product.price}
-                </span>
-                {product.originalPrice && (
-                  <span className="text-xs line-through text-muted-foreground">
-                    {product.originalPrice}
-                  </span>
+                {product.salePrice ? (
+                  <>
+                    <input
+                      type="text"
+                      value={product.salePrice}
+                      onChange={(e) => updateProduct(index, 'salePrice', e.target.value)}
+                      className="text-sm font-medium w-16 bg-transparent border-none focus:outline-none focus:ring-1 focus:ring-green-500 rounded"
+                      style={{ color: '#00D954' }}
+                    />
+                    <input
+                      type="text"
+                      value={product.price}
+                      onChange={(e) => updateProduct(index, 'price', e.target.value)}
+                      className="text-xs line-through text-muted-foreground w-14 bg-transparent border-none focus:outline-none focus:ring-1 focus:ring-green-500 rounded"
+                    />
+                  </>
+                ) : (
+                  <input
+                    type="text"
+                    value={product.price}
+                    onChange={(e) => updateProduct(index, 'price', e.target.value)}
+                    className="text-sm font-medium w-16 bg-transparent border-none focus:outline-none focus:ring-1 focus:ring-green-500 rounded"
+                    style={{ color: '#212121' }}
+                  />
                 )}
+                <button
+                  onClick={() => updateProduct(index, 'salePrice', product.salePrice ? '' : product.price)}
+                  className="text-[10px] px-1 py-0.5 rounded border border-dashed border-gray-300 hover:border-green-500 text-gray-400 hover:text-green-500"
+                  title={product.salePrice ? 'Zrušit slevu' : 'Přidat slevu'}
+                >
+                  {product.salePrice ? '−sleva' : '+sleva'}
+                </button>
                 <button 
                   className="ml-auto w-6 h-6 rounded-full flex items-center justify-center"
                   style={{ backgroundColor: '#00D954' }}

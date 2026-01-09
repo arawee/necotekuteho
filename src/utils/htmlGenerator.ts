@@ -4,12 +4,14 @@ export function generateHTMLFromBlocks(blocks: NewsletterBlock[]): string {
   const blockHTML = blocks.map(block => {
     switch (block.type) {
       case 'zichovec-header':
+      case 'zichovec-header-menu':
         return generateZichovecHeaderHTML(block);
       case 'zichovec-footer':
         return generateZichovecFooterHTML(block);
       case 'product-list':
         return generateProductListHTML(block);
       case 'locations':
+      case 'mista':
         return generateLocationsHTML(block);
       case 'blog-posts':
         return generateBlogPostsHTML(block);
@@ -21,6 +23,10 @@ export function generateHTMLFromBlocks(blocks: NewsletterBlock[]): string {
         return generateGalleryDuoHTML(block);
       case 'article-text':
         return generateArticleTextHTML(block);
+      case 'benefits':
+        return generateBenefitsHTML(block);
+      case 'categories':
+        return generateCategoriesHTML(block);
       default:
         return '';
     }
@@ -385,6 +391,47 @@ function generateArticleTextHTML(block: NewsletterBlock): string {
       </table>
     </td>
   </tr>
+</table>`;
+}
+
+function generateBenefitsHTML(block: NewsletterBlock): string {
+  const benefits = block.content.benefits || [];
+  const benefitCells = benefits.map(b => `
+    <td valign="top" width="25%" style="padding:8px;text-align:center;font-family:Arial,sans-serif;">
+      <div style="font-size:24px;color:#00D954;margin-bottom:8px;">${b.icon}</div>
+      <h4 style="margin:0 0 8px;font-size:14px;color:#212121;">${b.title}</h4>
+      <p style="margin:0;font-size:11px;color:#666;font-style:italic;">${b.description}</p>
+    </td>
+  `).join('');
+
+  return `<!-- Benefity -->
+<table role="presentation" border="0" width="100%" cellspacing="0" cellpadding="0">
+  <tr><td align="center" style="padding:32px 24px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" style="max-width:600px;">
+      <tr>${benefitCells}</tr>
+    </table>
+  </td></tr>
+</table>`;
+}
+
+function generateCategoriesHTML(block: NewsletterBlock): string {
+  const categories = block.content.categories || [];
+  const catCells = categories.slice(0, 4).map(c => `
+    <td valign="top" width="25%" style="padding:8px;">
+      ${c.image ? `<img src="${c.image}" width="140" height="180" style="border-radius:8px;display:block;margin-bottom:8px;"/>` : 
+        `<div style="width:140px;height:180px;background:#F5F5F5;border-radius:8px;margin-bottom:8px;"></div>`}
+      <span style="display:inline-block;background:#212121;color:#FFF;font-size:10px;padding:4px 8px;border-radius:4px;">${c.tag}</span>
+    </td>
+  `).join('');
+
+  return `<!-- Kategorie -->
+<table role="presentation" border="0" width="100%" cellspacing="0" cellpadding="0">
+  <tr><td align="center" style="padding:32px 24px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" style="max-width:600px;">
+      <tr><td style="padding-bottom:16px;"><h2 style="margin:0;font-family:Arial,sans-serif;font-size:20px;color:#212121;">${block.content.title || 'Vyber si to pravé pro tebe'}</h2></td></tr>
+      <tr>${catCells}</tr>
+    </table>
+  </td></tr>
 </table>`;
 }
 
