@@ -103,6 +103,27 @@ export const blockTemplates: BlockTemplate[] = [
     }
   },
   {
+    id: 'pozice',
+    name: 'Pozice',
+    type: 'pozice',
+    thumbnail: '/api/placeholder/200/150',
+    color: 'yellow',
+    defaultContent: {
+      title: 'Volné pozice'
+    }
+  },
+  {
+    id: 'product-text',
+    name: 'Produkt + text',
+    type: 'product-text',
+    thumbnail: '/api/placeholder/200/150',
+    color: 'yellow',
+    defaultContent: {
+      title: 'Magop',
+      text: 'V pátce roku 2019 vyhlášena servrem Untapped.com nejlepším pivem v České republice.'
+    }
+  },
+  {
     id: 'blog-posts',
     name: 'Blog posty',
     type: 'blog-posts',

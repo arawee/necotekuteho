@@ -14,6 +14,8 @@ import { ArticleTextBlock } from './blocks/ArticleTextBlock';
 import { BenefitsBlock } from './blocks/BenefitsBlock';
 import { MistaBlock } from './blocks/MistaBlock';
 import { CategoriesBlock } from './blocks/CategoriesBlock';
+import { PoziceBlock } from './blocks/PoziceBlock';
+import { ProductTextBlock } from './blocks/ProductTextBlock';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { GripVertical, Trash2 } from 'lucide-react';
@@ -67,6 +69,10 @@ export function SortableBlockRenderer({ block, onUpdate, onDelete }: SortableBlo
         return <MistaBlock block={block} onUpdate={onUpdate} />;
       case 'categories':
         return <CategoriesBlock block={block} onUpdate={onUpdate} />;
+      case 'pozice':
+        return <PoziceBlock block={block} onUpdate={onUpdate} />;
+      case 'product-text':
+        return <ProductTextBlock block={block} onUpdate={onUpdate} />;
       default:
         return <div>Unknown block type: {block.type}</div>;
     }

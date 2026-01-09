@@ -1,11 +1,14 @@
 import { NewsletterBlock } from '@/types/newsletter';
 import { ImageUpload } from '@/components/ui/image-upload';
-import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { useState } from 'react';
 
 interface BlogPost {
   image: string;
   title: string;
   excerpt: string;
+  url?: string;
 }
 
 interface BlogPostsBlockProps {
@@ -14,30 +17,39 @@ interface BlogPostsBlockProps {
 }
 
 export const BlogPostsBlock = ({ block, onUpdate }: BlogPostsBlockProps) => {
+  const [editingUrl, setEditingUrl] = useState<number | null>(null);
+  const [editingViewAllUrl, setEditingViewAllUrl] = useState(false);
+
   const defaultPosts: BlogPost[] = [
     { 
       image: '', 
       title: 'První hospoda ZICHOVEC!', 
-      excerpt: 'Je to tady! Kouska od IP Pavlova. Na čepu ZICHOVEC! Otevíráme 21. 5. 2027. Máte žízeň?'
+      excerpt: 'Je to tady! Kouska od IP Pavlova. Na čepu ZICHOVEC! Otevíráme 21. 5. 2027. Máte žízeň?',
+      url: '#'
     },
     { 
       image: '', 
       title: 'Příběh marakuji', 
-      excerpt: 'Je to tady! Kouska od IP Pavlova. Na čepu ZICHOVEC! Otevíráme 21. 5. 2027. Máte žízeň?'
+      excerpt: 'Je to tady! Kouska od IP Pavlova. Na čepu ZICHOVEC! Otevíráme 21. 5. 2027. Máte žízeň?',
+      url: '#'
     },
     { 
       image: '', 
       title: 'Chill day 7', 
-      excerpt: 'Je to tady! Kouska od IP Pavlova. Na čepu ZICHOVEC! Otevíráme 21. 5. 2027. Máte žízeň?'
+      excerpt: 'Je to tady! Kouska od IP Pavlova. Na čepu ZICHOVEC! Otevíráme 21. 5. 2027. Máte žízeň?',
+      url: '#'
     },
     { 
       image: '', 
       title: 'Chill day 7', 
-      excerpt: 'Je to tady! Kouska od IP Pavlova. Na čepu ZICHOVEC! Otevíráme 21. 5. 2027. Máte žízeň?'
+      excerpt: 'Je to tady! Kouska od IP Pavlova. Na čepu ZICHOVEC! Otevíráme 21. 5. 2027. Máte žízeň?',
+      url: '#'
     }
   ];
 
   const posts = (block.content as any).posts || defaultPosts;
+  const viewAllUrl = block.content.viewAllUrl || '#';
+  const viewAllText = block.content.viewAllText || '→ zobrazit vše';
 
   const updatePost = (index: number, field: keyof BlogPost, value: any) => {
     const newPosts = [...posts];
@@ -59,9 +71,36 @@ export const BlogPostsBlock = ({ block, onUpdate }: BlogPostsBlockProps) => {
           >
             {block.content.title || 'Novinky od ZICHOVCE'}
           </h2>
-          <a href="#" className="text-sm underline hover:no-underline" style={{ color: '#212121' }}>
-            → zobrazit vše
-          </a>
+          <div className="relative">
+            {editingViewAllUrl ? (
+              <div className="flex gap-2 items-center">
+                <Input
+                  value={viewAllUrl}
+                  onChange={(e) => onUpdate({ ...block.content, viewAllUrl: e.target.value })}
+                  placeholder="URL"
+                  className="w-40 h-7 text-xs"
+                  onBlur={() => setEditingViewAllUrl(false)}
+                  autoFocus
+                />
+              </div>
+            ) : (
+              <span 
+                className="text-sm underline hover:no-underline cursor-pointer" 
+                style={{ color: '#212121' }}
+                contentEditable
+                suppressContentEditableWarning
+                onBlur={(e) => onUpdate({ ...block.content, viewAllText: e.currentTarget.textContent || '' })}
+                onClick={(e) => {
+                  if (e.detail === 2) {
+                    setEditingViewAllUrl(true);
+                  }
+                }}
+                title="Double-click to edit URL"
+              >
+                {viewAllText}
+              </span>
+            )}
+          </div>
         </div>
 
         {/* Blog posts grid */}
@@ -99,25 +138,30 @@ export const BlogPostsBlock = ({ block, onUpdate }: BlogPostsBlockProps) => {
                 {post.excerpt}
               </p>
 
-              {/* Action button */}
-              <button 
-                className="w-6 h-6 rounded-full flex items-center justify-center"
-                style={{ backgroundColor: '#00D954' }}
-              >
-                <Plus className="w-4 h-4" style={{ color: '#212121' }} />
-              </button>
+              {/* Action button with editable URL */}
+              <div className="relative">
+                {editingUrl === index ? (
+                  <Input
+                    value={post.url || '#'}
+                    onChange={(e) => updatePost(index, 'url', e.target.value)}
+                    placeholder="URL"
+                    className="w-full h-7 text-xs"
+                    onBlur={() => setEditingUrl(null)}
+                    autoFocus
+                  />
+                ) : (
+                  <button 
+                    className="w-6 h-6 rounded-full flex items-center justify-center"
+                    style={{ backgroundColor: '#00D954' }}
+                    onClick={() => setEditingUrl(index)}
+                    title="Click to edit URL"
+                  >
+                    <Plus className="w-4 h-4" style={{ color: '#212121' }} />
+                  </button>
+                )}
+              </div>
             </div>
           ))}
-        </div>
-
-        {/* Navigation */}
-        <div className="flex justify-center gap-2 mt-6">
-          <button className="w-8 h-8 rounded-full border flex items-center justify-center" style={{ borderColor: '#E5E5E5' }}>
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-          <button className="w-8 h-8 rounded-full border flex items-center justify-center" style={{ borderColor: '#212121' }}>
-            <ChevronRight className="w-4 h-4" />
-          </button>
         </div>
       </div>
     </div>

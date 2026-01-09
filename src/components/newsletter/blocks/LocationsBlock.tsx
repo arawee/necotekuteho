@@ -1,6 +1,8 @@
 import { NewsletterBlock } from '@/types/newsletter';
 import { ImageUpload } from '@/components/ui/image-upload';
-import { Edit2 } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { useState } from 'react';
 
 interface Location {
   image: string;
@@ -10,6 +12,10 @@ interface Location {
   weekendHours: string;
   facebookUrl?: string;
   instagramUrl?: string;
+  primaryButtonText?: string;
+  primaryButtonUrl?: string;
+  secondaryButtonText?: string;
+  secondaryButtonUrl?: string;
 }
 
 interface LocationsBlockProps {
@@ -18,38 +24,58 @@ interface LocationsBlockProps {
 }
 
 export const LocationsBlock = ({ block, onUpdate }: LocationsBlockProps) => {
+  const [editingButton, setEditingButton] = useState<{ index: number; type: 'primary' | 'secondary' } | null>(null);
+
   const defaultLocations: Location[] = [
     { 
       image: '', 
       name: 'Pivovar v Lounech', 
       address: '5. května 2789, Louny\n440 01',
       hours: 'Po-Pá 9-17 h',
-      weekendHours: 'So-Ne 9-22 h'
+      weekendHours: 'So-Ne 9-22 h',
+      primaryButtonText: '',
+      primaryButtonUrl: '#',
+      secondaryButtonText: 'Rezervace',
+      secondaryButtonUrl: '#'
     },
     { 
       image: '', 
       name: 'Sklad Louny', 
       address: '5. května 2789, Louny\n440 01',
       hours: 'Po-Pá 9-17 h',
-      weekendHours: 'So-Ne 9-22 h'
+      weekendHours: 'So-Ne 9-22 h',
+      primaryButtonText: '',
+      primaryButtonUrl: '#',
+      secondaryButtonText: 'Rezervace',
+      secondaryButtonUrl: '#'
     },
     { 
       image: '', 
       name: 'Pivní bar Louny', 
       address: '5. května 2789, Louny\n440 01',
       hours: 'Po-Pá 9-17 h',
-      weekendHours: 'So-Ne 9-22 h'
+      weekendHours: 'So-Ne 9-22 h',
+      primaryButtonText: '',
+      primaryButtonUrl: '#',
+      secondaryButtonText: 'Rezervace',
+      secondaryButtonUrl: '#'
     },
     { 
       image: '', 
       name: 'Restaurace Zichovec', 
       address: '5. května 2789, Louny\n440 01',
       hours: 'Po-Pá 9-17 h',
-      weekendHours: 'So-Ne 9-22 h'
+      weekendHours: 'So-Ne 9-22 h',
+      primaryButtonText: '',
+      primaryButtonUrl: '#',
+      secondaryButtonText: 'Rezervace',
+      secondaryButtonUrl: '#'
     }
   ];
 
   const locations = (block.content as any).locations || defaultLocations;
+  const viewAllUrl = block.content.viewAllUrl || '#';
+  const viewAllText = block.content.viewAllText || '→ zobrazit vše';
 
   const updateLocation = (index: number, field: keyof Location, value: any) => {
     const newLocations = [...locations];
@@ -58,7 +84,7 @@ export const LocationsBlock = ({ block, onUpdate }: LocationsBlockProps) => {
   };
 
   return (
-    <div className="bg-white rounded-lg border border-border p-6">
+    <div className="rounded-lg border border-border p-6" style={{ backgroundColor: '#F5F5F5' }}>
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
@@ -71,15 +97,21 @@ export const LocationsBlock = ({ block, onUpdate }: LocationsBlockProps) => {
           >
             {block.content.title || 'Kde nás ochutnáte?'}
           </h2>
-          <a href="#" className="text-sm underline hover:no-underline" style={{ color: '#212121' }}>
-            → zobrazit vše
-          </a>
+          <span 
+            className="text-sm underline hover:no-underline cursor-pointer" 
+            style={{ color: '#212121' }}
+            contentEditable
+            suppressContentEditableWarning
+            onBlur={(e) => onUpdate({ ...block.content, viewAllText: e.currentTarget.textContent || '' })}
+          >
+            {viewAllText}
+          </span>
         </div>
 
         {/* Locations grid */}
         <div className="grid grid-cols-4 gap-4">
           {locations.map((location: Location, index: number) => (
-            <div key={index} className="group">
+            <div key={index} className="group bg-white p-3 rounded-lg">
               {/* Location image */}
               <div className="relative mb-3 rounded-lg aspect-[4/3] overflow-hidden">
                 <ImageUpload
@@ -110,24 +142,87 @@ export const LocationsBlock = ({ block, onUpdate }: LocationsBlockProps) => {
               >
                 {location.address}
               </p>
-              <p className="text-xs text-muted-foreground mb-1">{location.hours}</p>
-              <p className="text-xs text-muted-foreground mb-2">{location.weekendHours}</p>
+              <p 
+                className="text-xs text-muted-foreground mb-1"
+                contentEditable
+                suppressContentEditableWarning
+                onBlur={(e) => updateLocation(index, 'hours', e.currentTarget.textContent || '')}
+              >
+                {location.hours}
+              </p>
+              <p 
+                className="text-xs text-muted-foreground mb-2"
+                contentEditable
+                suppressContentEditableWarning
+                onBlur={(e) => updateLocation(index, 'weekendHours', e.currentTarget.textContent || '')}
+              >
+                {location.weekendHours}
+              </p>
               
               {/* Social links */}
               <div className="flex gap-2 text-xs mb-2">
-                <a href="#" className="underline">Facebook</a>
-                <a href="#" className="underline">Instagram</a>
+                <a 
+                  href="#" 
+                  className="underline"
+                  contentEditable
+                  suppressContentEditableWarning
+                  onBlur={(e) => updateLocation(index, 'facebookUrl', e.currentTarget.textContent || '')}
+                >
+                  Facebook
+                </a>
+                <a 
+                  href="#" 
+                  className="underline"
+                  contentEditable
+                  suppressContentEditableWarning
+                  onBlur={(e) => updateLocation(index, 'instagramUrl', e.currentTarget.textContent || '')}
+                >
+                  Instagram
+                </a>
               </div>
 
-              {/* Action */}
+              {/* Action buttons */}
               <div className="flex items-center gap-2">
-                <button 
-                  className="w-6 h-6 rounded-full flex items-center justify-center border"
-                  style={{ borderColor: '#212121' }}
-                >
-                  <span style={{ color: '#212121' }}>+</span>
-                </button>
-                <span className="text-xs">→ Rezervace</span>
+                {editingButton?.index === index && editingButton?.type === 'primary' ? (
+                  <Input
+                    value={location.primaryButtonUrl || '#'}
+                    onChange={(e) => updateLocation(index, 'primaryButtonUrl', e.target.value)}
+                    placeholder="URL"
+                    className="w-full h-7 text-xs"
+                    onBlur={() => setEditingButton(null)}
+                    autoFocus
+                  />
+                ) : (
+                  <button 
+                    className="w-6 h-6 rounded-full flex items-center justify-center"
+                    style={{ backgroundColor: '#00D954' }}
+                    onClick={() => setEditingButton({ index, type: 'primary' })}
+                    title="Click to edit URL"
+                  >
+                    <ArrowRight className="w-4 h-4" style={{ color: '#212121' }} />
+                  </button>
+                )}
+                {editingButton?.index === index && editingButton?.type === 'secondary' ? (
+                  <Input
+                    value={location.secondaryButtonUrl || '#'}
+                    onChange={(e) => updateLocation(index, 'secondaryButtonUrl', e.target.value)}
+                    placeholder="URL"
+                    className="w-full h-7 text-xs"
+                    onBlur={() => setEditingButton(null)}
+                    autoFocus
+                  />
+                ) : (
+                  <span 
+                    className="text-xs cursor-pointer"
+                    onClick={() => setEditingButton({ index, type: 'secondary' })}
+                    title="Click to edit URL"
+                    contentEditable
+                    suppressContentEditableWarning
+                    onBlur={(e) => updateLocation(index, 'secondaryButtonText', e.currentTarget.textContent || '')}
+                  >
+                    → {location.secondaryButtonText || 'Rezervace'}
+                  </span>
+                )}
               </div>
             </div>
           ))}
