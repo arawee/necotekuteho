@@ -25,46 +25,92 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
     }
   ];
 
+  const email = (block.content as any).email || 'e-shop@pivovarzichovec.cz';
+  const socials = (block.content as any).socials || ['Facebook', 'Instagram', 'Youtube', 'X', 'LinkedIn'];
+  const columns = (block.content as any).columns || footerColumns;
+
   return (
-    <div className="bg-white border-t border-border">
+    <div style={{ backgroundColor: '#00D954' }} className="border-t border-black/10">
       <div className="max-w-2xl mx-auto">
         {/* Main footer content */}
         <div className="p-8 grid grid-cols-4 gap-6 text-sm">
           {/* Contact column */}
           <div>
-            <p className="mb-4" style={{ fontFamily: 'monospace' }}>
+            <p className="mb-4" style={{ fontFamily: 'monospace', color: '#212121' }}>
               <span 
                 contentEditable 
                 suppressContentEditableWarning
                 onBlur={(e) => onUpdate({ ...block.content, footerText: e.currentTarget.textContent || '' })}
-                className="hover:bg-muted/50 px-1 rounded cursor-text"
+                className="hover:bg-black/10 px-1 rounded cursor-text"
               >
                 {block.content.footerText || '+420 602 555 555'}
               </span>
             </p>
             <p className="mb-6">
-              <a href="#" className="underline hover:no-underline" style={{ color: '#212121' }}>
-                e-shop@pivovarzichovec.cz
-              </a>
+              <span 
+                contentEditable 
+                suppressContentEditableWarning
+                onBlur={(e) => onUpdate({ ...block.content, email: e.currentTarget.textContent || '' } as any)}
+                className="underline hover:no-underline cursor-text" 
+                style={{ color: '#212121' }}
+              >
+                {email}
+              </span>
             </p>
             <div className="flex flex-col gap-1">
-              {['Facebook', 'Instagram', 'Youtube', 'X', 'LinkedIn'].map((social) => (
-                <a key={social} href="#" className="underline hover:no-underline" style={{ color: '#212121' }}>
+              {socials.map((social: string, idx: number) => (
+                <span 
+                  key={idx} 
+                  contentEditable 
+                  suppressContentEditableWarning
+                  onBlur={(e) => {
+                    const newSocials = [...socials];
+                    newSocials[idx] = e.currentTarget.textContent || '';
+                    onUpdate({ ...block.content, socials: newSocials } as any);
+                  }}
+                  className="underline hover:no-underline cursor-text" 
+                  style={{ color: '#212121' }}
+                >
                   {social}
-                </a>
+                </span>
               ))}
             </div>
           </div>
 
-          {/* Link columns */}
-          {footerColumns.map((column, idx) => (
+          {/* Link columns - editable */}
+          {columns.map((column: any, idx: number) => (
             <div key={idx}>
-              <h4 className="font-medium mb-4" style={{ color: '#212121' }}>{column.title}</h4>
+              <h4 
+                className="font-medium mb-4 cursor-text" 
+                contentEditable 
+                suppressContentEditableWarning
+                onBlur={(e) => {
+                  const newColumns = [...columns];
+                  newColumns[idx] = { ...newColumns[idx], title: e.currentTarget.textContent || '' };
+                  onUpdate({ ...block.content, columns: newColumns } as any);
+                }}
+                style={{ color: '#212121' }}
+              >
+                {column.title}
+              </h4>
               <div className="flex flex-col gap-1">
-                {column.links.map((link) => (
-                  <a key={link} href="#" className="underline hover:no-underline" style={{ color: '#212121' }}>
+                {column.links.map((link: string, linkIdx: number) => (
+                  <span 
+                    key={linkIdx} 
+                    contentEditable 
+                    suppressContentEditableWarning
+                    onBlur={(e) => {
+                      const newColumns = [...columns];
+                      const newLinks = [...newColumns[idx].links];
+                      newLinks[linkIdx] = e.currentTarget.textContent || '';
+                      newColumns[idx] = { ...newColumns[idx], links: newLinks };
+                      onUpdate({ ...block.content, columns: newColumns } as any);
+                    }}
+                    className="underline hover:no-underline cursor-text" 
+                    style={{ color: '#212121' }}
+                  >
                     {link}
-                  </a>
+                  </span>
                 ))}
               </div>
             </div>
@@ -72,11 +118,12 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
         </div>
 
         {/* Payment icons */}
-        <div className="px-8 py-4 flex justify-center gap-3 border-t border-border">
+        <div className="px-8 py-4 flex justify-center gap-3 border-t border-black/10">
           {['VISA', 'Diners', 'Amex', 'Discover', 'Mastercard', 'Maestro', 'Stripe', 'PayPal', 'GPay', 'ApplePay', 'BitPay'].map((payment) => (
             <div 
               key={payment} 
-              className="w-10 h-6 bg-muted rounded flex items-center justify-center text-[8px] text-muted-foreground"
+              className="w-10 h-6 rounded flex items-center justify-center text-[8px]"
+              style={{ backgroundColor: 'rgba(0,0,0,0.1)', color: '#212121' }}
             >
               {payment}
             </div>
@@ -84,8 +131,13 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
         </div>
 
         {/* Copyright */}
-        <div className="px-8 py-4 flex justify-between items-center text-xs border-t border-border" style={{ color: '#212121' }}>
-          <span>
+        <div className="px-8 py-4 flex justify-between items-center text-xs border-t border-black/10" style={{ color: '#212121' }}>
+          <span
+            contentEditable 
+            suppressContentEditableWarning
+            onBlur={(e) => onUpdate({ ...block.content, copyright: e.currentTarget.textContent || '' })}
+            className="cursor-text"
+          >
             {block.content.copyright || 'Copyright © 2025 Pivovar ZICHOVEC. Všechna práva vyhrazena.'}
           </span>
           <div className="flex gap-4">

@@ -18,16 +18,13 @@ export interface NewsletterBlock {
     location?: string;
     subtitle?: string;
     url?: string;
-    // Photos/Gallery
     photos?: Array<{
       url: string;
       alt?: string;
     }>;
     backgroundColor?: string;
-    // Quote block
     quote?: string;
     quoteSubheading?: string;
-    // Footer block
     footerText?: string;
     socialLinks?: Array<{
       platform: string;
@@ -37,10 +34,16 @@ export interface NewsletterBlock {
     copyright?: string;
     unsubscribeUrl?: string;
     // Zichovec-specific
+    menuItems?: Array<{ text: string; url: string }>;
+    benefits?: Array<{ icon: string; title: string; description: string }>;
     products?: Array<{
       name: string;
       price: string;
       image?: string;
+      alcohol?: string;
+      volume?: string;
+      salePrice?: string;
+      tags?: string[];
     }>;
     locations?: Array<{
       name: string;
@@ -53,9 +56,20 @@ export interface NewsletterBlock {
     }>;
     boxes?: Array<{
       title: string;
-      subtitle: string;
+      subtitle?: string;
       color?: string;
+      features?: Array<{ label: string; value: string }>;
+      buttonText?: string;
+      buttonUrl?: string;
+      bgColor?: string;
     }>;
+    places?: Array<{ image: string; name: string; buttonText: string; buttonUrl: string }>;
+    categories?: Array<{ image: string; tag: string }>;
+    email?: string;
+    socials?: string[];
+    columns?: Array<{ title: string; links: string[] }>;
+    viewAllText?: string;
+    viewAllUrl?: string;
   };
 }
 
