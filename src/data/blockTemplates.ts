@@ -175,16 +175,6 @@ export const blockTemplates: BlockTemplate[] = [
     }
   },
   {
-    id: 'body-text-box',
-    name: 'Body text + box',
-    type: 'body-text-box',
-    thumbnail: '/api/placeholder/200/150',
-    color: 'yellow',
-    defaultContent: {
-      title: 'OPA: Jemná evoluce moderních ale'
-    }
-  },
-  {
     id: 'zichovec-footer',
     name: 'Patička',
     type: 'zichovec-footer',
