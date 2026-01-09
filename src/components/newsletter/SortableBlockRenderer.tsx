@@ -18,7 +18,6 @@ import { CategoriesBlock } from './blocks/CategoriesBlock';
 import { PoziceBlock } from './blocks/PoziceBlock';
 import { ProductTextBlock } from './blocks/ProductTextBlock';
 import { TextTwoColumnsBlock } from './blocks/TextTwoColumnsBlock';
-import { BodyTextBoxBlock } from './blocks/BodyTextBoxBlock';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { GripVertical, Trash2 } from 'lucide-react';
@@ -80,8 +79,6 @@ export function SortableBlockRenderer({ block, onUpdate, onDelete }: SortableBlo
         return <GallerySingleBlock block={block} onUpdate={onUpdate} />;
       case 'text-two-columns':
         return <TextTwoColumnsBlock block={block} onUpdate={onUpdate} />;
-      case 'body-text-box':
-        return <BodyTextBoxBlock block={block} onUpdate={onUpdate} />;
       default:
         return <div>Unknown block type: {block.type}</div>;
     }

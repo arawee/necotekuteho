@@ -35,8 +35,6 @@ export function generateHTMLFromBlocks(blocks: NewsletterBlock[]): string {
         return generateGallerySingleHTML(block);
       case 'text-two-columns':
         return generateTextTwoColumnsHTML(block);
-      case 'body-text-box':
-        return generateBodyTextBoxHTML(block);
       default:
         return '';
     }
@@ -540,53 +538,6 @@ function generateTextTwoColumnsHTML(block: NewsletterBlock): string {
 </table>`;
 }
 
-function generateBodyTextBoxHTML(block: NewsletterBlock): string {
-  const { content } = block;
-  const sections = (content as any).sections || [];
-  
-  const sectionsHTML = sections.map((s: any) => `
-    <tr>
-      <td style="padding-bottom:24px;">
-        ${s.text ? 
-          `<h2 style="margin:0 0 12px;font-family:Arial,sans-serif;font-size:20px;font-weight:500;color:#212121;">${s.heading}</h2>
-           <p style="margin:0;font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#212121;">${s.text}</p>` :
-          `<p style="margin:0;padding-left:16px;border-left:3px solid #212121;font-family:Arial,sans-serif;font-size:18px;font-style:italic;line-height:1.4;color:#212121;">${s.heading}</p>`
-        }
-      </td>
-    </tr>
-  `).join('');
-  
-  return `<!-- Body text + box -->
-<table role="presentation" border="0" width="100%" cellspacing="0" cellpadding="0">
-  <tr>
-    <td align="center" style="padding:32px 24px;">
-      <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" style="max-width:600px;">
-        <tr>
-          <td style="padding-bottom:24px;">
-            <h1 style="margin:0;font-family:Arial,sans-serif;font-size:32px;font-weight:400;color:#212121;">${content.title || ''}</h1>
-          </td>
-        </tr>
-        <tr>
-          <td style="padding-bottom:24px;font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#212121;">
-            ${(content as any).introText || ''}
-          </td>
-        </tr>
-        ${sectionsHTML}
-        <tr>
-          <td style="padding-top:24px;border-top:1px solid #E5E5E5;font-family:Arial,sans-serif;font-size:12px;color:#212121;">
-            <table role="presentation" border="0" cellspacing="0" cellpadding="0">
-              <tr><td style="padding:4px 0;"><strong>Datum →</strong> ${(content as any).metaDate || ''}</td></tr>
-              <tr><td style="padding:4px 0;"><strong>Autor →</strong> ${(content as any).metaAuthor || ''}</td></tr>
-              <tr><td style="padding:4px 0;"><strong>Tag →</strong> <span style="text-decoration:underline;">${(content as any).metaTags || ''}</span></td></tr>
-              <tr><td style="padding:4px 0;"><strong>Sdílet →</strong> <span style="text-decoration:underline;">${(content as any).metaShare || ''}</span></td></tr>
-            </table>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>`;
-}
 
 function getNewsletterCSS(): string {
   return `
