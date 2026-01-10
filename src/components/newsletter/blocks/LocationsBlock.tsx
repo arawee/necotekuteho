@@ -115,17 +115,19 @@ export const LocationsBlock = ({ block, onUpdate }: LocationsBlockProps) => {
     onUpdate({ ...block.content, locations: newLocations } as any);
   };
 
+  // Limit to max 6 locations
+  const displayedLocations = locations.slice(0, 6);
+
   return (
     <div className="border border-border p-6 bg-white">
       <div className="max-w-2xl mx-auto">
-        {/* Header */}
+        {/* Header - matching component heading style */}
         <div className="flex justify-between items-center mb-6">
           <h2 
-            className="text-2xl font-normal"
             contentEditable
             suppressContentEditableWarning
             onBlur={(e) => onUpdate({ ...block.content, title: e.currentTarget.textContent || '' })}
-            style={{ color: '#212121' }}
+            style={{ color: '#212121', fontSize: '24px', fontWeight: 400, margin: 0 }}
           >
             {block.content.title || 'Kde nás ochutnáte?'}
           </h2>
@@ -150,128 +152,147 @@ export const LocationsBlock = ({ block, onUpdate }: LocationsBlockProps) => {
           </div>
         </div>
 
-        {/* Locations grid - flex */}
-        <div style={{ display: 'flex', gap: '12px' }}>
-          {locations.map((location: Location, index: number) => (
-            <div 
-              key={index} 
-              className="group relative"
-              style={{ backgroundColor: '#F4F4F4', flex: 1 }}
-            >
-              {/* Remove button */}
-              <button
-                onClick={() => removeLocation(index)}
-                className="absolute -top-2 -right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity p-1 bg-white shadow hover:bg-red-50"
+        {/* Locations grid - max 3 per row, fill space */}
+        <div style={{ 
+          display: 'flex', 
+          flexWrap: 'wrap', 
+          gap: '12px' 
+        }}>
+          {displayedLocations.map((location: Location, index: number) => {
+            // Calculate flex basis: if less than 3 cards, they should fill the row
+            const totalCards = displayedLocations.length;
+            const flexBasis = totalCards < 3 
+              ? `calc(${100 / totalCards}% - ${(totalCards - 1) * 12 / totalCards}px)` 
+              : 'calc(33.333% - 8px)';
+
+            return (
+              <div 
+                key={index} 
+                className="group relative"
+                style={{ 
+                  backgroundColor: '#F4F4F4', 
+                  flex: `0 0 ${flexBasis}`,
+                  maxWidth: flexBasis
+                }}
               >
-                <Trash2 className="w-3 h-3 text-red-500" />
-              </button>
+                {/* Remove button */}
+                <button
+                  onClick={() => removeLocation(index)}
+                  className="absolute -top-2 -right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity p-1 bg-white shadow hover:bg-red-50"
+                >
+                  <Trash2 className="w-3 h-3 text-red-500" />
+                </button>
 
-              {/* Location image - edge to edge */}
-              <div className="relative aspect-[4/3] overflow-hidden">
-                <ImageUpload
-                  currentImage={location.image}
-                  onImageUploaded={(url) => updateLocation(index, 'image', url)}
-                  aspectRatio="landscape"
-                  placeholder="Nahrát foto"
-                  className="w-full h-full"
-                  showBorder={false}
-                />
-              </div>
-
-              {/* Content with padding */}
-              <div className="p-3">
-                {/* Location info - 16px heading, black text */}
-                <h3 
-                  className="font-medium mb-1 cursor-pointer"
-                  onClick={() => setEditingLocation(index)}
-                  style={{ color: '#000000', fontSize: '16px' }}
-                >
-                  {location.name}
-                </h3>
-                <p 
-                  className="text-xs mb-1 whitespace-pre-line cursor-pointer"
-                  onClick={() => setEditingLocation(index)}
-                  style={{ color: '#000000' }}
-                >
-                  {location.address}
-                </p>
-                <p 
-                  className="text-xs mb-1 cursor-pointer"
-                  onClick={() => setEditingLocation(index)}
-                  style={{ color: '#000000' }}
-                >
-                  {location.hours}
-                </p>
-                <p 
-                  className="text-xs mb-2 cursor-pointer"
-                  onClick={() => setEditingLocation(index)}
-                  style={{ color: '#000000' }}
-                >
-                  {location.weekendHours}
-                </p>
-                
-                {/* Social links - underlined */}
-                <div className="flex gap-2 text-xs mb-2">
-                  <a 
-                    href={location.facebookUrl || '#'} 
-                    className="cursor-pointer"
-                    style={{ color: '#000000', textDecoration: 'underline' }}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setEditingLocation(index);
-                    }}
-                  >
-                    Facebook
-                  </a>
-                  <a 
-                    href={location.instagramUrl || '#'} 
-                    className="cursor-pointer"
-                    style={{ color: '#000000', textDecoration: 'underline' }}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setEditingLocation(index);
-                    }}
-                  >
-                    Instagram
-                  </a>
+                {/* Location image - 5/4 ratio */}
+                <div className="relative overflow-hidden" style={{ aspectRatio: '5/4' }}>
+                  <ImageUpload
+                    currentImage={location.image}
+                    onImageUploaded={(url) => updateLocation(index, 'image', url)}
+                    aspectRatio="landscape"
+                    placeholder="Nahrát foto"
+                    className="w-full h-full"
+                    showBorder={false}
+                  />
                 </div>
 
-                {/* Action buttons - 48px circular with 12px arrow */}
-                <div className="flex items-center gap-2">
-                  <button 
-                    className="flex items-center justify-center rounded-full"
-                    style={{ 
-                      width: '48px', 
-                      height: '48px', 
-                      backgroundColor: '#00C322',
-                      border: 'none'
-                    }}
+                {/* Content with padding */}
+                <div className="p-3">
+                  {/* Location info - Název with font-weight 700 */}
+                  <h3 
+                    className="mb-1 cursor-pointer"
                     onClick={() => setEditingLocation(index)}
+                    style={{ color: '#000000', fontSize: '16px', fontWeight: 700 }}
                   >
-                    <ArrowRight style={{ width: '12px', height: '12px', color: '#FFFFFF' }} />
-                  </button>
-                  <span 
-                    className="text-xs cursor-pointer"
+                    {location.name}
+                  </h3>
+                  <p 
+                    className="text-xs mb-1 whitespace-pre-line cursor-pointer"
                     onClick={() => setEditingLocation(index)}
+                    style={{ color: '#000000' }}
                   >
-                    → {location.secondaryButtonText || 'Rezervace'}
-                  </span>
+                    {location.address}
+                  </p>
+                  <p 
+                    className="text-xs mb-1 cursor-pointer"
+                    onClick={() => setEditingLocation(index)}
+                    style={{ color: '#000000' }}
+                  >
+                    {location.hours}
+                  </p>
+                  <p 
+                    className="text-xs mb-2 cursor-pointer"
+                    onClick={() => setEditingLocation(index)}
+                    style={{ color: '#000000' }}
+                  >
+                    {location.weekendHours}
+                  </p>
+                  
+                  {/* Social links - underlined */}
+                  <div className="flex gap-2 text-xs mb-2">
+                    <a 
+                      href={location.facebookUrl || '#'} 
+                      className="cursor-pointer"
+                      style={{ color: '#000000', textDecoration: 'underline' }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setEditingLocation(index);
+                      }}
+                    >
+                      Facebook
+                    </a>
+                    <a 
+                      href={location.instagramUrl || '#'} 
+                      className="cursor-pointer"
+                      style={{ color: '#000000', textDecoration: 'underline' }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setEditingLocation(index);
+                      }}
+                    >
+                      Instagram
+                    </a>
+                  </div>
+
+                  {/* Action buttons - 36px circular with green border, no background */}
+                  <div className="flex items-center gap-2">
+                    <button 
+                      className="flex items-center justify-center"
+                      style={{ 
+                        width: '36px', 
+                        height: '36px', 
+                        backgroundColor: 'transparent',
+                        border: '1px solid #00C322',
+                        borderRadius: '100% !important' as any
+                      }}
+                      onClick={() => setEditingLocation(index)}
+                    >
+                      <ArrowRight style={{ width: '12px', height: '12px', color: '#00C322' }} />
+                    </button>
+                    <span 
+                      className="text-xs cursor-pointer"
+                      onClick={() => setEditingLocation(index)}
+                    >
+                      → {location.secondaryButtonText || 'Rezervace'}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
-        {/* Add location button */}
-        <div className="mt-4 flex justify-center">
-          <button
-            onClick={addLocation}
-            className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500 transition-colors"
-          >
-            <Plus className="w-4 h-4" />
-            Přidat lokaci
-          </button>
-        </div>
+        {/* Add location button - disabled when max 6 */}
+        {locations.length < 6 && (
+          <div className="mt-4 flex justify-center">
+            <button
+              onClick={addLocation}
+              className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500 transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+              Přidat lokaci
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Edit Dialog */}
