@@ -29,8 +29,8 @@ export const ArticleTextBlock = ({ block, onUpdate }: ArticleTextBlockProps) => 
   const [isEditingBody, setIsEditingBody] = useState(false);
   const [isEditingMeta, setIsEditingMeta] = useState(false);
 
-  const date = (block.content as any).date || '28. května 2025';
-  const author = block.content.subtitle || 'Petr Novák';
+  const date = ((block.content as any).date ?? '') as string;
+  const author = (block.content.subtitle ?? '') as string;
   
   // Tags and shares as arrays with links
   const tags: TagItem[] = (block.content as any).tagsArray || [
@@ -192,6 +192,7 @@ export const ArticleTextBlock = ({ block, onUpdate }: ArticleTextBlockProps) => 
               <label className="text-sm font-medium">Datum</label>
               <Input
                 value={date}
+                placeholder="28. května 2025"
                 onChange={(e) => onUpdate({ ...block.content, date: e.target.value } as any)}
               />
             </div>
@@ -199,6 +200,7 @@ export const ArticleTextBlock = ({ block, onUpdate }: ArticleTextBlockProps) => 
               <label className="text-sm font-medium">Autor</label>
               <Input
                 value={author}
+                placeholder="Petr Novák"
                 onChange={(e) => onUpdate({ ...block.content, subtitle: e.target.value })}
               />
             </div>
