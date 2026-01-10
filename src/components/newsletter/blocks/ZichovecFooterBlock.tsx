@@ -185,7 +185,7 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
         </div>
 
         {/* Payment icons - white background, 8px gap, flex wrap */}
-        <div className="py-4 flex justify-center flex-wrap border-t border-black/10" style={{ backgroundColor: '#FFFFFF', gap: '8px', paddingLeft: 0, paddingRight: 0 }}>
+        <div className="py-4 flex justify-center flex-wrap" style={{ backgroundColor: '#FFFFFF', gap: '8px', paddingLeft: 0, paddingRight: 0 }}>
           {paymentIcons.map((payment) => (
             <img 
               key={payment.name} 
@@ -197,7 +197,7 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
         </div>
 
         {/* Copyright - white background, 10px fontsize, NOT editable */}
-        <div className="px-8 py-4 flex justify-between items-start border-t border-black/10" style={{ backgroundColor: '#FFFFFF', color: '#212121', fontSize: '10px' }}>
+        <div className="px-8 py-4 flex justify-between items-start" style={{ backgroundColor: '#FFFFFF', color: '#212121', fontSize: '10px' }}>
           <div>
             <div>{(block.content.copyright || 'Copyright © 2025 Pivovar ZICHOVEC.').replace(/\s*Všechna práva vyhrazena\.?/gi, '')}</div>
             <div>Všechna práva vyhrazena.</div>
