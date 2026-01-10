@@ -528,3 +528,8 @@ All colors MUST be HSL.
     padding-left: 0 !important;
   }
 }
+
+/* Místa block circular button */
+.mista-circle-btn {
+  border-radius: 100% !important;
+}
