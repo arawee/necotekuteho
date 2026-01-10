@@ -55,7 +55,7 @@ export const ZichovecHeaderWithMenuBlock = ({ block, onUpdate }: ZichovecHeaderW
 
   return (
     <div 
-      className="w-full flex flex-col justify-between px-8"
+      className="w-full relative"
       style={{ 
         backgroundColor: '#00C322', 
         width: '100%',
@@ -64,13 +64,13 @@ export const ZichovecHeaderWithMenuBlock = ({ block, onUpdate }: ZichovecHeaderW
         aspectRatio: '1440/416'
       }}
     >
-      {/* Logo - centered in upper area */}
-      <div className="flex-1 flex items-center justify-center">
+      {/* Logo - absolutely centered */}
+      <div className="absolute inset-0 flex items-center justify-center px-8">
         <ZichovecLogo />
       </div>
 
       {/* Menu - aligned to bottom */}
-      <div className="flex flex-wrap justify-center pb-6" style={{ gap: '8px' }}>
+      <div className="absolute bottom-0 left-0 right-0 flex flex-wrap justify-center pb-6" style={{ gap: '8px' }}>
         {menuItems.map((item, index) => (
           <div key={index} className="group flex items-center gap-1">
             <span
