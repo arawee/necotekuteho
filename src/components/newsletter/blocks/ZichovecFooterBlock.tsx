@@ -121,14 +121,14 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
                 href="tel:+420602555555"
                 className="hover:bg-black/10 px-1 cursor-pointer"
               >
-                {(block.content.footerText || 'tel. 602 555 555').replace(/^\+420\s*/, 'tel. ')}
+                {(block.content.footerText || '602 555 555').replace(/^\+420\s*/, '').replace(/^tel\.\s*/i, '')}
               </a>
             </p>
             <p className="mb-6">
               <a 
                 href="mailto:e-shop@pivovarzichovec.cz"
-                className="underline hover:no-underline cursor-pointer" 
-                style={{ color: '#212121', fontWeight: 'bold' }}
+                className="hover:no-underline cursor-pointer" 
+                style={{ color: '#212121', fontWeight: 'bold', textDecoration: 'underline' }}
               >
                 Email
               </a>
@@ -160,7 +160,7 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
                   newColumns[colIdx] = { ...newColumns[colIdx], title: e.currentTarget.textContent || '' };
                   onUpdate({ ...block.content, columns: newColumns } as any);
                 }}
-                style={{ color: '#212121', fontSize: '16px', fontWeight: 'normal', marginBottom: '1rem' }}
+                style={{ color: '#212121', fontSize: '16px', fontWeight: 700, marginBottom: '1rem' }}
               >
                 {column.title}
               </h4>
@@ -195,7 +195,7 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
         {/* Copyright - white background, 10px fontsize, NOT editable */}
         <div className="px-8 py-4 flex justify-between items-start border-t border-black/10" style={{ backgroundColor: '#FFFFFF', color: '#212121', fontSize: '10px' }}>
           <div>
-            <div>{block.content.copyright || 'Copyright © 2025 Pivovar ZICHOVEC.'}</div>
+            <div>{(block.content.copyright || 'Copyright © 2025 Pivovar ZICHOVEC.').replace(/\s*Všechna práva vyhrazena\.?/gi, '')}</div>
             <div>Všechna práva vyhrazena.</div>
           </div>
           <div className="flex gap-4">
