@@ -44,12 +44,6 @@ export const BlogPostsBlock = ({ block, onUpdate }: BlogPostsBlockProps) => {
       title: 'Chill day 7', 
       excerpt: 'Je to tady! Kouska od IP Pavlova. Na čepu ZICHOVEC! Otevíráme 21. 5. 2027. Máte žízeň?',
       url: '#'
-    },
-    { 
-      image: '', 
-      title: 'Chill day 7', 
-      excerpt: 'Je to tady! Kouska od IP Pavlova. Na čepu ZICHOVEC! Otevíráme 21. 5. 2027. Máte žízeň?',
-      url: '#'
     }
   ];
 
@@ -82,14 +76,14 @@ export const BlogPostsBlock = ({ block, onUpdate }: BlogPostsBlockProps) => {
   return (
     <div className="bg-white border border-border p-6">
       <div className="max-w-2xl mx-auto">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-6">
+        {/* Header - title 20px bold */}
+        <div className="flex justify-between items-center" style={{ marginBottom: '1rem' }}>
           <h2 
-            className="text-xl font-normal"
+            className="font-bold"
             contentEditable
             suppressContentEditableWarning
             onBlur={(e) => onUpdate({ ...block.content, title: e.currentTarget.textContent || '' })}
-            style={{ color: '#212121' }}
+            style={{ color: '#212121', fontSize: '20px' }}
           >
             {block.content.title || 'Novinky od ZICHOVCE'}
           </h2>
@@ -114,10 +108,10 @@ export const BlogPostsBlock = ({ block, onUpdate }: BlogPostsBlockProps) => {
           </div>
         </div>
 
-        {/* Blog posts grid */}
-        <div className="grid grid-cols-4 gap-4">
-          {posts.map((post: BlogPost, index: number) => (
-            <div key={index} className="group relative">
+        {/* Blog posts grid - flex with gap 12px */}
+        <div style={{ display: 'flex', gap: '12px' }}>
+          {posts.slice(0, 4).map((post: BlogPost, index: number) => (
+            <div key={index} className="group relative" style={{ flex: '1 1 0' }}>
               {/* Remove button */}
               <button
                 onClick={() => removePost(index)}
@@ -126,12 +120,12 @@ export const BlogPostsBlock = ({ block, onUpdate }: BlogPostsBlockProps) => {
                 <Trash2 className="w-3 h-3 text-red-500" />
               </button>
 
-              {/* Post image - no margin, directly connected to grey box */}
-              <div className="relative aspect-square overflow-hidden">
+              {/* Post image - 3/4 ratio */}
+              <div className="relative aspect-[3/4] overflow-hidden">
                 <ImageUpload
                   currentImage={post.image}
                   onImageUploaded={(url) => updatePost(index, 'image', url)}
-                  aspectRatio="square"
+                  aspectRatio="portrait"
                   placeholder="Nahrát foto"
                   className="w-full h-full"
                   showBorder={false}
@@ -140,7 +134,7 @@ export const BlogPostsBlock = ({ block, onUpdate }: BlogPostsBlockProps) => {
 
               {/* Grey box for title, excerpt and button - no gap to image */}
               <div 
-                className="p-3"
+                className="p-3 relative"
                 style={{ backgroundColor: '#F4F4F4' }}
               >
                 {/* Title - 20px bold */}
@@ -160,18 +154,24 @@ export const BlogPostsBlock = ({ block, onUpdate }: BlogPostsBlockProps) => {
                   {post.excerpt}
                 </p>
 
-                {/* Action button - 48px circular with 12px arrow */}
+                {/* Spacer for button positioning */}
+                <div style={{ height: '44px' }}></div>
+
+                {/* Action button - 36px circular outline, positioned bottom right */}
                 <button 
-                  className="flex items-center justify-center rounded-full"
+                  className="blog-circle-btn flex items-center justify-center absolute"
                   style={{ 
-                    width: '48px', 
-                    height: '48px', 
-                    backgroundColor: '#00C322',
-                    border: 'none'
+                    width: '36px', 
+                    height: '36px', 
+                    backgroundColor: 'transparent',
+                    border: '1px solid #00C322',
+                    borderRadius: '100%',
+                    bottom: '12px',
+                    right: '12px'
                   }}
                   onClick={() => setEditingPost(index)}
                 >
-                  <ArrowRight style={{ width: '12px', height: '12px', color: '#FFFFFF' }} />
+                  <ArrowRight style={{ width: '12px', height: '12px', color: '#00C322' }} />
                 </button>
               </div>
             </div>
@@ -179,15 +179,17 @@ export const BlogPostsBlock = ({ block, onUpdate }: BlogPostsBlockProps) => {
         </div>
 
         {/* Add post button */}
-        <div className="mt-4 flex justify-center">
-          <button
-            onClick={addPost}
-            className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500 transition-colors"
-          >
-            <Plus className="w-4 h-4" />
-            Přidat příspěvek
-          </button>
-        </div>
+        {posts.length < 4 && (
+          <div className="mt-4 flex justify-center">
+            <button
+              onClick={addPost}
+              className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500 transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+              Přidat příspěvek
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Edit Dialog */}
