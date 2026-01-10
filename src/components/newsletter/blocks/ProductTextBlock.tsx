@@ -1,5 +1,12 @@
 import { NewsletterBlock } from '@/types/newsletter';
 import { ImageUpload } from '@/components/ui/image-upload';
+import { useState } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 interface ProductTextBlockProps {
   block: NewsletterBlock;
@@ -7,12 +14,14 @@ interface ProductTextBlockProps {
 }
 
 export const ProductTextBlock = ({ block, onUpdate }: ProductTextBlockProps) => {
+  const [isEditing, setIsEditing] = useState(false);
+
   const productImage = block.content.image || '';
   const productName = block.content.title || 'Magop';
   const productText = block.content.text || 'V pátce roku 2019 vyhlášena servrem Untapped.com nejlepším pivem v České republice. New England IPA je moderním stylem, který vznikl v roce 2008 na východním pobřeží Spojených Států. Přinesl úplně nový pohled na stavbu americké IPA, zabil, který dařena velmi velké důraz na chmelovou arovatiku a hořkost se tak stavěla jen právhy doplńkem.';
 
   return (
-    <div className="bg-white rounded-lg border border-border p-6">
+    <div className="bg-white border border-border p-6">
       <div className="max-w-md mx-auto">
         {/* Product image */}
         <div className="relative mb-4 aspect-[3/4] overflow-hidden flex items-center justify-center">
@@ -26,14 +35,15 @@ export const ProductTextBlock = ({ block, onUpdate }: ProductTextBlockProps) => 
           />
         </div>
 
-        {/* Product info box */}
-        <div className="bg-white">
+        {/* Product info box - grey background */}
+        <div 
+          className="p-4 cursor-pointer"
+          style={{ backgroundColor: '#F4F4F4' }}
+          onClick={() => setIsEditing(true)}
+        >
           {/* Product name */}
           <h2 
             className="text-xl font-normal mb-4"
-            contentEditable
-            suppressContentEditableWarning
-            onBlur={(e) => onUpdate({ ...block.content, title: e.currentTarget.textContent || '' })}
             style={{ color: '#212121' }}
           >
             {productName}
@@ -42,15 +52,40 @@ export const ProductTextBlock = ({ block, onUpdate }: ProductTextBlockProps) => 
           {/* Product description */}
           <p 
             className="text-sm leading-relaxed"
-            contentEditable
-            suppressContentEditableWarning
-            onBlur={(e) => onUpdate({ ...block.content, text: e.currentTarget.textContent || '' })}
             style={{ color: '#212121' }}
           >
             {productText}
           </p>
         </div>
       </div>
+
+      {/* Edit Dialog */}
+      <Dialog open={isEditing} onOpenChange={setIsEditing}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Upravit produkt</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium">Název</label>
+              <input
+                className="w-full border p-2 text-sm"
+                value={productName}
+                onChange={(e) => onUpdate({ ...block.content, title: e.target.value })}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Popis</label>
+              <textarea
+                className="w-full border p-2 text-sm"
+                rows={5}
+                value={productText}
+                onChange={(e) => onUpdate({ ...block.content, text: e.target.value })}
+              />
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

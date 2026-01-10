@@ -1,7 +1,13 @@
 import { NewsletterBlock } from '@/types/newsletter';
 import { Input } from '@/components/ui/input';
 import { Plus, Trash2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useState } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 interface Feature {
   label: string;
@@ -21,9 +27,9 @@ interface PromoBoxBlockProps {
   onUpdate: (content: NewsletterBlock['content']) => void;
 }
 
-const colorOptions = ['#00D954', '#FFFFFF', '#F5F5F5', '#212121', '#FFF59D', '#FFAB91'];
-
 export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
+  const [editingButton, setEditingButton] = useState<number | null>(null);
+
   const defaultBoxes: PromoBox[] = [
     {
       title: 'Pivní předplatné?',
@@ -36,7 +42,7 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
       ],
       buttonText: '+ objevit předplatné',
       buttonUrl: '#',
-      bgColor: '#00D954'
+      bgColor: '#00C322'
     },
     {
       title: 'Věrnostní program',
@@ -62,7 +68,7 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
       ],
       buttonText: '+ zeptat se',
       buttonUrl: '#',
-      bgColor: '#F5F5F5'
+      bgColor: '#F4F4F4'
     }
   ];
 
@@ -94,31 +100,37 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
     onUpdate({ ...block.content, boxes: newBoxes } as any);
   };
 
-  const isLightBg = (color: string) => color === '#FFFFFF' || color === '#F5F5F5' || color === '#00D954' || color === '#FFF59D' || color === '#FFAB91';
+  const isLightBg = (color: string) => {
+    const hex = color.replace('#', '');
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    return brightness > 128;
+  };
 
   return (
-    <div className="bg-white rounded-lg border border-border p-6">
+    <div className="bg-white border border-border p-6">
       <div className="max-w-2xl mx-auto">
         <div className="grid grid-cols-3 gap-4">
           {boxes.map((box, index) => (
             <div 
               key={index} 
-              className="rounded-lg p-6 group relative"
+              className="p-6 group relative"
               style={{ 
                 backgroundColor: box.bgColor,
                 border: box.bgColor === '#FFFFFF' ? '1px solid #E5E5E5' : 'none'
               }}
             >
-              {/* Color picker */}
-              <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
-                {colorOptions.map((color) => (
-                  <button
-                    key={color}
-                    onClick={() => updateBox(index, 'bgColor', color)}
-                    className="w-4 h-4 rounded-full border border-gray-400"
-                    style={{ backgroundColor: color }}
-                  />
-                ))}
+              {/* HEX Color picker */}
+              <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <input
+                  type="color"
+                  value={box.bgColor}
+                  onChange={(e) => updateBox(index, 'bgColor', e.target.value)}
+                  className="w-6 h-6 cursor-pointer border-0"
+                  title="Vybrat barvu"
+                />
               </div>
 
               <h3 
@@ -163,13 +175,13 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
                 ))}
                 <button
                   onClick={() => addFeature(index)}
-                  className="text-xs px-2 py-0.5 rounded border border-dashed border-gray-400 hover:border-green-500 text-gray-400 hover:text-green-500"
+                  className="text-xs px-2 py-0.5 border border-dashed border-gray-400 hover:border-green-500 text-gray-400 hover:text-green-500"
                 >
                   + přidat
                 </button>
               </div>
 
-              {/* Button - rectangular */}
+              {/* Button */}
               <div className="space-y-2">
                 <button 
                   className="text-sm px-4 py-2 border w-full"
@@ -178,27 +190,42 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
                     color: isLightBg(box.bgColor) ? '#212121' : '#FFFFFF',
                     backgroundColor: 'transparent'
                   }}
+                  onClick={() => setEditingButton(index)}
                 >
-                  <span
-                    contentEditable
-                    suppressContentEditableWarning
-                    onBlur={(e) => updateBox(index, 'buttonText', e.currentTarget.textContent || '')}
-                  >
-                    {box.buttonText}
-                  </span>
+                  {box.buttonText}
                 </button>
-                <Input
-                  type="text"
-                  value={box.buttonUrl}
-                  onChange={(e) => updateBox(index, 'buttonUrl', e.target.value)}
-                  placeholder="URL tlačítka"
-                  className="h-6 text-xs bg-white/50"
-                />
               </div>
             </div>
           ))}
         </div>
       </div>
+
+      {/* Edit Button Dialog */}
+      <Dialog open={editingButton !== null} onOpenChange={(open) => !open && setEditingButton(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Upravit tlačítko</DialogTitle>
+          </DialogHeader>
+          {editingButton !== null && (
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm font-medium">Text tlačítka</label>
+                <Input
+                  value={boxes[editingButton]?.buttonText || ''}
+                  onChange={(e) => updateBox(editingButton, 'buttonText', e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium">URL</label>
+                <Input
+                  value={boxes[editingButton]?.buttonUrl || ''}
+                  onChange={(e) => updateBox(editingButton, 'buttonUrl', e.target.value)}
+                />
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

@@ -14,9 +14,9 @@ export const GallerySingleBlock = ({ block, onUpdate }: GallerySingleBlockProps)
   };
 
   return (
-    <div className="bg-white rounded-lg border border-border p-6">
+    <div className="bg-white border border-border">
       <div className="max-w-2xl mx-auto">
-        <div className="aspect-[16/9] rounded-lg overflow-hidden">
+        <div className="aspect-[16/9] overflow-hidden">
           <ImageUpload
             currentImage={photo.url}
             onImageUploaded={updatePhoto}

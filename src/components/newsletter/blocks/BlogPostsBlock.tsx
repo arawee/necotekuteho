@@ -1,8 +1,15 @@
 import { NewsletterBlock } from '@/types/newsletter';
 import { ImageUpload } from '@/components/ui/image-upload';
-import { Plus } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { ArrowRight } from 'lucide-react';
 import { useState } from 'react';
+import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 interface BlogPost {
   image: string;
@@ -17,8 +24,7 @@ interface BlogPostsBlockProps {
 }
 
 export const BlogPostsBlock = ({ block, onUpdate }: BlogPostsBlockProps) => {
-  const [editingUrl, setEditingUrl] = useState<number | null>(null);
-  const [editingViewAllUrl, setEditingViewAllUrl] = useState(false);
+  const [editingPost, setEditingPost] = useState<number | null>(null);
 
   const defaultPosts: BlogPost[] = [
     { 
@@ -48,8 +54,9 @@ export const BlogPostsBlock = ({ block, onUpdate }: BlogPostsBlockProps) => {
   ];
 
   const posts = (block.content as any).posts || defaultPosts;
+  const showViewAll = (block.content as any).showViewAll !== false;
   const viewAllUrl = block.content.viewAllUrl || '#';
-  const viewAllText = block.content.viewAllText || '→ zobrazit vše';
+  const viewAllText = block.content.viewAllText || 'zobrazit vše';
 
   const updatePost = (index: number, field: keyof BlogPost, value: any) => {
     const newPosts = [...posts];
@@ -58,7 +65,7 @@ export const BlogPostsBlock = ({ block, onUpdate }: BlogPostsBlockProps) => {
   };
 
   return (
-    <div className="bg-white rounded-lg border border-border p-6">
+    <div className="bg-white border border-border p-6">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
@@ -71,33 +78,21 @@ export const BlogPostsBlock = ({ block, onUpdate }: BlogPostsBlockProps) => {
           >
             {block.content.title || 'Novinky od ZICHOVCE'}
           </h2>
-          <div className="relative">
-            {editingViewAllUrl ? (
-              <div className="flex gap-2 items-center">
-                <Input
-                  value={viewAllUrl}
-                  onChange={(e) => onUpdate({ ...block.content, viewAllUrl: e.target.value })}
-                  placeholder="URL"
-                  className="w-40 h-7 text-xs"
-                  onBlur={() => setEditingViewAllUrl(false)}
-                  autoFocus
-                />
-              </div>
-            ) : (
+          <div className="flex items-center gap-4">
+            <label className="flex items-center gap-2 text-xs text-muted-foreground">
+              <Checkbox
+                checked={showViewAll}
+                onCheckedChange={(checked) => onUpdate({ ...block.content, showViewAll: checked } as any)}
+              />
+              Zobrazit vše
+            </label>
+            {showViewAll && (
               <span 
-                className="text-sm underline hover:no-underline cursor-pointer" 
+                className="text-sm cursor-pointer"
                 style={{ color: '#212121' }}
-                contentEditable
-                suppressContentEditableWarning
-                onBlur={(e) => onUpdate({ ...block.content, viewAllText: e.currentTarget.textContent || '' })}
-                onClick={(e) => {
-                  if (e.detail === 2) {
-                    setEditingViewAllUrl(true);
-                  }
-                }}
-                title="Double-click to edit URL"
+                onClick={() => setEditingPost(-1)}
               >
-                {viewAllText}
+                → {viewAllText}
               </span>
             )}
           </div>
@@ -108,7 +103,7 @@ export const BlogPostsBlock = ({ block, onUpdate }: BlogPostsBlockProps) => {
           {posts.map((post: BlogPost, index: number) => (
             <div key={index} className="group">
               {/* Post image */}
-              <div className="relative mb-3 rounded-lg aspect-square overflow-hidden">
+              <div className="relative mb-3 aspect-square overflow-hidden">
                 <ImageUpload
                   currentImage={post.image}
                   onImageUploaded={(url) => updatePost(index, 'image', url)}
@@ -121,49 +116,90 @@ export const BlogPostsBlock = ({ block, onUpdate }: BlogPostsBlockProps) => {
 
               {/* Post info */}
               <h3 
-                className="font-medium text-sm mb-2"
-                contentEditable
-                suppressContentEditableWarning
-                onBlur={(e) => updatePost(index, 'title', e.currentTarget.textContent || '')}
+                className="font-medium text-sm mb-2 cursor-pointer"
+                onClick={() => setEditingPost(index)}
                 style={{ color: '#212121' }}
               >
                 {post.title}
               </h3>
-              <p 
-                className="text-xs text-muted-foreground mb-3 line-clamp-3"
-                contentEditable
-                suppressContentEditableWarning
-                onBlur={(e) => updatePost(index, 'excerpt', e.currentTarget.textContent || '')}
+              {/* Grey box for excerpt */}
+              <div 
+                className="p-2 mb-3"
+                style={{ backgroundColor: '#F4F4F4' }}
               >
-                {post.excerpt}
-              </p>
-
-              {/* Action button with editable URL */}
-              <div className="relative">
-                {editingUrl === index ? (
-                  <Input
-                    value={post.url || '#'}
-                    onChange={(e) => updatePost(index, 'url', e.target.value)}
-                    placeholder="URL"
-                    className="w-full h-7 text-xs"
-                    onBlur={() => setEditingUrl(null)}
-                    autoFocus
-                  />
-                ) : (
-                  <button 
-                    className="w-6 h-6 rounded-full flex items-center justify-center"
-                    style={{ backgroundColor: '#00D954' }}
-                    onClick={() => setEditingUrl(index)}
-                    title="Click to edit URL"
-                  >
-                    <Plus className="w-4 h-4" style={{ color: '#212121' }} />
-                  </button>
-                )}
+                <p 
+                  className="text-xs text-muted-foreground line-clamp-3 cursor-pointer"
+                  onClick={() => setEditingPost(index)}
+                >
+                  {post.excerpt}
+                </p>
               </div>
+
+              {/* Action button - same style as Místa */}
+              <button 
+                className="w-6 h-6 flex items-center justify-center border"
+                style={{ borderColor: '#00C322' }}
+                onClick={() => setEditingPost(index)}
+              >
+                <ArrowRight className="w-4 h-4" style={{ color: '#00C322' }} />
+              </button>
             </div>
           ))}
         </div>
       </div>
+
+      {/* Edit Dialog */}
+      <Dialog open={editingPost !== null} onOpenChange={(open) => !open && setEditingPost(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{editingPost === -1 ? 'Upravit "zobrazit vše"' : 'Upravit příspěvek'}</DialogTitle>
+          </DialogHeader>
+          {editingPost === -1 ? (
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm font-medium">Text</label>
+                <Input
+                  value={viewAllText}
+                  onChange={(e) => onUpdate({ ...block.content, viewAllText: e.target.value })}
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium">URL</label>
+                <Input
+                  value={viewAllUrl}
+                  onChange={(e) => onUpdate({ ...block.content, viewAllUrl: e.target.value })}
+                />
+              </div>
+            </div>
+          ) : editingPost !== null && (
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm font-medium">Titulek</label>
+                <Input
+                  value={posts[editingPost]?.title || ''}
+                  onChange={(e) => updatePost(editingPost, 'title', e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium">Popis</label>
+                <textarea
+                  className="w-full border p-2 text-sm"
+                  rows={3}
+                  value={posts[editingPost]?.excerpt || ''}
+                  onChange={(e) => updatePost(editingPost, 'excerpt', e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium">URL</label>
+                <Input
+                  value={posts[editingPost]?.url || ''}
+                  onChange={(e) => updatePost(editingPost, 'url', e.target.value)}
+                />
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
