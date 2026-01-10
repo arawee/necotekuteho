@@ -144,7 +144,7 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
         </div>
 
         {/* Products flex */}
-        <div style={{ display: 'flex', gap: '16px' }}>
+        <div style={{ display: 'flex', gap: '12px' }}>
           {products.map((product: Product, index: number) => (
             <div key={index} className="group relative">
               {/* Remove button */}
@@ -181,17 +181,17 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
                 ))}
               </div>
 
-              {/* Product info - title bold */}
+              {/* Product info - title bold 700 */}
               <h3 
-                className="font-bold text-sm mb-1 cursor-pointer"
+                className="text-sm mb-1 cursor-pointer"
                 onClick={() => setEditingProduct(index)}
-                style={{ color: '#212121' }}
+                style={{ color: '#212121', fontWeight: 700 }}
               >
                 {product.name}
               </h3>
               
-              {/* Alcohol and volume - 10px, volume right aligned */}
-              <div className="text-muted-foreground mb-2 flex items-center justify-between" style={{ fontSize: '10px' }}>
+              {/* Alcohol and volume - 10px black, volume right aligned */}
+              <div className="mb-2 flex items-center justify-between" style={{ fontSize: '10px', color: '#000000' }}>
                 <span>Alk. → {product.alcohol}% obj.</span>
                 <span>{product.volume}</span>
               </div>
