@@ -212,12 +212,12 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
                     {product.price}
                   </span>
                 )}
-                {/* Circular green button 48px with black plus 10px */}
+                {/* Circular green button 36px with black plus 10px */}
                 <button 
                   className="ml-auto flex items-center justify-center !rounded-full"
                   style={{ 
-                    width: '48px', 
-                    height: '48px', 
+                    width: '36px', 
+                    height: '36px', 
                     backgroundColor: '#00C322',
                     border: 'none'
                   }}
