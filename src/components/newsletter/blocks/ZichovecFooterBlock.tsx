@@ -18,6 +18,7 @@ import paymentStripe from '@/assets/payment-stripe.png';
 import paymentPaypal from '@/assets/payment-paypal.png';
 import paymentGooglepay from '@/assets/payment-googlepay.png';
 import paymentApplepay from '@/assets/payment-applepay.png';
+import paymentBitpay from '@/assets/payment-bitpay.png';
 
 interface FooterLink {
   text: string;
@@ -45,6 +46,7 @@ const paymentIcons = [
   { name: 'PayPal', src: paymentPaypal },
   { name: 'GPay', src: paymentGooglepay },
   { name: 'ApplePay', src: paymentApplepay },
+  { name: 'BitPay', src: paymentBitpay },
 ];
 
 export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProps) => {
@@ -114,15 +116,13 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
         <div className="p-8 grid grid-cols-4 gap-6" style={{ fontSize: '12px' }}>
           {/* Contact column - first column bold and underlined */}
           <div>
-            <p className="mb-4" style={{ fontFamily: "'JetBrains Mono', monospace", color: '#212121', fontWeight: 'bold', textDecoration: 'underline' }}>
-              <span 
-                contentEditable 
-                suppressContentEditableWarning
-                onBlur={(e) => onUpdate({ ...block.content, footerText: e.currentTarget.textContent || '' })}
-                className="hover:bg-black/10 px-1 cursor-text"
+            <p style={{ fontFamily: "'JetBrains Mono', monospace", color: '#212121', fontWeight: 'bold', textDecoration: 'underline', marginBottom: '1rem' }}>
+              <a 
+                href="tel:+420602555555"
+                className="hover:bg-black/10 px-1 cursor-pointer"
               >
                 {block.content.footerText || 'tel. 602 555 555'}
-              </span>
+              </a>
             </p>
             <p className="mb-6">
               <a 
@@ -180,8 +180,8 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
           ))}
         </div>
 
-        {/* Payment icons - white background */}
-        <div className="px-8 py-4 flex justify-center gap-3 border-t border-black/10" style={{ backgroundColor: '#FFFFFF' }}>
+        {/* Payment icons - white background, 10px gap */}
+        <div className="px-8 py-4 flex justify-center border-t border-black/10" style={{ backgroundColor: '#FFFFFF', gap: '10px' }}>
           {paymentIcons.map((payment) => (
             <img 
               key={payment.name} 
@@ -193,13 +193,18 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
         </div>
 
         {/* Copyright - white background, 10px fontsize, NOT editable */}
-        <div className="px-8 py-4 flex justify-between items-center border-t border-black/10" style={{ backgroundColor: '#FFFFFF', color: '#212121', fontSize: '10px' }}>
-          <span>
-            {block.content.copyright || 'Copyright © 2025 Pivovar ZICHOVEC. Všechna práva vyhrazena.'}
-          </span>
-          <div className="flex gap-4">
-            <span>Vývoj <a href="https://www.fv-studio.cz/" target="_blank" rel="noopener noreferrer" style={{ color: '#A073FF', textDecoration: 'underline' }}>FY STUDIO + Shoptet</a></span>
-            <span>Design <a href="https://www.vanek.studio" target="_blank" rel="noopener noreferrer" style={{ color: '#A073FF', textDecoration: 'underline' }}>Vaněk.Studio</a></span>
+        <div className="px-8 py-4 border-t border-black/10" style={{ backgroundColor: '#FFFFFF', color: '#212121', fontSize: '10px' }}>
+          <div className="mb-1">
+            {block.content.copyright || 'Copyright © 2025 Pivovar ZICHOVEC.'}
+          </div>
+          <div className="mb-1">
+            Všechna práva vyhrazena.
+          </div>
+          <div className="mb-1">
+            Vývoj <a href="https://www.fv-studio.cz/" target="_blank" rel="noopener noreferrer" style={{ color: '#A073FF', textDecoration: 'underline' }}>FY STUDIO + Shoptet</a>
+          </div>
+          <div>
+            Design <a href="https://www.vanek.studio" target="_blank" rel="noopener noreferrer" style={{ color: '#A073FF', textDecoration: 'underline' }}>Vaněk.Studio</a>
           </div>
         </div>
       </div>
