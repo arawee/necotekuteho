@@ -136,15 +136,13 @@ export const CategoriesBlock = ({ block, onUpdate }: CategoriesBlockProps) => {
         {/* Add button */}
         {categories.length < 8 && (
           <div className="mt-4 flex justify-center">
-            <Button
+            <button
               onClick={addCategory}
-              variant="outline"
-              size="sm"
-              className="gap-1"
+              className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500 transition-colors"
             >
               <CustomPlusIcon color="currentColor" />
               Přidat kategorii
-            </Button>
+            </button>
           </div>
         )}
       </div>

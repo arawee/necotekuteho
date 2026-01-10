@@ -2,6 +2,7 @@ import { NewsletterBlock } from '@/types/newsletter';
 import { Trash2 } from 'lucide-react';
 import { ImageUpload } from '@/components/ui/image-upload';
 import { useState } from 'react';
+import { CustomPlusIcon } from '@/components/icons/CustomIcons';
 import {
   Dialog,
   DialogContent,
@@ -138,9 +139,10 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
           <div className="mt-6 flex justify-center">
             <button
               onClick={addBenefit}
-              className="px-3 py-1.5 text-sm border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500 flex items-center gap-1"
+              className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500 transition-colors"
             >
-              + Přidat benefit
+              <CustomPlusIcon color="currentColor" />
+              Přidat benefit
             </button>
           </div>
         )}

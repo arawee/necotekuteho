@@ -135,10 +135,11 @@ export const ArticleTextBlock = ({ block, onUpdate }: ArticleTextBlockProps) => 
           if (!hasAnyMeta) {
             return (
               <button
-                className="text-xs px-3 py-1 border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500"
+                className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500 transition-colors"
                 onClick={() => setIsEditingMeta(true)}
               >
-                + Přidat metadata
+                <CustomPlusIcon color="currentColor" />
+                Přidat metadata
               </button>
             );
           }
