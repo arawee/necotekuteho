@@ -23,6 +23,17 @@ interface PoziceBlockProps {
   onUpdate: (content: NewsletterBlock['content']) => void;
 }
 
+// Helper function to determine if a color is dark
+const isColorDark = (hexColor: string): boolean => {
+  const hex = hexColor.replace('#', '');
+  const r = parseInt(hex.substr(0, 2), 16);
+  const g = parseInt(hex.substr(2, 2), 16);
+  const b = parseInt(hex.substr(4, 2), 16);
+  // Calculate relative luminance
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance < 0.5;
+};
+
 export const PoziceBlock = ({ block, onUpdate }: PoziceBlockProps) => {
   const [editingPosition, setEditingPosition] = useState<number | null>(null);
 
@@ -140,30 +151,30 @@ export const PoziceBlock = ({ block, onUpdate }: PoziceBlockProps) => {
                 <span className="text-[10px] text-muted-foreground">{position.bgColor}</span>
               </div>
 
-              {/* Position title - 16px, font-weight 700, black text */}
+              {/* Position title - 16px, font-weight 700, dynamic text color */}
               <h3 
                 className="mb-3 cursor-pointer"
                 onClick={() => setEditingPosition(index)}
-                style={{ color: '#000000', fontSize: '16px', fontWeight: 700 }}
+                style={{ color: isColorDark(position.bgColor || '#F4F4F4') ? '#FFFFFF' : '#000000', fontSize: '16px', fontWeight: 700 }}
               >
                 {position.title}
               </h3>
 
-              {/* Position description - black text */}
+              {/* Position description - dynamic text color */}
               <p 
                 className="text-xs cursor-pointer"
                 onClick={() => setEditingPosition(index)}
-                style={{ color: '#000000', marginBottom: '1rem' }}
+                style={{ color: isColorDark(position.bgColor || '#F4F4F4') ? '#FFFFFF' : '#000000', marginBottom: '1rem' }}
               >
                 {position.description}
               </p>
 
-              {/* Action button - with border and arrow */}
+              {/* Action button - with border and arrow, dynamic colors */}
               <button 
                 className="text-xs px-3 py-2 border flex items-center justify-center gap-2"
                 style={{ 
-                  borderColor: '#212121', 
-                  color: '#212121',
+                  borderColor: isColorDark(position.bgColor || '#F4F4F4') ? '#FFFFFF' : '#212121', 
+                  color: isColorDark(position.bgColor || '#F4F4F4') ? '#FFFFFF' : '#212121',
                   borderWidth: '1px'
                 }}
                 onClick={() => setEditingPosition(index)}
