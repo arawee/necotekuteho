@@ -23,8 +23,8 @@ export const ProductTextBlock = ({ block, onUpdate }: ProductTextBlockProps) => 
   return (
     <div className="bg-white border border-border p-6">
       <div className="max-w-md mx-auto">
-        {/* Product image - no margin bottom */}
-        <div className="relative aspect-[3/4] overflow-hidden flex items-center justify-center">
+        {/* Product image - 4/5 aspect ratio */}
+        <div className="relative aspect-[4/5] overflow-hidden flex items-center justify-center">
           <ImageUpload
             currentImage={productImage}
             onImageUploaded={(url) => onUpdate({ ...block.content, image: url })}
@@ -49,10 +49,10 @@ export const ProductTextBlock = ({ block, onUpdate }: ProductTextBlockProps) => 
             {productName}
           </h2>
 
-          {/* Product description - 120% line height */}
+          {/* Product description - 12px, weight 700, 120% line height */}
           <p 
-            className="text-sm"
-            style={{ color: '#212121', lineHeight: '120%' }}
+            className="font-bold"
+            style={{ color: '#212121', fontSize: '12px', lineHeight: '120%' }}
           >
             {productText}
           </p>
