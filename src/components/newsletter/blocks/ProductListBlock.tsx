@@ -181,11 +181,11 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
                 ))}
               </div>
 
-              {/* Product info - title bold 700 */}
+              {/* Product info - title bold 700, 20px */}
               <h3 
-                className="text-sm mb-1 cursor-pointer"
+                className="mb-1 cursor-pointer"
                 onClick={() => setEditingProduct(index)}
-                style={{ color: '#212121', fontWeight: 700 }}
+                style={{ color: '#212121', fontWeight: 700, fontSize: '20px' }}
               >
                 {product.name}
               </h3>
@@ -196,19 +196,19 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
                 <span>{product.volume}</span>
               </div>
               
-              {/* Price */}
+              {/* Price - bold, discounted 10px */}
               <div className="flex items-center gap-2">
                 {product.salePrice ? (
                   <>
-                    <span className="text-sm font-medium" style={{ color: '#FF4C4C' }}>
+                    <span style={{ color: '#FF4C4C', fontWeight: 700 }}>
                       {product.salePrice}
                     </span>
-                    <span className="text-xs line-through text-muted-foreground">
+                    <span className="line-through" style={{ fontSize: '10px', color: '#666' }}>
                       {product.price}
                     </span>
                   </>
                 ) : (
-                  <span className="text-sm font-medium" style={{ color: '#212121' }}>
+                  <span style={{ color: '#212121', fontWeight: 700 }}>
                     {product.price}
                   </span>
                 )}
