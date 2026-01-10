@@ -60,7 +60,7 @@ export const ZichovecHeaderWithMenuBlock = ({ block, onUpdate }: ZichovecHeaderW
         backgroundColor: '#00C322', 
         width: '100%',
         maxWidth: '1440px',
-        height: '416px',
+        aspectRatio: '3.4615384615',
         position: 'relative'
       }}
     >
