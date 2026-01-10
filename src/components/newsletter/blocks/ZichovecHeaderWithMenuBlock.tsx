@@ -70,12 +70,12 @@ export const ZichovecHeaderWithMenuBlock = ({ block, onUpdate }: ZichovecHeaderW
       </div>
 
       {/* Menu - aligned to bottom */}
-      <div style={{ position: 'absolute', bottom: '24px', left: 0, right: 0, display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '8px' }}>
+      <div style={{ position: 'absolute', bottom: '8px', left: 0, right: 0, display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '8px' }}>
         {menuItems.map((item, index) => (
           <div key={index} className="group flex items-center gap-1">
             <span
-              className="cursor-pointer hover:underline text-sm font-bold"
-              style={{ color: '#212121', fontStyle: 'normal' }}
+              className="cursor-pointer hover:underline font-bold"
+              style={{ color: '#212121', fontStyle: 'normal', fontSize: '12px' }}
               onClick={() => setEditingMenuItem(index)}
             >
               {item.text}
