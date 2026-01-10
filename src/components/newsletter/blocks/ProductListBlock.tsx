@@ -40,11 +40,12 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
   const defaultProducts: Product[] = [
     { image: '', name: 'Magor 15', alcohol: '5,9', volume: '750 ml', price: '113 Kč', tags: [{ text: 'Polotmavé bock', color: 'dark' }], url: '#' },
     { image: '', name: 'Sour Passion Fruit', alcohol: '5,9', volume: '750 ml', price: '167 Kč', salePrice: '90 Kč', tags: [{ text: 'Relax', color: 'dark' }, { text: 'Poslední šance', color: 'red' }], url: '#' },
-    { image: '', name: 'Milky', alcohol: '5,9', volume: '750 ml', price: '113 Kč', tags: [{ text: 'Neipa', color: 'dark' }, { text: 'Novinka', color: 'green' }], url: '#' },
-    { image: '', name: 'Juicy Lucy', alcohol: '5,9', volume: '750 ml', price: '113 Kč', tags: [{ text: 'Relax', color: 'dark' }], url: '#' }
+    { image: '', name: 'Milky', alcohol: '5,9', volume: '750 ml', price: '113 Kč', tags: [{ text: 'Neipa', color: 'dark' }, { text: 'Novinka', color: 'green' }], url: '#' }
   ];
 
-  const products: Product[] = (block.content as any).products || defaultProducts;
+  // Max 4 products
+  const allProducts: Product[] = (block.content as any).products || defaultProducts;
+  const products: Product[] = allProducts.slice(0, 4);
   const showViewAll = (block.content as any).showViewAll !== false;
   const viewAllText = (block.content as any).viewAllText || 'zobrazit vše';
   const viewAllUrl = (block.content as any).viewAllUrl || '#';
@@ -56,6 +57,7 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
   };
 
   const addProduct = () => {
+    if (products.length >= 4) return;
     const newProduct: Product = {
       image: '',
       name: 'Nový produkt',
@@ -229,16 +231,18 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
           ))}
         </div>
 
-        {/* Add product button */}
-        <div className="mt-4 flex justify-center">
-          <button
-            onClick={addProduct}
-            className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500 transition-colors"
-          >
-            <Plus className="w-4 h-4" />
-            Přidat produkt
-          </button>
-        </div>
+        {/* Add product button - only show if less than 4 products */}
+        {products.length < 4 && (
+          <div className="mt-4 flex justify-center">
+            <button
+              onClick={addProduct}
+              className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500 transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+              Přidat produkt
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Edit Dialog */}

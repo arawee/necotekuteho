@@ -37,8 +37,7 @@ export const blockTemplates: BlockTemplate[] = [
       benefits: [
         { icon: '', title: 'Experiment', description: 'Náš pivovar rád experimentuje a neustále objevuje nové chutě a způsoby vaření piva.' },
         { icon: '', title: 'Radost', description: 'Pivo jako radost, zážitek, komunita.' },
-        { icon: '', title: 'Komunita', description: 'Propojujeme zákazníky s výrobou, sládky, inspirací, chutěmi i místem.' },
-        { icon: '', title: 'Kvalita', description: 'Dbáme na autenticitu a kvalitu vstupních surovin.' }
+        { icon: '', title: 'Komunita', description: 'Propojujeme zákazníky s výrobou, sládky, inspirací, chutěmi i místem.' }
       ]
     }
   },
