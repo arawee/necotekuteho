@@ -571,6 +571,10 @@ function getNewsletterCSS(): string {
       line-height: 1.5;
     }
     
+    .newsletter-email h2 {
+      font-weight: 700;
+    }
+    
     /* Responsive */
     @media only screen and (max-width: 620px) {
       table[class="wrap"] {
