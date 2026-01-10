@@ -109,10 +109,10 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
   return (
     <div className="bg-white border border-border p-6">
       <div className="max-w-2xl mx-auto">
-        {/* Header - title 20px */}
+        {/* Header - title 20px bold */}
         <div className="flex justify-between items-center mb-6">
           <h2 
-            className="font-normal"
+            className="font-bold"
             contentEditable
             suppressContentEditableWarning
             onBlur={(e) => onUpdate({ ...block.content, title: e.currentTarget.textContent || '' })}
@@ -141,8 +141,8 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
           </div>
         </div>
 
-        {/* Products grid */}
-        <div className="grid grid-cols-4 gap-4">
+        {/* Products flex */}
+        <div style={{ display: 'flex', gap: '16px' }}>
           {products.map((product: Product, index: number) => (
             <div key={index} className="group relative">
               {/* Remove button */}
@@ -153,8 +153,8 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
                 <Trash2 className="w-3 h-3 text-red-500" />
               </button>
 
-              {/* Product image */}
-              <div className="relative mb-3 bg-muted aspect-[3/4] overflow-hidden">
+              {/* Product image - no margin bottom */}
+              <div className="relative bg-muted aspect-[3/4] overflow-hidden" style={{ marginBottom: '0rem' }}>
                 <ImageUpload
                   currentImage={product.image}
                   onImageUploaded={(url) => updateProduct(index, 'image', url)}
@@ -179,18 +179,19 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
                 ))}
               </div>
 
-              {/* Product info */}
+              {/* Product info - title bold */}
               <h3 
-                className="font-medium text-sm mb-1 cursor-pointer"
+                className="font-bold text-sm mb-1 cursor-pointer"
                 onClick={() => setEditingProduct(index)}
                 style={{ color: '#212121' }}
               >
                 {product.name}
               </h3>
               
-              {/* Alcohol and volume */}
-              <div className="text-xs text-muted-foreground mb-2 flex items-center gap-1">
-                <span>Alk. → {product.alcohol}% obj. {product.volume}</span>
+              {/* Alcohol and volume - 10px, volume right aligned */}
+              <div className="text-muted-foreground mb-2 flex items-center justify-between" style={{ fontSize: '10px' }}>
+                <span>Alk. → {product.alcohol}% obj.</span>
+                <span>{product.volume}</span>
               </div>
               
               {/* Price */}
@@ -209,18 +210,19 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
                     {product.price}
                   </span>
                 )}
-                {/* Circular green button 48px with white plus 10px */}
+                {/* Circular green button 48px with black plus 10px */}
                 <button 
-                  className="ml-auto flex items-center justify-center rounded-full"
+                  className="ml-auto flex items-center justify-center"
                   style={{ 
                     width: '48px', 
                     height: '48px', 
                     backgroundColor: '#00C322',
-                    border: 'none'
+                    border: 'none',
+                    borderRadius: '50%'
                   }}
                   onClick={() => setEditingProduct(index)}
                 >
-                  <Plus style={{ width: '10px', height: '10px', color: '#FFFFFF' }} />
+                  <Plus style={{ width: '10px', height: '10px', color: '#000000' }} />
                 </button>
               </div>
             </div>

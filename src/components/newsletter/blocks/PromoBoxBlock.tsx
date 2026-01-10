@@ -148,7 +148,7 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
               </div>
 
               <h3 
-                className="font-medium mb-4"
+                className="font-bold mb-4"
                 contentEditable
                 suppressContentEditableWarning
                 onBlur={(e) => updateBox(index, 'title', e.currentTarget.textContent || '')}
@@ -159,7 +159,7 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
               
               <div className="space-y-2 mb-6">
                 {box.features.map((feature, fIdx) => (
-                  <div key={fIdx} className="text-xs flex items-start gap-1 group/feature">
+                  <div key={fIdx} className="text-xs flex items-start gap-1 group/feature" style={{ marginTop: '0.25rem' }}>
                     <span 
                       className="cursor-text"
                       contentEditable
