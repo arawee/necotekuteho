@@ -8,7 +8,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Plus, Trash2 } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
+import { CustomPlusIcon } from '@/components/icons/CustomIcons';
 
 interface TagItem {
   text: string;
@@ -235,7 +236,7 @@ export const ArticleTextBlock = ({ block, onUpdate }: ArticleTextBlockProps) => 
                   onClick={addTag}
                   className="text-xs px-2 py-1 border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500 flex items-center gap-1"
                 >
-                  <Plus className="w-3 h-3" /> Přidat tag
+                  <CustomPlusIcon color="currentColor" /> Přidat tag
                 </button>
               </div>
             </div>
@@ -270,7 +271,7 @@ export const ArticleTextBlock = ({ block, onUpdate }: ArticleTextBlockProps) => 
                   onClick={addShare}
                   className="text-xs px-2 py-1 border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500 flex items-center gap-1"
                 >
-                  <Plus className="w-3 h-3" /> Přidat odkaz
+                  <CustomPlusIcon color="currentColor" /> Přidat odkaz
                 </button>
               </div>
             </div>
