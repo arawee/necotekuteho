@@ -533,3 +533,8 @@ All colors MUST be HSL.
 .mista-circle-btn {
   border-radius: 100% !important;
 }
+
+/* Blog posts circular button */
+.blog-circle-btn {
+  border-radius: 100% !important;
+}
