@@ -2,7 +2,8 @@ import { NewsletterBlock } from '@/types/newsletter';
 import { ImageUpload } from '@/components/ui/image-upload';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Plus, Trash2, ArrowRight } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
+import { CustomPlusIcon, CustomArrowIcon } from '@/components/icons/CustomIcons';
 import { useState } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -125,7 +126,7 @@ export const MistaBlock = ({ block, onUpdate }: MistaBlockProps) => {
                   }}
                   onClick={() => setEditingPlace(index)}
                 >
-                  <ArrowRight style={{ width: '12px', height: '12px', color: '#00C322' }} />
+                  <CustomArrowIcon color="#00C322" />
                 </button>
                 <h3 
                   className="truncate cursor-pointer"
@@ -148,7 +149,7 @@ export const MistaBlock = ({ block, onUpdate }: MistaBlockProps) => {
               size="sm"
               className="gap-1"
             >
-              <Plus className="w-4 h-4" />
+              <CustomPlusIcon color="currentColor" />
               Přidat místo
             </Button>
           </div>

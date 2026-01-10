@@ -3,8 +3,8 @@ import { blockTemplates } from '@/data/blockTemplates';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Card, CardContent } from '@/components/ui/card';
 import { NewsletterBlock } from '@/types/newsletter';
-import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { CustomPlusIcon } from '@/components/icons/CustomIcons';
 
 interface BlockSelectionDialogProps {
   onAddBlock: (template: typeof blockTemplates[0]) => void;
@@ -42,7 +42,7 @@ export function BlockSelectionDialog({ onAddBlock, children }: BlockSelectionDia
             size="sm"
             className="w-full border-dashed border-2 hover:border-primary hover:bg-primary/5 text-muted-foreground hover:text-primary"
           >
-            <Plus className="w-4 h-4 mr-2" />
+            <CustomPlusIcon className="mr-2" color="currentColor" />
             Přidat blok
           </Button>
         )}

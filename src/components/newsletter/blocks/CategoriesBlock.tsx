@@ -2,7 +2,8 @@ import { NewsletterBlock } from '@/types/newsletter';
 import { ImageUpload } from '@/components/ui/image-upload';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Plus, Trash2 } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
+import { CustomPlusIcon } from '@/components/icons/CustomIcons';
 import { useState } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -141,7 +142,7 @@ export const CategoriesBlock = ({ block, onUpdate }: CategoriesBlockProps) => {
               size="sm"
               className="gap-1"
             >
-              <Plus className="w-4 h-4" />
+              <CustomPlusIcon color="currentColor" />
               Přidat kategorii
             </Button>
           </div>

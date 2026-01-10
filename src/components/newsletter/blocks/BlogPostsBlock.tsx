@@ -1,7 +1,8 @@
 import { NewsletterBlock } from '@/types/newsletter';
 import { ImageUpload } from '@/components/ui/image-upload';
 import { Input } from '@/components/ui/input';
-import { ArrowRight, Plus, Trash2 } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
+import { CustomPlusIcon, CustomArrowIcon } from '@/components/icons/CustomIcons';
 import { useState } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -171,7 +172,7 @@ export const BlogPostsBlock = ({ block, onUpdate }: BlogPostsBlockProps) => {
                     }}
                     onClick={() => setEditingPost(index)}
                   >
-                    <ArrowRight style={{ width: '12px', height: '12px', color: '#00C322' }} />
+                    <CustomArrowIcon color="#00C322" />
                   </button>
                 </div>
               </div>
@@ -186,7 +187,7 @@ export const BlogPostsBlock = ({ block, onUpdate }: BlogPostsBlockProps) => {
               onClick={addPost}
               className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500 transition-colors"
             >
-              <Plus className="w-4 h-4" />
+              <CustomPlusIcon color="currentColor" />
               Přidat příspěvek
             </button>
           </div>
