@@ -121,14 +121,14 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
                 onBlur={(e) => onUpdate({ ...block.content, footerText: e.currentTarget.textContent || '' })}
                 className="hover:bg-black/10 px-1 cursor-text"
               >
-                {block.content.footerText || '602 555 555'}
+                {block.content.footerText || 'tel. 602 555 555'}
               </span>
             </p>
             <p className="mb-6">
               <a 
                 href="mailto:e-shop@pivovarzichovec.cz"
                 className="underline hover:no-underline cursor-pointer" 
-                style={{ color: '#212121' }}
+                style={{ color: '#212121', fontWeight: 'bold' }}
               >
                 Email
               </a>
@@ -138,7 +138,7 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
                 <span 
                   key={idx} 
                   className="underline hover:no-underline cursor-pointer" 
-                  style={{ color: '#212121' }}
+                  style={{ color: '#212121', fontWeight: 'bold' }}
                   onClick={() => setEditingSocial(idx)}
                 >
                   {social.text}
@@ -152,7 +152,7 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
             <div key={colIdx}>
               {/* Headings 16px fontsize */}
               <h4 
-                className="mb-4 cursor-text" 
+                className="cursor-text" 
                 contentEditable 
                 suppressContentEditableWarning
                 onBlur={(e) => {
@@ -160,7 +160,7 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
                   newColumns[colIdx] = { ...newColumns[colIdx], title: e.currentTarget.textContent || '' };
                   onUpdate({ ...block.content, columns: newColumns } as any);
                 }}
-                style={{ color: '#212121', fontSize: '16px', fontWeight: 'normal' }}
+                style={{ color: '#212121', fontSize: '16px', fontWeight: 'normal', marginBottom: '1rem' }}
               >
                 {column.title}
               </h4>
@@ -168,7 +168,7 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
                 {column.links.map((link, linkIdx) => (
                   <span 
                     key={linkIdx} 
-                    className="underline hover:no-underline cursor-pointer" 
+                    className="hover:underline cursor-pointer" 
                     style={{ color: '#212121' }}
                     onClick={() => setEditingColumn({ colIdx, linkIdx })}
                   >
