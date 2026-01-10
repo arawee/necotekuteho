@@ -2,7 +2,8 @@ import { NewsletterBlock } from '@/types/newsletter';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
-import { ArrowRight, Plus, Trash2 } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
+import { CustomPlusIcon, CustomArrowIcon } from '@/components/icons/CustomIcons';
 import {
   Dialog,
   DialogContent,
@@ -180,9 +181,9 @@ export const PoziceBlock = ({ block, onUpdate }: PoziceBlockProps) => {
                   borderWidth: '1px'
                 }}
                 onClick={() => setEditingPosition(index)}
-              >
-                <ArrowRight className="w-3 h-3 mr-2" />
-                {position.buttonText}
+                >
+                  <CustomArrowIcon color={isColorDark(position.bgColor || '#F4F4F4') ? '#FFFFFF' : '#212121'} style={{ marginRight: '8px' }} />
+                  {position.buttonText}
               </button>
             </div>
           ))}
@@ -195,7 +196,7 @@ export const PoziceBlock = ({ block, onUpdate }: PoziceBlockProps) => {
               onClick={addPosition}
               className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500 transition-colors"
             >
-              <Plus className="w-4 h-4" />
+              <CustomPlusIcon color="currentColor" />
               Přidat pozici
             </button>
           </div>

@@ -143,15 +143,13 @@ export const MistaBlock = ({ block, onUpdate }: MistaBlockProps) => {
         {/* Add button */}
         {places.length < 3 && (
           <div className="mt-4 flex justify-center">
-            <Button
+            <button
               onClick={addPlace}
-              variant="outline"
-              size="sm"
-              className="gap-1"
+              className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500 transition-colors"
             >
               <CustomPlusIcon color="currentColor" />
               Přidat místo
-            </Button>
+            </button>
           </div>
         )}
       </div>

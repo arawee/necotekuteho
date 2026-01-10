@@ -1,7 +1,8 @@
 import { NewsletterBlock } from '@/types/newsletter';
 import { Input } from '@/components/ui/input';
-import { Plus, Trash2, ArrowRight } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import { CustomPlusIcon, CustomArrowIcon } from '@/components/icons/CustomIcons';
 import {
   Dialog,
   DialogContent,
@@ -168,7 +169,7 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
                     >
                       {feature.label}
                     </span>
-                    <ArrowRight style={{ width: '10px', height: '10px', color: '#000000', flexShrink: 0, marginTop: '2px' }} />
+                    <CustomArrowIcon color="#000000" style={{ flexShrink: 0, marginTop: '2px' }} />
                     <span 
                       className="cursor-text flex-1"
                       contentEditable
@@ -188,9 +189,9 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
                 ))}
                 <button
                   onClick={() => addFeature(index)}
-                  className="text-xs px-2 py-0.5 border border-dashed border-gray-400 hover:border-green-500 text-gray-400 hover:text-green-500"
+                  className="text-xs px-2 py-0.5 border border-dashed border-gray-400 hover:border-green-500 text-gray-400 hover:text-green-500 flex items-center gap-1"
                 >
-                  + přidat
+                  <CustomPlusIcon color="currentColor" /> přidat
                 </button>
               </div>
 
@@ -219,7 +220,7 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
             onClick={addBox}
             className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500 transition-colors"
           >
-            <Plus className="w-4 h-4" />
+            <CustomPlusIcon color="currentColor" />
             Přidat box
           </button>
         </div>
