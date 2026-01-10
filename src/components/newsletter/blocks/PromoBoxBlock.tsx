@@ -148,11 +148,11 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
               </div>
 
               <h3 
-                className="font-bold mb-4"
+                className="font-bold"
                 contentEditable
                 suppressContentEditableWarning
                 onBlur={(e) => updateBox(index, 'title', e.currentTarget.textContent || '')}
-                style={{ color: isVeryDarkBg(box.bgColor) ? '#FFFFFF' : '#000000', fontSize: '24px' }}
+                style={{ color: isVeryDarkBg(box.bgColor) ? '#FFFFFF' : '#000000', fontSize: '24px', marginBottom: '1rem' }}
               >
                 {box.title}
               </h3>
