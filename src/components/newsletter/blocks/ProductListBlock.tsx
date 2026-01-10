@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { NewsletterBlock } from '@/types/newsletter';
 import { ImageUpload } from '@/components/ui/image-upload';
 import { Input } from '@/components/ui/input';
-import { Plus } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   Dialog,
@@ -55,6 +55,24 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
     onUpdate({ ...block.content, products: newProducts } as any);
   };
 
+  const addProduct = () => {
+    const newProduct: Product = {
+      image: '',
+      name: 'Nový produkt',
+      alcohol: '5,0',
+      volume: '500 ml',
+      price: '99 Kč',
+      tags: [],
+      url: '#'
+    };
+    onUpdate({ ...block.content, products: [...products, newProduct] } as any);
+  };
+
+  const removeProduct = (index: number) => {
+    const newProducts = products.filter((_, i) => i !== index);
+    onUpdate({ ...block.content, products: newProducts } as any);
+  };
+
   const updateTag = (productIndex: number, tagIndex: number, field: 'text' | 'color', value: string) => {
     const newProducts = [...products];
     const newTags = [...newProducts[productIndex].tags];
@@ -91,14 +109,14 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
   return (
     <div className="bg-white border border-border p-6">
       <div className="max-w-2xl mx-auto">
-        {/* Header */}
+        {/* Header - title 20px */}
         <div className="flex justify-between items-center mb-6">
           <h2 
             className="font-normal"
             contentEditable
             suppressContentEditableWarning
             onBlur={(e) => onUpdate({ ...block.content, title: e.currentTarget.textContent || '' })}
-            style={{ color: '#212121', fontSize: '24px' }}
+            style={{ color: '#212121', fontSize: '20px' }}
           >
             {block.content.title || 'Mohlo by vám chutnat'}
           </h2>
@@ -112,11 +130,12 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
             </label>
             {showViewAll && (
               <span 
-                className="text-sm cursor-pointer underline"
-                style={{ color: '#000000' }}
+                className="text-sm cursor-pointer"
+                style={{ color: '#000000', textUnderlineOffset: '2px' }}
                 onClick={() => setEditingProduct(-1)}
               >
-                {viewAllText}
+                <span style={{ textDecoration: 'none' }}>→ </span>
+                <span style={{ textDecoration: 'underline' }}>{viewAllText}</span>
               </span>
             )}
           </div>
@@ -125,7 +144,15 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
         {/* Products grid */}
         <div className="grid grid-cols-4 gap-4">
           {products.map((product: Product, index: number) => (
-            <div key={index} className="group">
+            <div key={index} className="group relative">
+              {/* Remove button */}
+              <button
+                onClick={() => removeProduct(index)}
+                className="absolute -top-2 -right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity p-1 bg-white shadow hover:bg-red-50"
+              >
+                <Trash2 className="w-3 h-3 text-red-500" />
+              </button>
+
               {/* Product image */}
               <div className="relative mb-3 bg-muted aspect-[3/4] overflow-hidden">
                 <ImageUpload
@@ -182,16 +209,33 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
                     {product.price}
                   </span>
                 )}
+                {/* Circular green button 48px with white plus 10px */}
                 <button 
-                  className="ml-auto w-6 h-6 flex items-center justify-center border"
-                  style={{ borderColor: '#00C322', borderRadius: '50%' }}
+                  className="ml-auto flex items-center justify-center rounded-full"
+                  style={{ 
+                    width: '48px', 
+                    height: '48px', 
+                    backgroundColor: '#00C322',
+                    border: 'none'
+                  }}
                   onClick={() => setEditingProduct(index)}
                 >
-                  <Plus className="w-4 h-4" style={{ color: '#00C322' }} />
+                  <Plus style={{ width: '10px', height: '10px', color: '#FFFFFF' }} />
                 </button>
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Add product button */}
+        <div className="mt-4 flex justify-center">
+          <button
+            onClick={addProduct}
+            className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500 transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            Přidat produkt
+          </button>
         </div>
       </div>
 
