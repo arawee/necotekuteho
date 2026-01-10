@@ -29,8 +29,7 @@ export const MistaBlock = ({ block, onUpdate }: MistaBlockProps) => {
 
   const defaultPlaces: Place[] = [
     { image: '', name: 'Kolbenova 9', buttonText: '→', buttonUrl: '#' },
-    { image: '', name: 'Pizza Rosa', buttonText: '→', buttonUrl: '#' },
-    { image: '', name: 'Koprteenka', buttonText: '→', buttonUrl: '#' }
+    { image: '', name: 'Pizza Rosa', buttonText: '→', buttonUrl: '#' }
   ];
 
   const places: Place[] = (block.content as any).places || defaultPlaces;
@@ -59,7 +58,7 @@ export const MistaBlock = ({ block, onUpdate }: MistaBlockProps) => {
     <div className="bg-white border border-border p-6">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center" style={{ marginBottom: '1rem' }}>
           <h2 
             contentEditable
             suppressContentEditableWarning
