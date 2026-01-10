@@ -55,7 +55,14 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
     }
   ];
 
-  const benefits: Benefit[] = (block.content as any).benefits || defaultBenefits;
+  // Use saved benefits, but apply default icons if icon is empty
+  const savedBenefits: Benefit[] = (block.content as any).benefits;
+  const benefits: Benefit[] = savedBenefits 
+    ? savedBenefits.map((b, i) => ({
+        ...b,
+        icon: b.icon || defaultIcons[i] || defaultIcons[0]
+      }))
+    : defaultBenefits;
 
   const updateBenefit = (index: number, field: keyof Benefit, value: string) => {
     const newBenefits = [...benefits];
