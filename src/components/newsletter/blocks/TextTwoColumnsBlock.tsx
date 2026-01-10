@@ -28,8 +28,7 @@ export const TextTwoColumnsBlock = ({ block, onUpdate }: TextTwoColumnsBlockProp
           {/* Left column (1/6) */}
           <div className="w-1/6">
             <p 
-              className="text-sm font-medium"
-              style={{ color: '#212121' }}
+              style={{ color: '#212121', fontWeight: 900, fontSize: '14px' }}
             >
               {leftColumn}
             </p>
@@ -38,8 +37,7 @@ export const TextTwoColumnsBlock = ({ block, onUpdate }: TextTwoColumnsBlockProp
           {/* Right column (5/6) */}
           <div className="w-5/6">
             <p 
-              className="text-sm leading-relaxed"
-              style={{ color: '#212121' }}
+              style={{ color: '#212121', fontWeight: 700, fontSize: '12px', lineHeight: '150%' }}
             >
               {rightColumn}
             </p>

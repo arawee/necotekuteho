@@ -185,7 +185,7 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
               <h3 
                 className="mb-1 cursor-pointer"
                 onClick={() => setEditingProduct(index)}
-                style={{ color: '#212121', fontWeight: 700, fontSize: '20px' }}
+                style={{ color: '#212121', fontWeight: 700, fontSize: '20px', lineHeight: '150%' }}
               >
                 {product.name}
               </h3>
