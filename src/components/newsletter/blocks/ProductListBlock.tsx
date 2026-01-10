@@ -214,13 +214,12 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
                 )}
                 {/* Circular green button 48px with black plus 10px */}
                 <button 
-                  className="ml-auto flex items-center justify-center"
+                  className="ml-auto flex items-center justify-center !rounded-full"
                   style={{ 
                     width: '48px', 
                     height: '48px', 
                     backgroundColor: '#00C322',
-                    border: 'none',
-                    borderRadius: '50%'
+                    border: 'none'
                   }}
                   onClick={() => setEditingProduct(index)}
                 >
