@@ -76,9 +76,9 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
   return (
     <div className="bg-white border border-border p-8">
       <div className="max-w-3xl mx-auto">
-        <div className="grid grid-cols-4 gap-8">
+        <div style={{ display: 'flex', gap: '32px' }}>
           {benefits.map((benefit, index) => (
-            <div key={index} className="group relative text-center">
+            <div key={index} className="group relative text-center" style={{ flex: 1 }}>
               {/* Remove button */}
               <button
                 onClick={() => removeBenefit(index)}
@@ -112,16 +112,16 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
               <h3 
                 className="font-bold mb-2 cursor-pointer"
                 onClick={() => setEditingBenefit(index)}
-                style={{ color: '#000000', fontSize: '20px' }}
+                style={{ color: '#000000', fontSize: '20px', lineHeight: '120%' }}
               >
                 {benefit.title}
               </h3>
 
               {/* Description - 14px regular black */}
               <p 
-                className="leading-relaxed cursor-pointer"
+                className="cursor-pointer"
                 onClick={() => setEditingBenefit(index)}
-                style={{ color: '#000000', fontSize: '14px', fontStyle: 'normal', fontWeight: 'normal' }}
+                style={{ color: '#000000', fontSize: '14px', fontStyle: 'normal', fontWeight: 'normal', lineHeight: '120%' }}
               >
                 {benefit.description}
               </p>
