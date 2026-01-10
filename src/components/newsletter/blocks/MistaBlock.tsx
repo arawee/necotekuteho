@@ -28,10 +28,9 @@ export const MistaBlock = ({ block, onUpdate }: MistaBlockProps) => {
   const [editingPlace, setEditingPlace] = useState<number | null>(null);
 
   const defaultPlaces: Place[] = [
-    { image: '', name: 'Kolbenova 9', buttonText: '+', buttonUrl: '#' },
-    { image: '', name: 'Pizza Rosa', buttonText: '+', buttonUrl: '#' },
-    { image: '', name: 'Koprteenka', buttonText: '+', buttonUrl: '#' },
-    { image: '', name: 'BarBar', buttonText: '+', buttonUrl: '#' }
+    { image: '', name: 'Kolbenova 9', buttonText: '→', buttonUrl: '#' },
+    { image: '', name: 'Pizza Rosa', buttonText: '→', buttonUrl: '#' },
+    { image: '', name: 'Koprteenka', buttonText: '→', buttonUrl: '#' }
   ];
 
   const places: Place[] = (block.content as any).places || defaultPlaces;
@@ -46,7 +45,8 @@ export const MistaBlock = ({ block, onUpdate }: MistaBlockProps) => {
   };
 
   const addPlace = () => {
-    const newPlaces = [...places, { image: '', name: 'Nové místo', buttonText: '+', buttonUrl: '#' }];
+    if (places.length >= 4) return;
+    const newPlaces = [...places, { image: '', name: 'Nové místo', buttonText: '→', buttonUrl: '#' }];
     onUpdate({ ...block.content, places: newPlaces } as any);
   };
 
@@ -59,13 +59,12 @@ export const MistaBlock = ({ block, onUpdate }: MistaBlockProps) => {
     <div className="bg-white border border-border p-6">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center">
           <h2 
-            className="text-lg font-normal"
             contentEditable
             suppressContentEditableWarning
             onBlur={(e) => onUpdate({ ...block.content, title: e.currentTarget.textContent || '' })}
-            style={{ color: '#212121' }}
+            style={{ color: '#212121', fontSize: '20px', fontWeight: 400, marginBottom: '1rem' }}
           >
             {block.content.title || 'Kde nás ochutnáte?'}
           </h2>
@@ -103,11 +102,11 @@ export const MistaBlock = ({ block, onUpdate }: MistaBlockProps) => {
               </button>
 
               {/* Place image */}
-              <div className="relative mb-3 aspect-[4/3] overflow-hidden">
+              <div className="relative mb-3 aspect-[3/4] overflow-hidden">
                 <ImageUpload
                   currentImage={place.image}
                   onImageUploaded={(url) => updatePlace(index, 'image', url)}
-                  aspectRatio="landscape"
+                  aspectRatio="portrait"
                   placeholder="Nahrát foto"
                   className="w-full h-full"
                   showBorder={false}
@@ -117,21 +116,22 @@ export const MistaBlock = ({ block, onUpdate }: MistaBlockProps) => {
               {/* Button and name row */}
               <div className="flex items-center gap-2">
                 <button 
-                  className="flex items-center justify-center flex-shrink-0 rounded-full"
+                  className="flex items-center justify-center flex-shrink-0"
                   style={{ 
-                    width: '48px', 
-                    height: '48px', 
-                    backgroundColor: '#00C322',
-                    border: 'none'
+                    width: '36px', 
+                    height: '36px', 
+                    backgroundColor: 'transparent',
+                    border: '1px solid #00C322',
+                    borderRadius: '100%'
                   }}
                   onClick={() => setEditingPlace(index)}
                 >
-                  <ArrowRight style={{ width: '12px', height: '12px', color: '#FFFFFF' }} />
+                  <ArrowRight style={{ width: '12px', height: '12px', color: '#00C322' }} />
                 </button>
                 <h3 
-                  className="font-medium text-sm truncate cursor-pointer"
+                  className="truncate cursor-pointer"
                   onClick={() => setEditingPlace(index)}
-                  style={{ color: '#212121' }}
+                  style={{ color: '#212121', fontSize: '16px', fontWeight: 700 }}
                 >
                   {place.name}
                 </h3>
