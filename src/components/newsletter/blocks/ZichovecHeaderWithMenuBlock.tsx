@@ -70,7 +70,7 @@ export const ZichovecHeaderWithMenuBlock = ({ block, onUpdate }: ZichovecHeaderW
       </div>
 
       {/* Menu - aligned to bottom */}
-      <div style={{ position: 'absolute', bottom: '8px', left: 0, right: 0, display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '8px' }}>
+      <div style={{ position: 'absolute', bottom: '8px', left: 0, right: 0, display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0' }}>
         {menuItems.map((item, index) => (
           <div key={index} className="group flex items-center gap-1">
             <span
