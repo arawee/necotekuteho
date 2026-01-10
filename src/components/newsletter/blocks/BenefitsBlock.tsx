@@ -46,11 +46,6 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
       icon: defaultIcons[2], 
       title: 'Komunita', 
       description: 'Propojujeme zákazníky s výrobou, sládky, inspirací, chutěmi i místem.' 
-    },
-    { 
-      icon: defaultIcons[3], 
-      title: 'Kvalita', 
-      description: 'Dbáme na autenticitu a kvalitu vstupních surovin.' 
     }
   ];
 
