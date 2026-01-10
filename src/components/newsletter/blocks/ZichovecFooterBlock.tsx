@@ -193,18 +193,19 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
         </div>
 
         {/* Copyright - white background, 10px fontsize, NOT editable */}
-        <div className="px-8 py-4 border-t border-black/10" style={{ backgroundColor: '#FFFFFF', color: '#212121', fontSize: '10px' }}>
-          <div className="mb-1">
-            {block.content.copyright || 'Copyright © 2025 Pivovar ZICHOVEC.'}
-          </div>
-          <div className="mb-1">
-            Všechna práva vyhrazena.
-          </div>
-          <div className="mb-1">
-            Vývoj <a href="https://www.fv-studio.cz/" target="_blank" rel="noopener noreferrer" style={{ color: '#A073FF', textDecoration: 'underline' }}>FY STUDIO + Shoptet</a>
-          </div>
-          <div>
-            Design <a href="https://www.vanek.studio" target="_blank" rel="noopener noreferrer" style={{ color: '#A073FF', textDecoration: 'underline' }}>Vaněk.Studio</a>
+        <div className="px-8 py-4 flex justify-between items-start border-t border-black/10" style={{ backgroundColor: '#FFFFFF', color: '#212121', fontSize: '10px' }}>
+          <span>
+            {block.content.copyright || 'Copyright © 2025 Pivovar ZICHOVEC. Všechna práva vyhrazena.'}
+          </span>
+          <div className="flex gap-4">
+            <div className="flex flex-col">
+              <span>Vývoj</span>
+              <a href="https://www.fv-studio.cz/" target="_blank" rel="noopener noreferrer" style={{ color: '#A073FF', textDecoration: 'underline' }}>FY STUDIO + Shoptet</a>
+            </div>
+            <div className="flex flex-col">
+              <span>Design</span>
+              <a href="https://www.vanek.studio" target="_blank" rel="noopener noreferrer" style={{ color: '#A073FF', textDecoration: 'underline' }}>Vaněk.Studio</a>
+            </div>
           </div>
         </div>
       </div>
