@@ -2,13 +2,19 @@ import { NewsletterBlock } from '@/types/newsletter';
 
 // SVG Icons for email HTML
 const ARROW_ICON_SVG = (color: string = '#00C322') => `
-<svg width="8" height="8" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="8" height="8" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;">
   <path d="M4.16156 11.5628L7.22156 7.66281C7.54156 7.23615 7.88156 6.97615 8.24156 6.88281H0.00156253V4.68281H8.16156C8.02823 4.64281 7.86823 4.55615 7.68156 4.42281C7.50823 4.28948 7.3549 4.13615 7.22156 3.96281L4.14156 0.00281215H6.90156L11.4016 5.76281L6.88156 11.5628H4.16156Z" fill="${color}"/>
 </svg>`;
 
 const PLUS_ICON_SVG = (color: string = '#000000') => `
-<svg width="8" height="8" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="8" height="8" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;">
   <path d="M3.58031 9.51937V5.91937H0.000312582V3.59937H3.58031V-0.000625372H6.06031V3.59937H9.64031V5.91937H6.06031V9.51937H3.58031Z" fill="${color}"/>
+</svg>`;
+
+// The Zichovec logo SVG
+const ZICHOVEC_LOGO_SVG = `
+<svg width="100%" height="auto" viewBox="0 0 1258 143" fill="none" xmlns="http://www.w3.org/2000/svg" style="max-width:400px;">
+  <path d="M1177.26 143C1225.76 143 1255.72 119.372 1257.97 81.8424L1220.08 79.8804C1217.99 98.4351 1203.22 109.394 1177.26 109.394C1149.78 109.394 1133.5 94.9316 1133.5 71.5C1133.5 48.0684 1149.78 33.6058 1177.26 33.6058C1203.03 33.6058 1217.82 44.5368 1220.08 63.1196L1257.97 60.7652C1254.93 23.6558 1225.19 0 1177.26 0C1126.67 0 1095.22 27.7479 1095.22 71.5C1095.22 115.252 1126.67 143 1177.26 143ZM945.709 3.13916V139.889H1081.96V106.283H983.984V87.1397H1071.71V55.2997H983.984V36.745H1081.96V3.13916H945.709ZM937.2 3.13916H894.766L846.269 106.283L796.223 3.13916H752.647L818.406 139.889H872.801L937.2 3.13916ZM674.003 109.394C645.759 109.394 627.573 94.9316 627.573 71.5C627.573 48.0684 645.759 33.6058 674.003 33.6058C702.248 33.6058 720.434 48.0684 720.434 71.5C720.434 94.9316 702.248 109.394 674.003 109.394ZM674.003 143C725.354 143 758.709 115.252 758.709 71.5C758.709 27.7479 725.354 0 674.003 0C622.653 0 589.298 27.7479 589.298 71.5C589.298 115.252 622.653 143 674.003 143ZM411.187 3.13916V139.889H449.462V88.3169H532.075V139.889H570.35V3.13916H532.075V54.7111H449.462V3.13916H411.187ZM311.503 143C359.999 143 389.956 119.372 392.213 81.8424L354.318 79.8804C352.225 98.4351 337.464 109.394 311.503 109.394C284.02 109.394 267.737 94.9316 267.737 71.5C267.737 48.0684 284.02 33.6058 311.503 33.6058C337.274 33.6058 352.062 44.5368 354.318 63.1196L392.213 60.7652C389.168 23.6558 359.429 0 311.503 0C260.913 0 229.461 27.7479 229.461 71.5C229.461 115.252 260.913 143 311.503 143ZM172.239 3.13916V139.889H210.514V3.13916H172.239ZM0 111.16V139.889H155.194V106.283H64.0458L152.53 31.8401V3.13916H1.90289V36.745H89.0552L0 111.16Z" fill="black"/>
 </svg>`;
 
 // Helper function to determine if a color is dark
@@ -31,12 +37,24 @@ const isVeryDarkBg = (color: string): boolean => {
   return brightness < 60;
 };
 
+// Placeholder benefit icons (SVG data URIs)
+const BENEFIT_ICON_PLACEHOLDER = (index: number) => {
+  const icons = [
+    `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Crect fill='%23E5E5E5' width='48' height='48'/%3E%3Ctext x='24' y='28' text-anchor='middle' fill='%23999' font-size='12'%3E1%3C/text%3E%3C/svg%3E`,
+    `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Crect fill='%23E5E5E5' width='48' height='48'/%3E%3Ctext x='24' y='28' text-anchor='middle' fill='%23999' font-size='12'%3E2%3C/text%3E%3C/svg%3E`,
+    `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Crect fill='%23E5E5E5' width='48' height='48'/%3E%3Ctext x='24' y='28' text-anchor='middle' fill='%23999' font-size='12'%3E3%3C/text%3E%3C/svg%3E`,
+    `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Crect fill='%23E5E5E5' width='48' height='48'/%3E%3Ctext x='24' y='28' text-anchor='middle' fill='%23999' font-size='12'%3E4%3C/text%3E%3C/svg%3E`
+  ];
+  return icons[index] || icons[0];
+};
+
 export function generateHTMLFromBlocks(blocks: NewsletterBlock[]): string {
   const blockHTML = blocks.map(block => {
     switch (block.type) {
       case 'zichovec-header':
-      case 'zichovec-header-menu':
         return generateZichovecHeaderHTML(block);
+      case 'zichovec-header-menu':
+        return generateZichovecHeaderWithMenuHTML(block);
       case 'zichovec-footer':
         return generateZichovecFooterHTML(block);
       case 'product-list':
@@ -92,18 +110,44 @@ ${blockHTML}
 }
 
 function generateZichovecHeaderHTML(block: NewsletterBlock): string {
-  const svgContent = block.content.image || '';
-  
   return `<!-- Záhlaví ZICHOVEC -->
 <tr>
-  <td align="center" style="background-color:#00C322;padding:48px 24px;">
+  <td align="center" style="background-color:#00C322;padding:48px 24px;margin-bottom:32px;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" style="max-width:600px;">
       <tr>
         <td align="center">
-          ${svgContent ? svgContent : `
-          <h1 style="margin:0;font-size:48px;font-weight:900;font-style:italic;color:#212121;font-family:'JetBrains Mono',monospace;letter-spacing:-1px;">
-            ZICHOVEC
-          </h1>`}
+          ${ZICHOVEC_LOGO_SVG}
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>`;
+}
+
+function generateZichovecHeaderWithMenuHTML(block: NewsletterBlock): string {
+  const menuItems = (block.content as any).menuItems || [
+    { text: 'E-shop ↓', url: '#' },
+    { text: 'Limitky a Novinky', url: '#' },
+    { text: 'Dárky a balíčky', url: '#' },
+    { text: 'Zachraň pivo', url: '#' }
+  ];
+
+  const menuHTML = menuItems.map((item: any) => 
+    `<a href="${item.url}" style="color:#212121;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;text-decoration:none;padding:0 8px;">${item.text}</a>`
+  ).join('');
+
+  return `<!-- Záhlaví ZICHOVEC s menu -->
+<tr>
+  <td align="center" style="background-color:#00C322;margin-bottom:32px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" style="max-width:600px;height:auto;">
+      <tr>
+        <td align="center" style="padding:48px 24px 16px 24px;">
+          ${ZICHOVEC_LOGO_SVG}
+        </td>
+      </tr>
+      <tr>
+        <td align="center" style="padding:0 24px 16px 24px;">
+          ${menuHTML}
         </td>
       </tr>
     </table>
@@ -129,7 +173,7 @@ function generateZichovecFooterHTML(block: NewsletterBlock): string {
   const phoneNumber = (content.footerText || '602 555 555').replace(/^\+420\s*/, '').replace(/^tel\.\s*/i, '');
 
   const columnHTML = columns.map((col: any) => `
-    <td valign="top" style="padding:0 12px 24px 0;font-family:'JetBrains Mono',monospace;font-size:12px;color:#212121;">
+    <td valign="top" width="25%" class="stack" style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#212121;">
       <h4 style="margin:0 0 1rem 0;font-size:16px;font-weight:700;color:#212121;">${col.title}</h4>
       <div style="display:flex;flex-direction:column;gap:4px;">
         ${col.links.map((link: any) => `<a href="${link.url}" style="color:#212121;text-decoration:none;display:block;margin-bottom:4px;">${link.text}</a>`).join('')}
@@ -139,15 +183,15 @@ function generateZichovecFooterHTML(block: NewsletterBlock): string {
 
   return `<!-- Patička ZICHOVEC -->
 <tr>
-  <td align="center" style="background-color:#00C322;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" style="max-width:600px;">
+  <td align="center" style="background-color:#00C322;margin-bottom:32px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
       <tr>
         <td style="padding:32px;">
           <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
             <tr>
               <!-- Contact column -->
-              <td valign="top" width="25%" style="padding:0 12px 24px 0;font-family:'JetBrains Mono',monospace;font-size:12px;color:#212121;">
-                <p style="margin:0 0 1rem 0;font-weight:bold;text-decoration:underline;padding-left:0;padding-right:0;">${phoneNumber}</p>
+              <td valign="top" width="25%" class="stack" style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#212121;">
+                <p style="margin:0 0 1rem 0;font-weight:bold;text-decoration:underline;">${phoneNumber}</p>
                 <p style="margin:0 0 24px 0;"><a href="mailto:${email}" style="color:#212121;font-weight:bold;text-decoration:underline;">Email</a></p>
                 <div style="display:flex;flex-direction:column;gap:4px;">
                   ${socials.map((s: any) => `<a href="${s.url}" style="color:#212121;font-weight:bold;text-decoration:underline;display:block;margin-bottom:4px;">${s.text}</a>`).join('')}
@@ -225,6 +269,9 @@ function generateProductListHTML(block: NewsletterBlock): string {
     }
   };
 
+  const productCount = Math.min(products.length, 4);
+  const colWidth = Math.floor(100 / productCount);
+
   const productCards = products.slice(0, 4).map((p: any) => {
     const tagsHTML = (p.tags || []).map((tag: any) => `
       <span style="display:inline-block;background-color:${getTagBgColor(tag.color)};color:#FFFFFF;font-size:10px;padding:2px 8px;margin-right:4px;margin-bottom:4px;">${tag.text}</span>
@@ -235,7 +282,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
       : `<span style="color:#212121;font-weight:700;">${p.price}</span>`;
 
     return `
-    <td valign="top" style="padding:0 6px;">
+    <td valign="top" width="${colWidth}%" class="stack" style="padding:0;">
       <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
         <tr>
           <td style="background-color:#F5F5F5;">
@@ -247,9 +294,9 @@ function generateProductListHTML(block: NewsletterBlock): string {
           <td style="padding-top:0;font-family:'JetBrains Mono',monospace;">
             <div style="margin-bottom:8px;">${tagsHTML}</div>
             <h3 style="margin:0 0 4px 0;font-size:16px;font-weight:700;color:#212121;line-height:150%;">${p.name}</h3>
-            <div style="font-size:10px;color:#000000;margin-bottom:8px;display:flex;justify-content:space-between;">
+            <div style="font-size:10px;color:#000000;margin-bottom:8px;">
               <span><strong>Alk. →</strong> ${p.alcohol}% obj.</span>
-              <span>${p.volume}</span>
+              <span style="float:right;">${p.volume}</span>
             </div>
             <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
               <tr>
@@ -275,8 +322,8 @@ function generateProductListHTML(block: NewsletterBlock): string {
 
   return `<!-- List produktů -->
 <tr>
-  <td align="center" style="padding:24px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" style="max-width:600px;">
+  <td align="center" style="padding:24px;margin-bottom:32px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
       <tr>
         <td style="padding-bottom:1rem;">
           <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -311,8 +358,11 @@ function generateMistaHTML(block: NewsletterBlock): string {
   const viewAllText = (content as any).viewAllText || 'zobrazit vše';
   const viewAllUrl = (content as any).viewAllUrl || '#';
 
+  const placeCount = Math.min(places.length, 3);
+  const colWidth = Math.floor(100 / placeCount);
+
   const placeCards = places.slice(0, 3).map((place: any) => `
-    <td valign="top" style="padding:0 6px;">
+    <td valign="top" width="${colWidth}%" class="stack" style="padding:0;">
       <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
         <tr>
           <td>
@@ -348,8 +398,8 @@ function generateMistaHTML(block: NewsletterBlock): string {
 
   return `<!-- Místa -->
 <tr>
-  <td align="center" style="padding:24px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" style="max-width:600px;">
+  <td align="center" style="padding:24px;margin-bottom:32px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
       <tr>
         <td style="padding-bottom:1rem;">
           <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -383,8 +433,11 @@ function generateLocationsHTML(block: NewsletterBlock): string {
   const viewAllText = content.viewAllText || 'zobrazit vše';
   const viewAllUrl = content.viewAllUrl || '#';
 
+  const locCount = Math.min(locations.length, 6);
+  const colWidth = locCount > 3 ? 33 : Math.floor(100 / locCount);
+
   const locationCards = locations.slice(0, 6).map((loc: any) => `
-    <td valign="top" width="33%" style="padding:0 6px 12px 0;">
+    <td valign="top" width="${colWidth}%" class="stack" style="padding:0 0 12px 0;">
       <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="background-color:#F4F4F4;">
         <tr>
           <td>
@@ -432,14 +485,14 @@ function generateLocationsHTML(block: NewsletterBlock): string {
 
   return `<!-- Lokace -->
 <tr>
-  <td align="center" style="padding:24px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" style="max-width:600px;">
+  <td align="center" style="padding:24px;margin-bottom:32px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
       <tr>
         <td style="padding-bottom:24px;">
           <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
             <tr>
               <td style="font-family:'JetBrains Mono',monospace;">
-                <h2 style="margin:0;font-size:24px;font-weight:700;color:#212121;">${content.title || 'Kde nás ochutnáte?'}</h2>
+                <h2 style="margin:0;font-size:20px;font-weight:700;color:#212121;">${content.title || 'Kde nás ochutnáte?'}</h2>
               </td>
               <td align="right">${viewAllHTML}</td>
             </tr>
@@ -467,8 +520,11 @@ function generateBlogPostsHTML(block: NewsletterBlock): string {
   const viewAllText = content.viewAllText || 'zobrazit vše';
   const viewAllUrl = content.viewAllUrl || '#';
 
+  const postCount = Math.min(posts.length, 3);
+  const colWidth = Math.floor(100 / postCount);
+
   const postCards = posts.slice(0, 3).map((post: any) => `
-    <td valign="top" style="padding:0 6px;">
+    <td valign="top" width="${colWidth}%" class="stack" style="padding:0;">
       <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
         <tr>
           <td>
@@ -499,8 +555,8 @@ function generateBlogPostsHTML(block: NewsletterBlock): string {
 
   return `<!-- Blog posty -->
 <tr>
-  <td align="center" style="padding:24px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" style="max-width:600px;">
+  <td align="center" style="padding:24px;margin-bottom:32px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
       <tr>
         <td style="padding-bottom:1rem;">
           <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -541,6 +597,9 @@ function generatePromoBoxHTML(block: NewsletterBlock): string {
     }
   ];
 
+  const boxCount = Math.min(boxes.length, 3);
+  const colWidth = Math.floor(100 / boxCount);
+
   const boxCards = boxes.map((box: any) => {
     const isDark = isVeryDarkBg(box.bgColor || '#00C322');
     const textColor = isDark ? '#FFFFFF' : '#000000';
@@ -558,7 +617,7 @@ function generatePromoBoxHTML(block: NewsletterBlock): string {
     `).join('');
 
     return `
-    <td valign="top" style="padding:0 6px;">
+    <td valign="top" width="${colWidth}%" class="stack" style="padding:0;">
       <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="background-color:${box.bgColor || '#00C322'};">
         <tr>
           <td style="padding:24px;font-family:'JetBrains Mono',monospace;">
@@ -577,8 +636,8 @@ function generatePromoBoxHTML(block: NewsletterBlock): string {
 
   return `<!-- Promo boxy -->
 <tr>
-  <td align="center" style="padding:24px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" style="max-width:600px;">
+  <td align="center" style="padding:24px;margin-bottom:32px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
       <tr>${boxCards}</tr>
     </table>
   </td>
@@ -591,8 +650,8 @@ function generateGalleryTrioHTML(block: NewsletterBlock): string {
 
   return `<!-- Galerie trio -->
 <tr>
-  <td align="center">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" style="max-width:600px;">
+  <td align="center" style="margin-bottom:32px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
       <!-- Main image 1:1 -->
       <tr>
         <td>
@@ -628,8 +687,8 @@ function generateGalleryDuoHTML(block: NewsletterBlock): string {
 
   return `<!-- Galerie duo -->
 <tr>
-  <td align="center">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" style="max-width:600px;">
+  <td align="center" style="margin-bottom:32px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
       <tr>
         <td width="50%">
           ${photos[0]?.url ? `<img src="${photos[0].url}" width="300" alt="${photos[0].alt || ''}" style="display:block;width:100%;aspect-ratio:3/4;object-fit:cover;"/>` :
@@ -650,8 +709,8 @@ function generateGallerySingleHTML(block: NewsletterBlock): string {
 
   return `<!-- Galerie single -->
 <tr>
-  <td align="center">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" style="max-width:600px;">
+  <td align="center" style="margin-bottom:32px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
       <tr>
         <td>
           ${photo?.url ? `<img src="${photo.url}" width="600" alt="${photo.alt || ''}" style="display:block;width:100%;aspect-ratio:1/1;object-fit:cover;"/>` :
@@ -679,19 +738,25 @@ function generateArticleTextHTML(block: NewsletterBlock): string {
 
   const metadataHTML = hasAnyMeta ? `
     <tr>
-      <td style="padding:16px;background-color:#F4F4F4;font-family:'JetBrains Mono',monospace;font-size:14px;">
-        ${hasDate ? `<div style="margin-bottom:4px;"><span style="font-weight:500;">Datum →</span> <span style="color:#666;">${date}</span></div>` : ''}
-        ${hasAuthor ? `<div style="margin-bottom:4px;"><span style="font-weight:500;">Autor →</span> <span style="color:#666;">${author}</span></div>` : ''}
-        ${hasTags ? `<div style="margin-bottom:4px;"><span style="font-weight:500;">Tag →</span> <span style="color:#666;text-decoration:underline;">${tags.filter((t: any) => t.text && t.text.trim() !== '').map((t: any) => t.text).join(', ')}</span></div>` : ''}
-        ${hasShares ? `<div><span style="font-weight:500;">Sdílet →</span> <span style="color:#666;text-decoration:underline;">${validShareLinks.map((s: any) => s.text).join(', ')}</span></div>` : ''}
+      <td style="padding-top:32px;">
+        <table role="presentation" border="0" cellspacing="0" cellpadding="0" style="display:inline-block;">
+          <tr>
+            <td style="padding:16px;background-color:#F4F4F4;font-family:'JetBrains Mono',monospace;font-size:14px;">
+              ${hasDate ? `<div style="margin-bottom:4px;"><span style="font-weight:500;">Datum →</span> <span style="color:#666;">${date}</span></div>` : ''}
+              ${hasAuthor ? `<div style="margin-bottom:4px;"><span style="font-weight:500;">Autor →</span> <span style="color:#666;">${author}</span></div>` : ''}
+              ${hasTags ? `<div style="margin-bottom:4px;"><span style="font-weight:500;">Tag →</span> <span style="color:#666;text-decoration:underline;">${tags.filter((t: any) => t.text && t.text.trim() !== '').map((t: any) => `<a href="${t.url || '#'}" style="color:#666;text-decoration:underline;">${t.text}</a>`).join(', ')}</span></div>` : ''}
+              ${hasShares ? `<div><span style="font-weight:500;">Sdílet →</span> <span style="color:#666;text-decoration:underline;">${validShareLinks.map((s: any) => `<a href="${s.url}" style="color:#666;text-decoration:underline;">${s.text}</a>`).join(', ')}</span></div>` : ''}
+            </td>
+          </tr>
+        </table>
       </td>
     </tr>
   ` : '';
 
   return `<!-- Článek -->
 <tr>
-  <td align="center" style="padding:24px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" style="max-width:600px;">
+  <td align="center" style="padding:24px;margin-bottom:32px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
       <tr>
         <td style="font-family:'JetBrains Mono',monospace;">
           <h1 style="margin:0 0 24px 0;font-size:32px;font-weight:700;line-height:1.2;color:#212121;">
@@ -700,7 +765,7 @@ function generateArticleTextHTML(block: NewsletterBlock): string {
         </td>
       </tr>
       <tr>
-        <td style="padding-bottom:32px;font-family:'JetBrains Mono',monospace;font-size:14px;line-height:120%;color:#212121;">
+        <td style="font-family:'JetBrains Mono',monospace;font-size:14px;line-height:120%;color:#212121;">
           ${content.text || 'OPA, tedy Oat Pale Ale, představuje moderní variaci na klasické světlé styly, která si díky své hladké textury a vysoké přístupnosti získává stále větší pozornost mezi pivovary i konzumenty.'}
         </td>
       </tr>
@@ -717,11 +782,13 @@ function generateBenefitsHTML(block: NewsletterBlock): string {
     { icon: '', title: 'Komunita', description: 'Propojujeme zákazníky s výrobou, sládky, inspirací, chutěmi i místem.' }
   ];
 
-  const benefitCells = benefits.slice(0, 4).map((b: any) => `
-    <td valign="top" style="padding:0 8px;text-align:center;font-family:'JetBrains Mono',monospace;">
+  const benefitCount = Math.min(benefits.length, 4);
+  const colWidth = Math.floor(100 / benefitCount);
+
+  const benefitCells = benefits.slice(0, 4).map((b: any, index: number) => `
+    <td valign="top" width="${colWidth}%" class="stack" style="padding:0;text-align:center;font-family:'JetBrains Mono',monospace;">
       <div style="margin-bottom:1rem;">
-        ${b.icon ? `<img src="${b.icon}" width="48" height="48" alt="${b.title}" style="display:inline-block;width:48px;height:48px;object-fit:contain;"/>` :
-          `<div style="width:48px;height:48px;margin:0 auto;border:1px dashed #CCC;"></div>`}
+        <img src="${b.icon || BENEFIT_ICON_PLACEHOLDER(index)}" width="48" height="48" alt="${b.title}" style="display:inline-block;width:48px;height:48px;object-fit:contain;"/>
       </div>
       <h4 style="margin:0 0 12px 0;font-size:16px;font-weight:700;color:#000000;line-height:120%;">${b.title}</h4>
       <p style="margin:0;font-size:12px;font-weight:400;color:#000000;line-height:120%;">${b.description}</p>
@@ -730,8 +797,8 @@ function generateBenefitsHTML(block: NewsletterBlock): string {
 
   return `<!-- Benefity -->
 <tr>
-  <td align="center" style="padding:32px 24px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" style="max-width:600px;">
+  <td align="center" style="padding:32px 24px;margin-bottom:32px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
       <tr>${benefitCells}</tr>
     </table>
   </td>
@@ -749,8 +816,11 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
   const viewAllText = (content as any).viewAllText || 'zobrazit vše';
   const viewAllUrl = (content as any).viewAllUrl || '#';
 
+  const catCount = Math.min(categories.length, 4);
+  const colWidth = Math.floor(100 / catCount);
+
   const catCells = categories.slice(0, 4).map((c: any) => `
-    <td valign="top" style="padding:0 6px;">
+    <td valign="top" width="${colWidth}%" class="stack" style="padding:0;">
       <a href="${c.url || '#'}" style="text-decoration:none;">
         <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
           <tr>
@@ -777,8 +847,8 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
 
   return `<!-- Kategorie -->
 <tr>
-  <td align="center" style="padding:24px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" style="max-width:600px;">
+  <td align="center" style="padding:24px;margin-bottom:32px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
       <tr>
         <td style="padding-bottom:1rem;">
           <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -812,19 +882,22 @@ function generatePoziceHTML(block: NewsletterBlock): string {
   const viewAllText = (content as any).viewAllText || 'zobrazit vše';
   const viewAllUrl = (content as any).viewAllUrl || '#';
 
+  const posCount = Math.min(positions.length, 3);
+  const colWidth = Math.floor(100 / posCount);
+
   const positionCells = positions.slice(0, 3).map((p: any) => {
     const isDark = isColorDark(p.bgColor || '#F4F4F4');
     const textColor = isDark ? '#FFFFFF' : '#000000';
     const borderColor = isDark ? '#FFFFFF' : '#212121';
 
     return `
-    <td valign="top" style="padding:0 6px;">
+    <td valign="top" width="${colWidth}%" class="stack" style="padding:0;">
       <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="background-color:${p.bgColor || '#F4F4F4'};">
         <tr>
           <td style="padding:16px;font-family:'JetBrains Mono',monospace;">
             <h4 style="margin:0 0 12px 0;font-size:16px;font-weight:700;color:${textColor};">${p.title}</h4>
             <p style="margin:0 0 1rem 0;font-size:12px;color:${textColor};">${p.description}</p>
-            <a href="${p.buttonUrl || '#'}" style="display:inline-flex;align-items:center;padding:12px 24px;border:1px solid ${borderColor};color:${textColor};font-size:12px;text-decoration:none;width:auto;">
+            <a href="${p.buttonUrl || '#'}" style="display:inline-flex;align-items:center;padding:12px 24px;border:1px solid ${borderColor};color:${textColor};font-size:12px;text-decoration:none;">
               ${ARROW_ICON_SVG(borderColor)}
               <span style="margin-left:8px;">${p.buttonText}</span>
             </a>
@@ -842,8 +915,8 @@ function generatePoziceHTML(block: NewsletterBlock): string {
 
   return `<!-- Pozice -->
 <tr>
-  <td align="center" style="padding:24px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" style="max-width:600px;">
+  <td align="center" style="padding:24px;margin-bottom:32px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
       <tr>
         <td style="padding-bottom:1rem;">
           <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -876,8 +949,8 @@ function generateProductTextHTML(block: NewsletterBlock): string {
 
   return `<!-- Produkt + text -->
 <tr>
-  <td align="center" style="padding:24px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="400" style="max-width:400px;">
+  <td align="center" style="padding:24px;margin-bottom:32px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="400" class="wrap" style="max-width:400px;">
       <tr>
         <td>
           ${productImage ? `<img src="${productImage}" width="400" alt="${productName}" style="display:block;width:100%;aspect-ratio:4/5;object-fit:cover;"/>` :
@@ -902,8 +975,8 @@ function generateTextTwoColumnsHTML(block: NewsletterBlock): string {
 
   return `<!-- Text dva sloupce -->
 <tr>
-  <td align="center" style="padding:24px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" style="max-width:600px;">
+  <td align="center" style="padding:24px;margin-bottom:32px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
       <tr>
         <td valign="top" width="100" style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:900;color:#212121;">
           ${leftColumn}
@@ -958,14 +1031,29 @@ function getNewsletterCSS(): string {
       color: inherit;
     }
     
-    /* Responsive */
+    /* Responsive - Mobile */
     @media only screen and (max-width: 620px) {
-      table[class="wrap"] {
+      table.wrap {
         width: 100% !important;
       }
-      td[class="stack"] {
+      td.stack {
         display: block !important;
         width: 100% !important;
+        padding: 0 0 16px 0 !important;
+      }
+      td.stack:last-child {
+        padding-bottom: 0 !important;
+      }
+      /* Make images responsive */
+      img {
+        max-width: 100% !important;
+        height: auto !important;
+      }
+      /* Stack footer columns */
+      .footer-col {
+        display: block !important;
+        width: 100% !important;
+        padding-bottom: 24px !important;
       }
     }
   `;
