@@ -169,17 +169,19 @@ export const PoziceBlock = ({ block, onUpdate }: PoziceBlockProps) => {
                 {position.description}
               </p>
 
-              {/* Action button - with border and arrow, dynamic colors */}
+              {/* Action button - sized to text like promo boxes, dynamic colors */}
               <button 
-                className="text-xs px-3 py-2 border flex items-center justify-center gap-2"
+                className="text-xs border inline-flex items-center"
                 style={{ 
                   borderColor: isColorDark(position.bgColor || '#F4F4F4') ? '#FFFFFF' : '#212121', 
                   color: isColorDark(position.bgColor || '#F4F4F4') ? '#FFFFFF' : '#212121',
+                  backgroundColor: 'transparent',
+                  padding: '12px 24px',
                   borderWidth: '1px'
                 }}
                 onClick={() => setEditingPosition(index)}
               >
-                <ArrowRight className="w-3 h-3" />
+                <ArrowRight className="w-3 h-3 mr-2" />
                 {position.buttonText}
               </button>
             </div>
