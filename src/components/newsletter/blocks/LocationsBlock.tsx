@@ -256,13 +256,12 @@ export const LocationsBlock = ({ block, onUpdate }: LocationsBlockProps) => {
                   {/* Action buttons - 36px circular with green border, no background */}
                   <div className="flex items-center gap-2">
                     <button 
-                      className="flex items-center justify-center"
+                      className="flex items-center justify-center locations-circle-btn"
                       style={{ 
                         width: '36px', 
                         height: '36px', 
                         backgroundColor: 'transparent',
-                        border: '1px solid #00C322',
-                        borderRadius: '100% !important' as any
+                        border: '1px solid #00C322'
                       }}
                       onClick={() => setEditingLocation(index)}
                     >
