@@ -114,7 +114,7 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
   };
 
   return (
-    <div style={{ backgroundColor: '#00C322' }} className="border-t border-black/10">
+    <div style={{ backgroundColor: '#00C322' }}>
       <div className="max-w-2xl mx-auto">
         {/* Main footer content - text 12px */}
         <div className="p-8 grid grid-cols-4 gap-6" style={{ fontSize: '12px' }}>
