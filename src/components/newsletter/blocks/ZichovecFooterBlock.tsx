@@ -53,6 +53,9 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
   const [editingColumn, setEditingColumn] = useState<{ colIdx: number; linkIdx: number } | null>(null);
   const [editingSocial, setEditingSocial] = useState<number | null>(null);
   const [editingPhone, setEditingPhone] = useState(false);
+  const [editingEmail, setEditingEmail] = useState(false);
+
+  const email = (block.content as any).email || 'e-shop@pivovarzichovec.cz';
 
   const defaultColumns: FooterColumn[] = [
     {
@@ -126,13 +129,13 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
               </span>
             </p>
             <p className="mb-6">
-              <a 
-                href="mailto:e-shop@pivovarzichovec.cz"
+              <span 
                 className="hover:no-underline cursor-pointer" 
                 style={{ color: '#212121', fontWeight: 'bold', textDecoration: 'underline' }}
+                onClick={() => setEditingEmail(true)}
               >
                 Email
-              </a>
+              </span>
             </p>
             <div className="flex flex-col gap-1">
               {socials.map((social, idx) => (
@@ -279,6 +282,25 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
                 value={(block.content.footerText || '602 555 555').replace(/^\+420\s*/, '').replace(/^tel\.\s*/i, '')}
                 onChange={(e) => onUpdate({ ...block.content, footerText: e.target.value })}
                 placeholder="602 555 555"
+              />
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Email Dialog */}
+      <Dialog open={editingEmail} onOpenChange={(open) => !open && setEditingEmail(false)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Upravit e-mail</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium">E-mailová adresa</label>
+              <Input
+                value={email}
+                onChange={(e) => onUpdate({ ...block.content, email: e.target.value } as any)}
+                placeholder="e-shop@pivovarzichovec.cz"
               />
             </div>
           </div>
