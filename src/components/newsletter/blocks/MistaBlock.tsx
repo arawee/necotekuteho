@@ -57,13 +57,14 @@ export const MistaBlock = ({ block, onUpdate }: MistaBlockProps) => {
   return (
     <div className="bg-white border border-border p-6">
       <div className="max-w-2xl mx-auto">
-        {/* Header */}
+        {/* Header - title 20px bold */}
         <div className="flex justify-between items-center" style={{ marginBottom: '1rem' }}>
           <h2 
+            className="font-bold"
             contentEditable
             suppressContentEditableWarning
             onBlur={(e) => onUpdate({ ...block.content, title: e.currentTarget.textContent || '' })}
-            style={{ color: '#212121', fontSize: '20px', fontWeight: 700, marginBottom: '1rem' }}
+            style={{ color: '#212121', fontSize: '20px' }}
           >
             {block.content.title || 'Kde nás ochutnáte?'}
           </h2>
