@@ -132,14 +132,18 @@ export const RichTextEditor = ({ value, onChange, placeholder, className }: Rich
       case 3:
         heading.style.fontSize = '16px';
         heading.style.fontWeight = 'bold';
+        heading.style.lineHeight = '140%';
         break;
       case 4:
         heading.style.fontSize = '14px';
         heading.style.fontWeight = '700';
+        heading.style.lineHeight = '140%';
         break;
     }
     heading.style.margin = '0';
-    heading.style.lineHeight = '1.2';
+    if (level === 1 || level === 2) {
+      heading.style.lineHeight = '120%';
+    }
 
     // If the selection matches the full formatted element, replace it (prevents nesting)
     if (closest && closestText === selectionText) {
