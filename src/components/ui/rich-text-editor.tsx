@@ -165,7 +165,7 @@ export const RichTextEditor = ({ value, onChange, placeholder, className }: Rich
     onChange(clean);
   };
 
-  // Paragraph handler - reset to default paragraph styling (without nesting)
+  // Paragraph handler - strip all formatting (leave bare text)
   const handleParagraph = () => {
     const selection = window.getSelection();
     if (!selection || selection.rangeCount === 0) return;
@@ -205,26 +205,24 @@ export const RichTextEditor = ({ value, onChange, placeholder, className }: Rich
     const closestText = closest?.textContent?.trim() ?? '';
     const selectionText = selectedText.trim();
 
-    const span = document.createElement('span');
-    span.textContent = selectedText;
-    span.style.fontSize = '12px';
-    span.style.fontWeight = '500';
-    span.style.lineHeight = '120%';
-
+    // Replace formatted element with bare text node (no wrapper)
     if (closest && closestText === selectionText) {
-      closest.replaceWith(span);
+      const textNode = document.createTextNode(selectedText);
+      closest.replaceWith(textNode);
 
       const newRange = document.createRange();
-      newRange.setStartAfter(span);
-      newRange.setEndAfter(span);
+      newRange.setStartAfter(textNode);
+      newRange.setEndAfter(textNode);
       selection.removeAllRanges();
       selection.addRange(newRange);
     } else {
+      // Just delete and insert plain text
       range.deleteContents();
-      range.insertNode(span);
+      const textNode = document.createTextNode(selectedText);
+      range.insertNode(textNode);
 
-      range.setStartAfter(span);
-      range.setEndAfter(span);
+      range.setStartAfter(textNode);
+      range.setEndAfter(textNode);
       selection.removeAllRanges();
       selection.addRange(range);
     }
