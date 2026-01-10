@@ -45,7 +45,7 @@ export const MistaBlock = ({ block, onUpdate }: MistaBlockProps) => {
   };
 
   const addPlace = () => {
-    if (places.length >= 4) return;
+    if (places.length >= 3) return;
     const newPlaces = [...places, { image: '', name: 'Nové místo', buttonText: '→', buttonUrl: '#' }];
     onUpdate({ ...block.content, places: newPlaces } as any);
   };
@@ -64,7 +64,7 @@ export const MistaBlock = ({ block, onUpdate }: MistaBlockProps) => {
             contentEditable
             suppressContentEditableWarning
             onBlur={(e) => onUpdate({ ...block.content, title: e.currentTarget.textContent || '' })}
-            style={{ color: '#212121', fontSize: '20px', fontWeight: 400, marginBottom: '1rem' }}
+            style={{ color: '#212121', fontSize: '20px', fontWeight: 700, marginBottom: '1rem' }}
           >
             {block.content.title || 'Kde nás ochutnáte?'}
           </h2>
@@ -91,8 +91,8 @@ export const MistaBlock = ({ block, onUpdate }: MistaBlockProps) => {
 
         {/* Places grid - flex with gap 12px */}
         <div style={{ display: 'flex', gap: '12px' }}>
-          {places.slice(0, 4).map((place, index) => (
-            <div key={index} className="group relative" style={{ flex: 1 }}>
+          {places.slice(0, 3).map((place, index) => (
+            <div key={index} className="group relative" style={{ flex: '1 1 0', minWidth: 0 }}>
               {/* Remove button */}
               <button
                 onClick={() => removePlace(index)}
@@ -116,13 +116,12 @@ export const MistaBlock = ({ block, onUpdate }: MistaBlockProps) => {
               {/* Button and name row */}
               <div className="flex items-center gap-2">
                 <button 
-                  className="flex items-center justify-center flex-shrink-0"
+                  className="mista-circle-btn flex items-center justify-center flex-shrink-0"
                   style={{ 
                     width: '36px', 
                     height: '36px', 
                     backgroundColor: 'transparent',
-                    border: '1px solid #00C322',
-                    borderRadius: '100%'
+                    border: '1px solid #00C322'
                   }}
                   onClick={() => setEditingPlace(index)}
                 >
@@ -141,7 +140,7 @@ export const MistaBlock = ({ block, onUpdate }: MistaBlockProps) => {
         </div>
 
         {/* Add button */}
-        {places.length < 4 && (
+        {places.length < 3 && (
           <div className="mt-4 flex justify-center">
             <Button
               onClick={addPlace}
