@@ -8,6 +8,17 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Plus, Trash2 } from 'lucide-react';
+
+interface TagItem {
+  text: string;
+  url: string;
+}
+
+interface ShareItem {
+  text: string;
+  url: string;
+}
 
 interface ArticleTextBlockProps {
   block: NewsletterBlock;
@@ -20,19 +31,63 @@ export const ArticleTextBlock = ({ block, onUpdate }: ArticleTextBlockProps) => 
 
   const date = (block.content as any).date || '28. května 2025';
   const author = block.content.subtitle || 'Petr Novák';
-  const tags = (block.content as any).tags || 'Pivo, OPA, Trend';
-  const shareLinks = (block.content as any).shareLinks || 'Link, Facebook, X, LinkedIn';
+  
+  // Tags and shares as arrays with links
+  const tags: TagItem[] = (block.content as any).tagsArray || [
+    { text: 'Pivo', url: '#' },
+    { text: 'OPA', url: '#' },
+    { text: 'Trend', url: '#' }
+  ];
+  
+  const shareLinks: ShareItem[] = (block.content as any).shareLinksArray || [
+    { text: 'Link', url: '#' },
+    { text: 'Facebook', url: '#' },
+    { text: 'X', url: '#' },
+    { text: 'LinkedIn', url: '#' }
+  ];
+
+  const updateTag = (index: number, field: keyof TagItem, value: string) => {
+    const newTags = [...tags];
+    newTags[index] = { ...newTags[index], [field]: value };
+    onUpdate({ ...block.content, tagsArray: newTags } as any);
+  };
+
+  const addTag = () => {
+    const newTags = [...tags, { text: 'Nový', url: '#' }];
+    onUpdate({ ...block.content, tagsArray: newTags } as any);
+  };
+
+  const removeTag = (index: number) => {
+    const newTags = tags.filter((_, i) => i !== index);
+    onUpdate({ ...block.content, tagsArray: newTags } as any);
+  };
+
+  const updateShare = (index: number, field: keyof ShareItem, value: string) => {
+    const newShares = [...shareLinks];
+    newShares[index] = { ...newShares[index], [field]: value };
+    onUpdate({ ...block.content, shareLinksArray: newShares } as any);
+  };
+
+  const addShare = () => {
+    const newShares = [...shareLinks, { text: 'Nový', url: '#' }];
+    onUpdate({ ...block.content, shareLinksArray: newShares } as any);
+  };
+
+  const removeShare = (index: number) => {
+    const newShares = shareLinks.filter((_, i) => i !== index);
+    onUpdate({ ...block.content, shareLinksArray: newShares } as any);
+  };
 
   return (
     <div className="bg-white border border-border p-6">
       <div className="max-w-2xl mx-auto">
-        {/* Title */}
+        {/* Title - bold */}
         <h1 
-          className="text-3xl font-normal mb-6"
+          className="text-3xl mb-6"
           contentEditable
           suppressContentEditableWarning
           onBlur={(e) => onUpdate({ ...block.content, title: e.currentTarget.textContent || '' })}
-          style={{ color: '#212121', lineHeight: '1.2' }}
+          style={{ color: '#212121', lineHeight: '1.2', fontWeight: 'bold' }}
         >
           {block.content.title || 'OPA: Jemná evoluce moderních ale'}
         </h1>
@@ -66,9 +121,9 @@ export const ArticleTextBlock = ({ block, onUpdate }: ArticleTextBlockProps) => 
           )}
         </div>
 
-        {/* Metadata - in grey box */}
+        {/* Metadata - in grey box, width fits content */}
         <div 
-          className="p-4 space-y-1 text-sm cursor-pointer"
+          className="p-4 space-y-1 text-sm cursor-pointer inline-block"
           style={{ backgroundColor: '#F4F4F4' }}
           onClick={() => setIsEditingMeta(true)}
         >
@@ -82,22 +137,26 @@ export const ArticleTextBlock = ({ block, onUpdate }: ArticleTextBlockProps) => 
           </div>
           <div className="flex gap-2">
             <span className="font-medium">Tag →</span>
-            <span className="text-muted-foreground underline">{tags}</span>
+            <span className="text-muted-foreground underline">
+              {tags.map(t => t.text).join(', ')}
+            </span>
           </div>
           <div className="flex gap-2">
             <span className="font-medium">Sdílet →</span>
-            <span className="text-muted-foreground underline">{shareLinks}</span>
+            <span className="text-muted-foreground underline">
+              {shareLinks.map(s => s.text).join(', ')}
+            </span>
           </div>
         </div>
       </div>
 
       {/* Edit Metadata Dialog */}
       <Dialog open={isEditingMeta} onOpenChange={setIsEditingMeta}>
-        <DialogContent>
+        <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle>Upravit metadata</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="space-y-4 max-h-[60vh] overflow-y-auto">
             <div>
               <label className="text-sm font-medium">Datum</label>
               <Input
@@ -112,19 +171,75 @@ export const ArticleTextBlock = ({ block, onUpdate }: ArticleTextBlockProps) => 
                 onChange={(e) => onUpdate({ ...block.content, subtitle: e.target.value })}
               />
             </div>
+            
+            {/* Tags with links */}
             <div>
-              <label className="text-sm font-medium">Tagy (oddělené čárkou)</label>
-              <Input
-                value={tags}
-                onChange={(e) => onUpdate({ ...block.content, tags: e.target.value } as any)}
-              />
+              <label className="text-sm font-medium mb-2 block">Tagy</label>
+              <div className="space-y-2">
+                {tags.map((tag, idx) => (
+                  <div key={idx} className="flex items-center gap-2">
+                    <Input
+                      value={tag.text}
+                      onChange={(e) => updateTag(idx, 'text', e.target.value)}
+                      placeholder="Text"
+                      className="flex-1"
+                    />
+                    <Input
+                      value={tag.url}
+                      onChange={(e) => updateTag(idx, 'url', e.target.value)}
+                      placeholder="URL"
+                      className="flex-1"
+                    />
+                    <button
+                      onClick={() => removeTag(idx)}
+                      className="text-red-500 hover:text-red-700 p-1"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+                <button
+                  onClick={addTag}
+                  className="text-xs px-2 py-1 border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500 flex items-center gap-1"
+                >
+                  <Plus className="w-3 h-3" /> Přidat tag
+                </button>
+              </div>
             </div>
+            
+            {/* Share links */}
             <div>
-              <label className="text-sm font-medium">Sdílet (oddělené čárkou)</label>
-              <Input
-                value={shareLinks}
-                onChange={(e) => onUpdate({ ...block.content, shareLinks: e.target.value } as any)}
-              />
+              <label className="text-sm font-medium mb-2 block">Sdílet</label>
+              <div className="space-y-2">
+                {shareLinks.map((share, idx) => (
+                  <div key={idx} className="flex items-center gap-2">
+                    <Input
+                      value={share.text}
+                      onChange={(e) => updateShare(idx, 'text', e.target.value)}
+                      placeholder="Text"
+                      className="flex-1"
+                    />
+                    <Input
+                      value={share.url}
+                      onChange={(e) => updateShare(idx, 'url', e.target.value)}
+                      placeholder="URL"
+                      className="flex-1"
+                    />
+                    <button
+                      onClick={() => removeShare(idx)}
+                      className="text-red-500 hover:text-red-700 p-1"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+                <button
+                  onClick={addShare}
+                  className="text-xs px-2 py-1 border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500 flex items-center gap-1"
+                >
+                  <Plus className="w-3 h-3" /> Přidat odkaz
+                </button>
+              </div>
             </div>
           </div>
         </DialogContent>

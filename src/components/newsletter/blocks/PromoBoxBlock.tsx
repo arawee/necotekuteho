@@ -1,6 +1,6 @@
 import { NewsletterBlock } from '@/types/newsletter';
 import { Input } from '@/components/ui/input';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, ArrowRight } from 'lucide-react';
 import { useState } from 'react';
 import {
   Dialog,
@@ -161,15 +161,15 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
                 {box.features.map((feature, fIdx) => (
                   <div key={fIdx} className="text-xs flex items-start gap-1 group/feature">
                     <span 
-                      className="font-medium cursor-text"
+                      className="cursor-text"
                       contentEditable
                       suppressContentEditableWarning
                       onBlur={(e) => updateFeature(index, fIdx, 'label', e.currentTarget.textContent || '')}
-                      style={{ color: isVeryDarkBg(box.bgColor) ? '#FFFFFF' : '#000000' }}
+                      style={{ color: isVeryDarkBg(box.bgColor) ? '#FFFFFF' : '#000000', fontWeight: 'bold' }}
                     >
                       {feature.label}
                     </span>
-                    <span style={{ color: isVeryDarkBg(box.bgColor) ? '#CCC' : '#666' }}> → </span>
+                    <ArrowRight style={{ width: '10px', height: '10px', color: '#000000', flexShrink: 0, marginTop: '2px' }} />
                     <span 
                       className="cursor-text flex-1"
                       contentEditable
@@ -195,14 +195,15 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
                 </button>
               </div>
 
-              {/* Button */}
+              {/* Button - sized to text + 24px left/right, 12px top/bottom */}
               <div className="space-y-2">
                 <button 
-                  className="text-sm px-4 py-2 border w-full text-left"
+                  className="text-sm border inline-flex items-center"
                   style={{ 
                     borderColor: isVeryDarkBg(box.bgColor) ? '#FFFFFF' : '#000000',
                     color: isVeryDarkBg(box.bgColor) ? '#FFFFFF' : '#000000',
-                    backgroundColor: 'transparent'
+                    backgroundColor: 'transparent',
+                    padding: '12px 24px'
                   }}
                   onClick={() => setEditingButton(index)}
                 >

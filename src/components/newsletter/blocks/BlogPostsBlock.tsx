@@ -1,7 +1,7 @@
 import { NewsletterBlock } from '@/types/newsletter';
 import { ImageUpload } from '@/components/ui/image-upload';
 import { Input } from '@/components/ui/input';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -64,6 +64,21 @@ export const BlogPostsBlock = ({ block, onUpdate }: BlogPostsBlockProps) => {
     onUpdate({ ...block.content, posts: newPosts } as any);
   };
 
+  const addPost = () => {
+    const newPost: BlogPost = {
+      image: '',
+      title: 'Nový příspěvek',
+      excerpt: 'Popis příspěvku...',
+      url: '#'
+    };
+    onUpdate({ ...block.content, posts: [...posts, newPost] } as any);
+  };
+
+  const removePost = (index: number) => {
+    const newPosts = posts.filter((_: any, i: number) => i !== index);
+    onUpdate({ ...block.content, posts: newPosts } as any);
+  };
+
   return (
     <div className="bg-white border border-border p-6">
       <div className="max-w-2xl mx-auto">
@@ -88,11 +103,12 @@ export const BlogPostsBlock = ({ block, onUpdate }: BlogPostsBlockProps) => {
             </label>
             {showViewAll && (
               <span 
-                className="text-sm cursor-pointer underline"
-                style={{ color: '#000000' }}
+                className="text-sm cursor-pointer"
+                style={{ color: '#000000', textUnderlineOffset: '2px' }}
                 onClick={() => setEditingPost(-1)}
               >
-                {viewAllText}
+                <span style={{ textDecoration: 'none' }}>→ </span>
+                <span style={{ textDecoration: 'underline' }}>{viewAllText}</span>
               </span>
             )}
           </div>
@@ -101,9 +117,17 @@ export const BlogPostsBlock = ({ block, onUpdate }: BlogPostsBlockProps) => {
         {/* Blog posts grid */}
         <div className="grid grid-cols-4 gap-4">
           {posts.map((post: BlogPost, index: number) => (
-            <div key={index} className="group">
-              {/* Post image */}
-              <div className="relative mb-3 aspect-square overflow-hidden">
+            <div key={index} className="group relative">
+              {/* Remove button */}
+              <button
+                onClick={() => removePost(index)}
+                className="absolute -top-2 -right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity p-1 bg-white shadow hover:bg-red-50"
+              >
+                <Trash2 className="w-3 h-3 text-red-500" />
+              </button>
+
+              {/* Post image - no margin, directly connected to grey box */}
+              <div className="relative aspect-square overflow-hidden">
                 <ImageUpload
                   currentImage={post.image}
                   onImageUploaded={(url) => updatePost(index, 'image', url)}
@@ -114,37 +138,55 @@ export const BlogPostsBlock = ({ block, onUpdate }: BlogPostsBlockProps) => {
                 />
               </div>
 
-              {/* Post info */}
-              <h3 
-                className="font-medium text-sm mb-2 cursor-pointer"
-                onClick={() => setEditingPost(index)}
-                style={{ color: '#212121' }}
-              >
-                {post.title}
-              </h3>
-              {/* Grey box for excerpt */}
+              {/* Grey box for title, excerpt and button - no gap to image */}
               <div 
-                className="p-2 mb-3"
+                className="p-3"
                 style={{ backgroundColor: '#F4F4F4' }}
               >
+                {/* Title - 20px bold */}
+                <h3 
+                  className="mb-2 cursor-pointer"
+                  onClick={() => setEditingPost(index)}
+                  style={{ color: '#212121', fontSize: '20px', fontWeight: 'bold' }}
+                >
+                  {post.title}
+                </h3>
+                
+                {/* Excerpt */}
                 <p 
-                  className="text-xs text-muted-foreground line-clamp-3 cursor-pointer"
+                  className="text-xs text-muted-foreground line-clamp-3 cursor-pointer mb-3"
                   onClick={() => setEditingPost(index)}
                 >
                   {post.excerpt}
                 </p>
-              </div>
 
-              {/* Action button - same style as Místa */}
-              <button 
-                className="w-6 h-6 flex items-center justify-center border"
-                style={{ borderColor: '#00C322' }}
-                onClick={() => setEditingPost(index)}
-              >
-                <ArrowRight className="w-4 h-4" style={{ color: '#00C322' }} />
-              </button>
+                {/* Action button - 48px circular with 12px arrow */}
+                <button 
+                  className="flex items-center justify-center rounded-full"
+                  style={{ 
+                    width: '48px', 
+                    height: '48px', 
+                    backgroundColor: '#00C322',
+                    border: 'none'
+                  }}
+                  onClick={() => setEditingPost(index)}
+                >
+                  <ArrowRight style={{ width: '12px', height: '12px', color: '#FFFFFF' }} />
+                </button>
+              </div>
             </div>
           ))}
+        </div>
+
+        {/* Add post button */}
+        <div className="mt-4 flex justify-center">
+          <button
+            onClick={addPost}
+            className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500 transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            Přidat příspěvek
+          </button>
         </div>
       </div>
 

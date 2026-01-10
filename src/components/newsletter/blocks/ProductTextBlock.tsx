@@ -23,8 +23,8 @@ export const ProductTextBlock = ({ block, onUpdate }: ProductTextBlockProps) => 
   return (
     <div className="bg-white border border-border p-6">
       <div className="max-w-md mx-auto">
-        {/* Product image */}
-        <div className="relative mb-4 aspect-[3/4] overflow-hidden flex items-center justify-center">
+        {/* Product image - no margin bottom */}
+        <div className="relative aspect-[3/4] overflow-hidden flex items-center justify-center">
           <ImageUpload
             currentImage={productImage}
             onImageUploaded={(url) => onUpdate({ ...block.content, image: url })}
@@ -41,18 +41,18 @@ export const ProductTextBlock = ({ block, onUpdate }: ProductTextBlockProps) => 
           style={{ backgroundColor: '#F4F4F4' }}
           onClick={() => setIsEditing(true)}
         >
-          {/* Product name */}
+          {/* Product name - 20px with 16px margin below */}
           <h2 
-            className="text-xl font-normal mb-4"
-            style={{ color: '#212121' }}
+            className="font-normal"
+            style={{ color: '#212121', fontSize: '20px', marginBottom: '16px' }}
           >
             {productName}
           </h2>
 
-          {/* Product description */}
+          {/* Product description - 120% line height */}
           <p 
-            className="text-sm leading-relaxed"
-            style={{ color: '#212121' }}
+            className="text-sm"
+            style={{ color: '#212121', lineHeight: '120%' }}
           >
             {productText}
           </p>

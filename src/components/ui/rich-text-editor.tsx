@@ -1,5 +1,5 @@
 import React, { useRef, useCallback, useState } from 'react';
-import { Bold, Italic, Underline, Strikethrough, Link } from 'lucide-react';
+import { Bold, Italic, Underline, Strikethrough, Link, Heading1, Heading2, Heading3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { sanitizeHTML } from '@/lib/sanitize';
@@ -26,11 +26,11 @@ export const RichTextEditor = ({ value, onChange, placeholder, className }: Rich
   const sanitizeInline = useCallback((input: string) => {
     if (!input) return '';
     
-    // 1) FIRST convert block elements to <br> tags
+    // 1) FIRST convert block elements to <br> tags (except h1, h2, h3 which we preserve)
     const container = document.createElement('div');
     container.innerHTML = input;
   
-    const BLOCKS = ['p','div','h1','h2','h3','h4','h5','h6','ul','ol','li','blockquote','pre'];
+    const BLOCKS = ['p','div','ul','ol','li','blockquote','pre'];
   
     BLOCKS.forEach((tag) => {
       container.querySelectorAll(tag).forEach((el) => {
@@ -113,6 +113,53 @@ export const RichTextEditor = ({ value, onChange, placeholder, className }: Rich
   const handleUnderline = () => execCommand('underline');
   const handleStrikethrough = () => execCommand('strikeThrough');
   
+  // Heading handlers - wrap selection in heading tags with specific styles
+  const handleHeading = (level: 1 | 2 | 3) => {
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return;
+    
+    const range = selection.getRangeAt(0);
+    const selectedText = range.toString();
+    
+    if (!selectedText) return;
+    
+    // Create heading element with inline styles for export
+    const heading = document.createElement(`h${level}`);
+    heading.textContent = selectedText;
+    
+    // Apply styles based on level
+    switch (level) {
+      case 1:
+        heading.style.fontSize = '30px';
+        heading.style.fontWeight = 'bold';
+        break;
+      case 2:
+        heading.style.fontSize = '24px';
+        heading.style.fontWeight = 'bold';
+        break;
+      case 3:
+        heading.style.fontSize = '16px';
+        heading.style.fontWeight = 'bold';
+        break;
+    }
+    heading.style.margin = '0';
+    heading.style.lineHeight = '1.2';
+    
+    range.deleteContents();
+    range.insertNode(heading);
+    
+    // Move cursor after the heading
+    range.setStartAfter(heading);
+    range.setEndAfter(heading);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    
+    if (editorRef.current) {
+      const clean = sanitizeInline(editorRef.current.innerHTML);
+      onChange(clean);
+    }
+  };
+  
   const handleLinkClick = () => {
     const selection = window.getSelection();
     if (selection && selection.toString().length > 0 && selection.rangeCount > 0) {
@@ -190,7 +237,7 @@ export const RichTextEditor = ({ value, onChange, placeholder, className }: Rich
     <>
       <div className={cn('border border-border rounded-lg', className)}>
         {/* Toolbar */}
-        <div className="flex items-center gap-1 p-2 border-b border-border">
+        <div className="flex items-center gap-1 p-2 border-b border-border flex-wrap">
           <Button type="button" variant="ghost" size="sm" onClick={handleBold} className="h-8 w-8 p-0">
             <Bold className="h-4 w-4" />
           </Button>
@@ -205,6 +252,16 @@ export const RichTextEditor = ({ value, onChange, placeholder, className }: Rich
           </Button>
           <Button type="button" variant="ghost" size="sm" onClick={handleLinkClick} className="h-8 w-8 p-0">
             <Link className="h-4 w-4" />
+          </Button>
+          <div className="w-px h-6 bg-border mx-1" />
+          <Button type="button" variant="ghost" size="sm" onClick={() => handleHeading(1)} className="h-8 px-2" title="Heading 1 (30px bold)">
+            <Heading1 className="h-4 w-4" />
+          </Button>
+          <Button type="button" variant="ghost" size="sm" onClick={() => handleHeading(2)} className="h-8 px-2" title="Heading 2 (24px bold)">
+            <Heading2 className="h-4 w-4" />
+          </Button>
+          <Button type="button" variant="ghost" size="sm" onClick={() => handleHeading(3)} className="h-8 px-2" title="Heading 3 (16px bold)">
+            <Heading3 className="h-4 w-4" />
           </Button>
         </div>
 

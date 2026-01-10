@@ -79,20 +79,21 @@ export const MistaBlock = ({ block, onUpdate }: MistaBlockProps) => {
             </label>
             {showViewAll && (
               <span 
-                className="text-sm cursor-pointer underline"
-                style={{ color: '#000000' }}
+                className="text-sm cursor-pointer"
+                style={{ color: '#000000', textUnderlineOffset: '2px' }}
                 onClick={() => setEditingPlace(-1)}
               >
-                {viewAllText}
+                <span style={{ textDecoration: 'none' }}>→ </span>
+                <span style={{ textDecoration: 'underline' }}>{viewAllText}</span>
               </span>
             )}
           </div>
         </div>
 
-        {/* Places grid */}
-        <div className="grid grid-cols-4 gap-4">
+        {/* Places grid - flex with gap 12px */}
+        <div style={{ display: 'flex', gap: '12px' }}>
           {places.slice(0, 4).map((place, index) => (
-            <div key={index} className="group relative">
+            <div key={index} className="group relative" style={{ flex: 1 }}>
               {/* Remove button */}
               <button
                 onClick={() => removePlace(index)}
@@ -116,11 +117,16 @@ export const MistaBlock = ({ block, onUpdate }: MistaBlockProps) => {
               {/* Button and name row */}
               <div className="flex items-center gap-2">
                 <button 
-                  className="w-6 h-6 flex items-center justify-center border flex-shrink-0"
-                  style={{ borderColor: '#00C322' }}
+                  className="flex items-center justify-center flex-shrink-0 rounded-full"
+                  style={{ 
+                    width: '48px', 
+                    height: '48px', 
+                    backgroundColor: '#00C322',
+                    border: 'none'
+                  }}
                   onClick={() => setEditingPlace(index)}
                 >
-                  <ArrowRight className="w-4 h-4" style={{ color: '#00C322' }} />
+                  <ArrowRight style={{ width: '12px', height: '12px', color: '#FFFFFF' }} />
                 </button>
                 <h3 
                   className="font-medium text-sm truncate cursor-pointer"

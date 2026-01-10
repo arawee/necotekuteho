@@ -1,6 +1,5 @@
 import { NewsletterBlock } from '@/types/newsletter';
-import { Button } from '@/components/ui/button';
-import { Plus, Trash2 } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import { ImageUpload } from '@/components/ui/image-upload';
 import { useState } from 'react';
 import {
@@ -55,10 +54,10 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
     }
   ];
 
-  // Use saved benefits, but apply default icons if icon is empty
+  // Use saved benefits, but apply default icons if icon is empty (max 4)
   const savedBenefits: Benefit[] = (block.content as any).benefits;
   const benefits: Benefit[] = savedBenefits 
-    ? savedBenefits.map((b, i) => ({
+    ? savedBenefits.slice(0, 4).map((b, i) => ({
         ...b,
         icon: b.icon || defaultIcons[i] || defaultIcons[0]
       }))
@@ -71,7 +70,9 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
   };
 
   const addBenefit = () => {
-    const newBenefits = [...benefits, { icon: '', title: 'Nový benefit', description: 'Popis benefitu' }];
+    if (benefits.length >= 4) return;
+    const newIndex = benefits.length;
+    const newBenefits = [...benefits, { icon: defaultIcons[newIndex] || '', title: 'Nový benefit', description: 'Popis benefitu' }];
     onUpdate({ ...block.content, benefits: newBenefits } as any);
   };
 
@@ -83,7 +84,7 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
   return (
     <div className="bg-white border border-border p-8">
       <div className="max-w-3xl mx-auto">
-        <div style={{ display: 'flex', gap: '32px' }}>
+        <div style={{ display: 'flex', gap: '16px' }}>
           {benefits.map((benefit, index) => (
             <div key={index} className="group relative text-center" style={{ flex: 1 }}>
               {/* Remove button */}
@@ -94,9 +95,10 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
                 <Trash2 className="w-3 h-3 text-red-500" />
               </button>
 
-              {/* Icon - replaceable image 48px */}
+              {/* Icon - replaceable image 48px with margin-bottom 1rem */}
               <div 
-                className="mb-4 flex justify-center cursor-pointer"
+                className="flex justify-center cursor-pointer"
+                style={{ marginBottom: '1rem' }}
                 onClick={() => setEditingBenefit(index)}
               >
                 {benefit.icon ? (
@@ -115,11 +117,11 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
                 )}
               </div>
 
-              {/* Title - 20px bold black with 8px margin below */}
+              {/* Title - 20px bold black with 12px margin below */}
               <h3 
                 className="cursor-pointer"
                 onClick={() => setEditingBenefit(index)}
-                style={{ color: '#000000', fontSize: '20px', lineHeight: '120%', fontWeight: 'bold', marginBottom: '8px' }}
+                style={{ color: '#000000', fontSize: '20px', lineHeight: '120%', fontWeight: 'bold', marginBottom: '12px' }}
               >
                 {benefit.title}
               </h3>
@@ -136,18 +138,17 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
           ))}
         </div>
 
-        {/* Add button */}
-        <div className="mt-6 flex justify-center">
-          <Button
-            onClick={addBenefit}
-            variant="outline"
-            size="sm"
-            className="gap-1"
-          >
-            <Plus className="w-4 h-4" />
-            Přidat benefit
-          </Button>
-        </div>
+        {/* Add button - only show if less than 4 benefits */}
+        {benefits.length < 4 && (
+          <div className="mt-6 flex justify-center">
+            <button
+              onClick={addBenefit}
+              className="px-3 py-1.5 text-sm border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500 flex items-center gap-1"
+            >
+              + Přidat benefit
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Edit Dialog */}
