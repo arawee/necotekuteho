@@ -97,8 +97,8 @@ export const CategoriesBlock = ({ block, onUpdate }: CategoriesBlockProps) => {
               className="group relative" 
               style={{ 
                 flex: '1 1 0',
-                minWidth: 'calc(25% - 9px)',
-                maxWidth: 'calc(25% - 9px)'
+                minWidth: categories.length > 4 ? 'calc(25% - 9px)' : undefined,
+                maxWidth: categories.length > 4 ? 'calc(25% - 9px)' : undefined
               }}
             >
               {/* Remove button */}
