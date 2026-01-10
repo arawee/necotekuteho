@@ -87,11 +87,11 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
   return (
     <div style={{ backgroundColor: '#00C322' }} className="border-t border-black/10">
       <div className="max-w-2xl mx-auto">
-        {/* Main footer content */}
-        <div className="p-8 grid grid-cols-4 gap-6 text-sm">
-          {/* Contact column */}
+        {/* Main footer content - text 12px */}
+        <div className="p-8 grid grid-cols-4 gap-6" style={{ fontSize: '12px' }}>
+          {/* Contact column - first column bold and underlined */}
           <div>
-            <p className="mb-4" style={{ fontFamily: "'JetBrains Mono', monospace", color: '#212121' }}>
+            <p className="mb-4" style={{ fontFamily: "'JetBrains Mono', monospace", color: '#212121', fontWeight: 'bold', textDecoration: 'underline' }}>
               <span 
                 contentEditable 
                 suppressContentEditableWarning
@@ -129,8 +129,9 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
           {/* Link columns - editable */}
           {columns.map((column, colIdx) => (
             <div key={colIdx}>
+              {/* Headings 20px fontsize */}
               <h4 
-                className="font-medium mb-4 cursor-text" 
+                className="mb-4 cursor-text" 
                 contentEditable 
                 suppressContentEditableWarning
                 onBlur={(e) => {
@@ -138,7 +139,7 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
                   newColumns[colIdx] = { ...newColumns[colIdx], title: e.currentTarget.textContent || '' };
                   onUpdate({ ...block.content, columns: newColumns } as any);
                 }}
-                style={{ color: '#212121' }}
+                style={{ color: '#212121', fontSize: '20px', fontWeight: 'normal' }}
               >
                 {column.title}
               </h4>
@@ -171,8 +172,8 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
           ))}
         </div>
 
-        {/* Copyright - white background */}
-        <div className="px-8 py-4 flex justify-between items-center text-xs border-t border-black/10" style={{ backgroundColor: '#FFFFFF', color: '#212121' }}>
+        {/* Copyright - white background, 10px fontsize */}
+        <div className="px-8 py-4 flex justify-between items-center border-t border-black/10" style={{ backgroundColor: '#FFFFFF', color: '#212121', fontSize: '10px' }}>
           <span
             contentEditable 
             suppressContentEditableWarning

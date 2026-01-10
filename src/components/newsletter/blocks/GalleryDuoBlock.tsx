@@ -22,21 +22,22 @@ export const GalleryDuoBlock = ({ block, onUpdate }: GalleryDuoBlockProps) => {
     <div className="bg-white border border-border">
       <div className="max-w-2xl mx-auto">
         <div className="grid grid-cols-2">
-          <div className="aspect-square overflow-hidden">
+          {/* Both images 3:4 ratio */}
+          <div className="aspect-[3/4] overflow-hidden">
             <ImageUpload
               currentImage={photos[0]?.url}
               onImageUploaded={(url) => updatePhoto(0, url)}
-              aspectRatio="square"
+              aspectRatio="portrait"
               placeholder="Nahrát foto 1"
               className="w-full h-full"
               showBorder={false}
             />
           </div>
-          <div className="aspect-square overflow-hidden">
+          <div className="aspect-[3/4] overflow-hidden">
             <ImageUpload
               currentImage={photos[1]?.url}
               onImageUploaded={(url) => updatePhoto(1, url)}
-              aspectRatio="square"
+              aspectRatio="portrait"
               placeholder="Nahrát foto 2"
               className="w-full h-full"
               showBorder={false}

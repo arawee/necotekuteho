@@ -2,7 +2,7 @@ import { NewsletterBlock } from '@/types/newsletter';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Plus, Trash2 } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -32,14 +32,14 @@ export const PoziceBlock = ({ block, onUpdate }: PoziceBlockProps) => {
       description: 'Sit aliqu ip venim non nostrud consectetur consequ at conse ctetur conse qui incidid unt excepteur. Consequat est quia sit. repudiand ae labor um comma se ac representa tiveed accumsan minim adip iscing dolor en ea nostrud representé parida tur adipisicing adig ad pis labe.',
       buttonText: 'Mám zájem',
       buttonUrl: '#',
-      bgColor: '#FFFFFF'
+      bgColor: '#F4F4F4'
     },
     { 
       title: 'Obsluha v Zichoveckém baru', 
       description: 'Sit aliqu ip venim non nostrud consectetur consequ at conse ctetur conse qui incidid unt excepteur. Consequat est quia sit. cupidat ur laboré commod ac representa tiveed accusam is tempor. In dolor.',
       buttonText: 'Mám zájem',
       buttonUrl: '#',
-      bgColor: '#FFFFFF'
+      bgColor: '#F4F4F4'
     },
     { 
       title: 'Sládek', 
@@ -53,7 +53,7 @@ export const PoziceBlock = ({ block, onUpdate }: PoziceBlockProps) => {
       description: 'Sit aliqu ip venim non nostrud consectetur consequ at conse ctetur conse qui incidid unt excepteur. expreat sit alqua re cupidat laboré commod tempor. In dolore magna adip isicing dolor en ea aliqu ea nostrud lorem repre henderit parida tur',
       buttonText: 'Mám zájem',
       buttonUrl: '#',
-      bgColor: '#FFFFFF'
+      bgColor: '#F4F4F4'
     }
   ];
 
@@ -65,6 +65,22 @@ export const PoziceBlock = ({ block, onUpdate }: PoziceBlockProps) => {
   const updatePosition = (index: number, field: keyof Position, value: any) => {
     const newPositions = [...positions];
     newPositions[index] = { ...newPositions[index], [field]: value };
+    onUpdate({ ...block.content, positions: newPositions } as any);
+  };
+
+  const addPosition = () => {
+    const newPosition: Position = {
+      title: 'Nová pozice',
+      description: 'Popis pozice...',
+      buttonText: 'Mám zájem',
+      buttonUrl: '#',
+      bgColor: '#F4F4F4'
+    };
+    onUpdate({ ...block.content, positions: [...positions, newPosition] } as any);
+  };
+
+  const removePosition = (index: number) => {
+    const newPositions = positions.filter((_: any, i: number) => i !== index);
     onUpdate({ ...block.content, positions: newPositions } as any);
   };
 
@@ -92,24 +108,33 @@ export const PoziceBlock = ({ block, onUpdate }: PoziceBlockProps) => {
             </label>
             {showViewAll && (
               <span 
-                className="text-sm cursor-pointer underline"
-                style={{ color: '#000000' }}
+                className="text-sm cursor-pointer"
+                style={{ color: '#000000', textUnderlineOffset: '2px' }}
                 onClick={() => setEditingPosition(-1)}
               >
-                {viewAllText}
+                <span style={{ textDecoration: 'none' }}>→ </span>
+                <span style={{ textDecoration: 'underline' }}>{viewAllText}</span>
               </span>
             )}
           </div>
         </div>
 
-        {/* Positions grid */}
-        <div className="grid grid-cols-4 gap-4">
+        {/* Positions grid - flex */}
+        <div style={{ display: 'flex', gap: '12px' }}>
           {positions.map((position: Position, index: number) => (
             <div 
               key={index} 
-              className="group p-4 flex flex-col"
-              style={{ backgroundColor: position.bgColor || '#FFFFFF' }}
+              className="group p-4 flex flex-col relative"
+              style={{ backgroundColor: position.bgColor || '#F4F4F4', flex: 1 }}
             >
+              {/* Remove button */}
+              <button
+                onClick={() => removePosition(index)}
+                className="absolute -top-2 -right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity p-1 bg-white shadow hover:bg-red-50"
+              >
+                <Trash2 className="w-3 h-3 text-red-500" />
+              </button>
+
               {/* HEX Color picker */}
               <div className="mb-2 flex items-center gap-2">
                 <input
@@ -122,19 +147,20 @@ export const PoziceBlock = ({ block, onUpdate }: PoziceBlockProps) => {
                 <span className="text-[10px] text-muted-foreground">{position.bgColor}</span>
               </div>
 
-              {/* Position title */}
+              {/* Position title - 16px, black text */}
               <h3 
-                className="font-medium text-sm mb-3 cursor-pointer"
+                className="font-medium mb-3 cursor-pointer"
                 onClick={() => setEditingPosition(index)}
-                style={{ color: '#212121' }}
+                style={{ color: '#000000', fontSize: '16px' }}
               >
                 {position.title}
               </h3>
 
-              {/* Position description */}
+              {/* Position description - black text */}
               <p 
-                className="text-xs text-muted-foreground mb-4 flex-grow cursor-pointer"
+                className="text-xs mb-4 flex-grow cursor-pointer"
                 onClick={() => setEditingPosition(index)}
+                style={{ color: '#000000' }}
               >
                 {position.description}
               </p>
@@ -154,6 +180,17 @@ export const PoziceBlock = ({ block, onUpdate }: PoziceBlockProps) => {
               </button>
             </div>
           ))}
+        </div>
+
+        {/* Add position button */}
+        <div className="mt-4 flex justify-center">
+          <button
+            onClick={addPosition}
+            className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500 transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            Přidat pozici
+          </button>
         </div>
       </div>
 

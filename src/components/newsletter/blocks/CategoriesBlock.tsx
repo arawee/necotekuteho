@@ -78,20 +78,21 @@ export const CategoriesBlock = ({ block, onUpdate }: CategoriesBlockProps) => {
             </label>
             {showViewAll && (
               <span 
-                className="text-sm cursor-pointer underline"
-                style={{ color: '#000000' }}
+                className="text-sm cursor-pointer"
+                style={{ color: '#000000', textUnderlineOffset: '2px' }}
                 onClick={() => setEditingCategory(-1)}
               >
-                {viewAllText}
+                <span style={{ textDecoration: 'none' }}>→ </span>
+                <span style={{ textDecoration: 'underline' }}>{viewAllText}</span>
               </span>
             )}
           </div>
         </div>
 
-        {/* Categories grid */}
-        <div className="grid grid-cols-4 gap-4">
+        {/* Categories grid - flex with gap 12px and 0px between image and tag */}
+        <div style={{ display: 'flex', gap: '12px' }}>
           {categories.slice(0, 4).map((category, index) => (
-            <div key={index} className="group relative">
+            <div key={index} className="group relative" style={{ flex: 1 }}>
               {/* Remove button */}
               <button
                 onClick={() => removeCategory(index)}
@@ -100,8 +101,8 @@ export const CategoriesBlock = ({ block, onUpdate }: CategoriesBlockProps) => {
                 <Trash2 className="w-3 h-3 text-red-500" />
               </button>
 
-              {/* Category image */}
-              <div className="relative mb-3 aspect-[3/4] overflow-hidden bg-gray-100">
+              {/* Category image - no margin bottom */}
+              <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
                 <ImageUpload
                   currentImage={category.image}
                   onImageUploaded={(url) => updateCategory(index, 'image', url)}
@@ -112,7 +113,7 @@ export const CategoriesBlock = ({ block, onUpdate }: CategoriesBlockProps) => {
                 />
               </div>
 
-              {/* Tag */}
+              {/* Tag - directly attached to image (0px gap) */}
               <div 
                 className="text-xs px-2 py-1 inline-block cursor-pointer"
                 style={{ backgroundColor: '#212121', color: '#FFFFFF' }}
