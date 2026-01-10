@@ -22,55 +22,17 @@ export const RichTextEditor = ({ value, onChange, placeholder, className }: Rich
   const [linkUrl, setLinkUrl] = useState('');
   const savedSelectionRef = useRef<Range | null>(null);
 
-  // Sanitize to inline-only HTML while preserving ALL line breaks including empty lines
+  // Sanitize to newsletter-safe rich text (keep headings/paragraphs intact)
   const sanitizeInline = useCallback((input: string) => {
     if (!input) return '';
-    
-    // 1) FIRST convert block elements to <br> tags (except h1, h2, h3 which we preserve)
-    const container = document.createElement('div');
-    container.innerHTML = input;
-  
-    const BLOCKS = ['p','div','ul','ol','li','blockquote','pre'];
-  
-    BLOCKS.forEach((tag) => {
-      container.querySelectorAll(tag).forEach((el) => {
-        const parent = el.parentNode;
-        if (!parent) return;
-  
-        const textContent = (el as HTMLElement).textContent?.trim() || '';
-        const isEmpty = textContent.length === 0;
-        
-        // Move all children out first (preserve inline markup like <b>, <i>, etc.)
-        while (el.firstChild) {
-          parent.insertBefore(el.firstChild, el);
-        }
-  
-        // Add a line break to represent this block element
-        parent.insertBefore(document.createElement('br'), el);
-        
-        // If the paragraph was empty, add an extra <br> to preserve the empty line
-        if (isEmpty) {
-          parent.insertBefore(document.createElement('br'), el);
-        }
-        
-        // Remove the now-empty block element
-        parent.removeChild(el);
-      });
-    });
-   
-    // 2) THEN take HTML with <br> and sanitize
-    let html = container.innerHTML;
-    
-    // Only remove leading/trailing breaks
-    html = html.replace(/^(<br\s*\/?>)+/, '').replace(/(<br\s*\/?>)+$/, '');
-    
-    // Sanitize with DOMPurify
-    const cleaned = sanitizeHTML(html);
-    
-    // Final cleanup - remove unwanted attributes but keep href, target, rel, style
+
+    // Sanitize with DOMPurify (via our wrapper)
+    const cleaned = sanitizeHTML(input);
+
+    // Remove unwanted attributes but keep href, target, rel, style
     const finalContainer = document.createElement('div');
     finalContainer.innerHTML = cleaned;
-    
+
     finalContainer.querySelectorAll<HTMLElement>('*').forEach((node) => {
       [...node.attributes].forEach((attr) => {
         const name = attr.name.toLowerCase();
@@ -79,7 +41,7 @@ export const RichTextEditor = ({ value, onChange, placeholder, className }: Rich
         node.removeAttribute(name);
       });
     });
-  
+
     return finalContainer.innerHTML;
   }, []);
 
@@ -330,13 +292,12 @@ export const RichTextEditor = ({ value, onChange, placeholder, className }: Rich
     document.execCommand('insertText', false, text);
   };
 
-  // Handle Enter key to insert only a single <br> tag
+  // Handle Enter key to insert a paragraph break (keeps structure persistent)
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      document.execCommand('insertLineBreak');
-      
-      // Export the updated content
+      document.execCommand('insertParagraph');
+
       if (editorRef.current) {
         const clean = sanitizeInline(editorRef.current.innerHTML);
         onChange(clean);

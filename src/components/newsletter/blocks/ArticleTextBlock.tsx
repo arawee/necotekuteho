@@ -111,7 +111,7 @@ export const ArticleTextBlock = ({ block, onUpdate }: ArticleTextBlockProps) => 
             </div>
           ) : (
             <div 
-              className="prose prose-sm max-w-none cursor-pointer hover:bg-muted/20 p-2 group relative"
+              className="prose prose-sm max-w-none cursor-pointer hover:bg-muted/20 group relative"
               onClick={() => setIsEditingBody(true)}
               dangerouslySetInnerHTML={{ 
                 __html: block.content.text || 'PA, tedy Oat Pale Ale, představuje moderní variaci na klasické světlé styly, která si díky své hladké textury a vysoké přístupnosti získává stále větší pozornost mezi pivovary i konzumenty. Na rozdíl od tradičních Pale Ale využívá ve větší míře ovesné vločky, které pivu dodávají hedvábnou plnost a příjemný zakulacený charakter. OPA tak stojí na pomezí mezi svěžím, chmelovým pivem a jemně krémovými stylem.' 
