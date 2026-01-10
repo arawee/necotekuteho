@@ -126,7 +126,7 @@ export const MistaBlock = ({ block, onUpdate }: MistaBlockProps) => {
                   }}
                   onClick={() => setEditingPlace(index)}
                 >
-                  <CustomArrowIcon color="#00C322" />
+                  <CustomArrowIcon color="#00C322" style={{ width: '10px', height: '10px' }} />
                 </button>
                 <h3 
                   className="truncate cursor-pointer"
