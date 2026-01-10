@@ -57,14 +57,14 @@ export const CategoriesBlock = ({ block, onUpdate }: CategoriesBlockProps) => {
   return (
     <div className="bg-white border border-border p-6">
       <div className="max-w-2xl mx-auto">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-6">
+        {/* Header - title 20px bold */}
+        <div className="flex justify-between items-center" style={{ marginBottom: '1rem' }}>
           <h2 
-            className="text-lg font-normal"
+            className="font-bold"
             contentEditable
             suppressContentEditableWarning
             onBlur={(e) => onUpdate({ ...block.content, title: e.currentTarget.textContent || '' })}
-            style={{ color: '#212121' }}
+            style={{ color: '#212121', fontSize: '20px' }}
           >
             {block.content.title || 'Vyber si to pravé pro tebe'}
           </h2>
@@ -89,10 +89,17 @@ export const CategoriesBlock = ({ block, onUpdate }: CategoriesBlockProps) => {
           </div>
         </div>
 
-        {/* Categories grid - flex with gap 12px and 0px between image and tag */}
-        <div style={{ display: 'flex', gap: '12px' }}>
-          {categories.slice(0, 4).map((category, index) => (
-            <div key={index} className="group relative" style={{ flex: 1 }}>
+        {/* Categories grid - flex with gap 12px, max 4 per row */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
+          {categories.slice(0, 8).map((category, index) => (
+            <div 
+              key={index} 
+              className="group relative" 
+              style={{ 
+                flex: '0 0 calc(25% - 9px)',
+                maxWidth: 'calc(25% - 9px)'
+              }}
+            >
               {/* Remove button */}
               <button
                 onClick={() => removeCategory(index)}
@@ -126,7 +133,7 @@ export const CategoriesBlock = ({ block, onUpdate }: CategoriesBlockProps) => {
         </div>
 
         {/* Add button */}
-        {categories.length < 4 && (
+        {categories.length < 8 && (
           <div className="mt-4 flex justify-center">
             <Button
               onClick={addCategory}
