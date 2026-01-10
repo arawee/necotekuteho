@@ -96,7 +96,8 @@ export const CategoriesBlock = ({ block, onUpdate }: CategoriesBlockProps) => {
               key={index} 
               className="group relative" 
               style={{ 
-                flex: '0 0 calc(25% - 9px)',
+                flex: '1 1 0',
+                minWidth: 'calc(25% - 9px)',
                 maxWidth: 'calc(25% - 9px)'
               }}
             >
