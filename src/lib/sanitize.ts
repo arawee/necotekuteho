@@ -1,16 +1,35 @@
 import DOMPurify from 'dompurify';
 
-// Configure DOMPurify to allow only safe inline formatting tags
-const ALLOWED_TAGS = ['b', 'i', 'strong', 'em', 'br', 'u', 's', 'del', 'strike', 'a'];
+// Configure DOMPurify to allow newsletter-safe rich text tags (kept intentionally small)
+const ALLOWED_TAGS = [
+  'b',
+  'i',
+  'strong',
+  'em',
+  'br',
+  'u',
+  's',
+  'del',
+  'strike',
+  'a',
+  // Rich text structure + headings
+  'span',
+  'p',
+  'div',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+];
 const ALLOWED_ATTR: string[] = ['href', 'target', 'rel', 'style'];
 
 /**
  * Sanitize HTML content to prevent XSS attacks
- * Only allows safe inline formatting tags
+ * Allows only a limited, newsletter-safe subset of rich-text tags.
  */
 export function sanitizeHTML(dirty: string): string {
   if (!dirty) return '';
-  
+
   return DOMPurify.sanitize(dirty, {
     ALLOWED_TAGS,
     ALLOWED_ATTR,
