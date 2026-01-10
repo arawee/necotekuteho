@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { NewsletterBlock } from '@/types/newsletter';
 import { ImageUpload } from '@/components/ui/image-upload';
 import { Input } from '@/components/ui/input';
-import { Plus, ArrowRight } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   Dialog,
@@ -10,6 +10,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 interface Product {
   image: string;
@@ -18,7 +25,7 @@ interface Product {
   volume: string;
   price: string;
   salePrice?: string;
-  tags: string[];
+  tags: { text: string; color: 'dark' | 'red' | 'green' }[];
   url?: string;
 }
 
@@ -31,10 +38,10 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
   const [editingProduct, setEditingProduct] = useState<number | null>(null);
 
   const defaultProducts: Product[] = [
-    { image: '', name: 'Magor 15', alcohol: '5,9', volume: '750 ml', price: '113 Kč', tags: ['Polotmavé bock'], url: '#' },
-    { image: '', name: 'Sour Passion Fruit', alcohol: '5,9', volume: '750 ml', price: '167 Kč', salePrice: '90 Kč', tags: ['Relax', 'Poslední šance'], url: '#' },
-    { image: '', name: 'Milky', alcohol: '5,9', volume: '750 ml', price: '113 Kč', tags: ['Neipa', 'Novinka'], url: '#' },
-    { image: '', name: 'Juicy Lucy', alcohol: '5,9', volume: '750 ml', price: '113 Kč', tags: ['Relax'], url: '#' }
+    { image: '', name: 'Magor 15', alcohol: '5,9', volume: '750 ml', price: '113 Kč', tags: [{ text: 'Polotmavé bock', color: 'dark' }], url: '#' },
+    { image: '', name: 'Sour Passion Fruit', alcohol: '5,9', volume: '750 ml', price: '167 Kč', salePrice: '90 Kč', tags: [{ text: 'Relax', color: 'dark' }, { text: 'Poslední šance', color: 'red' }], url: '#' },
+    { image: '', name: 'Milky', alcohol: '5,9', volume: '750 ml', price: '113 Kč', tags: [{ text: 'Neipa', color: 'dark' }, { text: 'Novinka', color: 'green' }], url: '#' },
+    { image: '', name: 'Juicy Lucy', alcohol: '5,9', volume: '750 ml', price: '113 Kč', tags: [{ text: 'Relax', color: 'dark' }], url: '#' }
   ];
 
   const products: Product[] = (block.content as any).products || defaultProducts;
@@ -48,17 +55,17 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
     onUpdate({ ...block.content, products: newProducts } as any);
   };
 
-  const updateTag = (productIndex: number, tagIndex: number, value: string) => {
+  const updateTag = (productIndex: number, tagIndex: number, field: 'text' | 'color', value: string) => {
     const newProducts = [...products];
     const newTags = [...newProducts[productIndex].tags];
-    newTags[tagIndex] = value;
+    newTags[tagIndex] = { ...newTags[tagIndex], [field]: value };
     newProducts[productIndex] = { ...newProducts[productIndex], tags: newTags };
     onUpdate({ ...block.content, products: newProducts } as any);
   };
 
   const addTag = (productIndex: number) => {
     const newProducts = [...products];
-    const newTags = [...newProducts[productIndex].tags, 'Nový tag'];
+    const newTags = [...newProducts[productIndex].tags, { text: 'Nový tag', color: 'dark' as const }];
     newProducts[productIndex] = { ...newProducts[productIndex], tags: newTags };
     onUpdate({ ...block.content, products: newProducts } as any);
   };
@@ -70,17 +77,28 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
     onUpdate({ ...block.content, products: newProducts } as any);
   };
 
+  const getTagStyle = (color: string) => {
+    switch (color) {
+      case 'red':
+        return { backgroundColor: '#FF4C4C', color: '#FFFFFF' };
+      case 'green':
+        return { backgroundColor: '#00C322', color: '#FFFFFF' };
+      default:
+        return { backgroundColor: '#161616', color: '#FFFFFF' };
+    }
+  };
+
   return (
     <div className="bg-white border border-border p-6">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <h2 
-            className="text-2xl font-normal"
+            className="font-normal"
             contentEditable
             suppressContentEditableWarning
             onBlur={(e) => onUpdate({ ...block.content, title: e.currentTarget.textContent || '' })}
-            style={{ color: '#212121' }}
+            style={{ color: '#212121', fontSize: '24px' }}
           >
             {block.content.title || 'Mohlo by vám chutnat'}
           </h2>
@@ -94,11 +112,11 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
             </label>
             {showViewAll && (
               <span 
-                className="text-sm cursor-pointer"
-                style={{ color: '#212121' }}
+                className="text-sm cursor-pointer underline"
+                style={{ color: '#000000' }}
                 onClick={() => setEditingProduct(-1)}
               >
-                → {viewAllText}
+                {viewAllText}
               </span>
             )}
           </div>
@@ -125,33 +143,13 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
                 {product.tags.map((tag, tagIdx) => (
                   <span 
                     key={tagIdx}
-                    className="text-[10px] px-2 py-0.5 cursor-text group/tag relative"
-                    style={{ 
-                      backgroundColor: tag.toLowerCase().includes('novinka') ? '#00C322' : '#F4F4F4',
-                      color: '#212121'
-                    }}
+                    className="text-[10px] px-2 py-0.5 cursor-pointer group/tag relative"
+                    style={getTagStyle(tag.color)}
+                    onClick={() => setEditingProduct(index)}
                   >
-                    <span
-                      contentEditable
-                      suppressContentEditableWarning
-                      onBlur={(e) => updateTag(index, tagIdx, e.currentTarget.textContent || '')}
-                    >
-                      {tag}
-                    </span>
-                    <button
-                      onClick={() => removeTag(index, tagIdx)}
-                      className="ml-1 opacity-0 group-hover/tag:opacity-100 text-red-500 hover:text-red-700"
-                    >
-                      ×
-                    </button>
+                    {tag.text}
                   </span>
                 ))}
-                <button
-                  onClick={() => addTag(index)}
-                  className="text-[10px] px-2 py-0.5 border border-dashed border-gray-300 hover:border-green-500 text-gray-400 hover:text-green-500"
-                >
-                  +
-                </button>
               </div>
 
               {/* Product info */}
@@ -172,7 +170,7 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
               <div className="flex items-center gap-2">
                 {product.salePrice ? (
                   <>
-                    <span className="text-sm font-medium" style={{ color: '#00C322' }}>
+                    <span className="text-sm font-medium" style={{ color: '#FF4C4C' }}>
                       {product.salePrice}
                     </span>
                     <span className="text-xs line-through text-muted-foreground">
@@ -186,10 +184,10 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
                 )}
                 <button 
                   className="ml-auto w-6 h-6 flex items-center justify-center border"
-                  style={{ borderColor: '#00C322' }}
+                  style={{ borderColor: '#00C322', borderRadius: '50%' }}
                   onClick={() => setEditingProduct(index)}
                 >
-                  <ArrowRight className="w-4 h-4" style={{ color: '#00C322' }} />
+                  <Plus className="w-4 h-4" style={{ color: '#00C322' }} />
                 </button>
               </div>
             </div>
@@ -268,6 +266,46 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
                   value={products[editingProduct]?.url || ''}
                   onChange={(e) => updateProduct(editingProduct, 'url', e.target.value)}
                 />
+              </div>
+              {/* Tags editor */}
+              <div>
+                <label className="text-sm font-medium">Tagy</label>
+                <div className="space-y-2 mt-2">
+                  {products[editingProduct]?.tags.map((tag, tagIdx) => (
+                    <div key={tagIdx} className="flex gap-2 items-center">
+                      <Input
+                        className="flex-1"
+                        value={tag.text}
+                        onChange={(e) => updateTag(editingProduct, tagIdx, 'text', e.target.value)}
+                      />
+                      <Select
+                        value={tag.color}
+                        onValueChange={(value) => updateTag(editingProduct, tagIdx, 'color', value)}
+                      >
+                        <SelectTrigger className="w-32">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="dark">Tmavý</SelectItem>
+                          <SelectItem value="red">Červený</SelectItem>
+                          <SelectItem value="green">Zelený</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <button
+                        onClick={() => removeTag(editingProduct, tagIdx)}
+                        className="text-red-500 hover:text-red-700 px-2"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    onClick={() => addTag(editingProduct)}
+                    className="text-sm text-green-600 hover:text-green-700"
+                  >
+                    + Přidat tag
+                  </button>
+                </div>
               </div>
             </div>
           )}

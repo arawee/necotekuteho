@@ -55,19 +55,6 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
       ],
       buttonText: '+ objevit',
       buttonUrl: '#',
-      bgColor: '#FFFFFF'
-    },
-    {
-      title: 'Pivo v sudu. Rovnou od zdroje.',
-      features: [
-        { label: 'Novinky', value: 'Nejnovější piva jako první.' },
-        { label: 'Všechno víš', value: 'Pravidelný přísun novinek.' },
-        { label: 'Doprava', value: 'Zdarma – navždy.' },
-        { label: '8-12 piv', value: 'Každý měsíc' },
-        { label: 'Magazín', value: 'Online mag ke každému předplatnému.' }
-      ],
-      buttonText: '+ zeptat se',
-      buttonUrl: '#',
       bgColor: '#F4F4F4'
     }
   ];
@@ -100,28 +87,55 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
     onUpdate({ ...block.content, boxes: newBoxes } as any);
   };
 
-  const isLightBg = (color: string) => {
+  const addBox = () => {
+    const newBox: PromoBox = {
+      title: 'Nový box',
+      features: [
+        { label: 'Funkce', value: 'Popis funkce' }
+      ],
+      buttonText: '+ akce',
+      buttonUrl: '#',
+      bgColor: '#F4F4F4'
+    };
+    onUpdate({ ...block.content, boxes: [...boxes, newBox] } as any);
+  };
+
+  const removeBox = (index: number) => {
+    const newBoxes = boxes.filter((_, i) => i !== index);
+    onUpdate({ ...block.content, boxes: newBoxes } as any);
+  };
+
+  // More restrictive threshold - only use white text on very dark backgrounds
+  const isVeryDarkBg = (color: string) => {
     const hex = color.replace('#', '');
     const r = parseInt(hex.substr(0, 2), 16);
     const g = parseInt(hex.substr(2, 2), 16);
     const b = parseInt(hex.substr(4, 2), 16);
     const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-    return brightness > 128;
+    return brightness < 60; // Much lower threshold - only very dark colors get white text
   };
 
   return (
     <div className="bg-white border border-border p-6">
       <div className="max-w-2xl mx-auto">
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid gap-4" style={{ gridTemplateColumns: `repeat(${boxes.length}, 1fr)` }}>
           {boxes.map((box, index) => (
             <div 
               key={index} 
               className="p-6 group relative"
               style={{ 
                 backgroundColor: box.bgColor,
-                border: box.bgColor === '#FFFFFF' ? '1px solid #E5E5E5' : 'none'
+                border: box.bgColor === '#FFFFFF' || box.bgColor === '#F4F4F4' ? '1px solid #E5E5E5' : 'none'
               }}
             >
+              {/* Delete box button */}
+              <button
+                onClick={() => removeBox(index)}
+                className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 bg-white shadow hover:bg-red-50"
+              >
+                <Trash2 className="w-3 h-3 text-red-500" />
+              </button>
+
               {/* HEX Color picker */}
               <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <input
@@ -134,11 +148,11 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
               </div>
 
               <h3 
-                className="font-medium text-lg mb-4"
+                className="font-medium mb-4"
                 contentEditable
                 suppressContentEditableWarning
                 onBlur={(e) => updateBox(index, 'title', e.currentTarget.textContent || '')}
-                style={{ color: isLightBg(box.bgColor) ? '#212121' : '#FFFFFF' }}
+                style={{ color: isVeryDarkBg(box.bgColor) ? '#FFFFFF' : '#000000', fontSize: '24px' }}
               >
                 {box.title}
               </h3>
@@ -151,17 +165,17 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
                       contentEditable
                       suppressContentEditableWarning
                       onBlur={(e) => updateFeature(index, fIdx, 'label', e.currentTarget.textContent || '')}
-                      style={{ color: isLightBg(box.bgColor) ? '#212121' : '#FFFFFF' }}
+                      style={{ color: isVeryDarkBg(box.bgColor) ? '#FFFFFF' : '#000000' }}
                     >
                       {feature.label}
                     </span>
-                    <span style={{ color: isLightBg(box.bgColor) ? '#666' : '#CCC' }}> → </span>
+                    <span style={{ color: isVeryDarkBg(box.bgColor) ? '#CCC' : '#666' }}> → </span>
                     <span 
                       className="cursor-text flex-1"
                       contentEditable
                       suppressContentEditableWarning
                       onBlur={(e) => updateFeature(index, fIdx, 'value', e.currentTarget.textContent || '')}
-                      style={{ color: isLightBg(box.bgColor) ? '#666' : '#CCC' }}
+                      style={{ color: isVeryDarkBg(box.bgColor) ? '#CCC' : '#000000' }}
                     >
                       {feature.value}
                     </span>
@@ -184,10 +198,10 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
               {/* Button */}
               <div className="space-y-2">
                 <button 
-                  className="text-sm px-4 py-2 border w-full"
+                  className="text-sm px-4 py-2 border w-full text-left"
                   style={{ 
-                    borderColor: isLightBg(box.bgColor) ? '#212121' : '#FFFFFF',
-                    color: isLightBg(box.bgColor) ? '#212121' : '#FFFFFF',
+                    borderColor: isVeryDarkBg(box.bgColor) ? '#FFFFFF' : '#000000',
+                    color: isVeryDarkBg(box.bgColor) ? '#FFFFFF' : '#000000',
                     backgroundColor: 'transparent'
                   }}
                   onClick={() => setEditingButton(index)}
@@ -197,6 +211,17 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Add box button */}
+        <div className="mt-4 flex justify-center">
+          <button
+            onClick={addBox}
+            className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500 transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            Přidat box
+          </button>
         </div>
       </div>
 

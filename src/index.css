@@ -123,6 +123,7 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
     font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
   }
   
   /* Rich Text Editor Styles */
