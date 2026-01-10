@@ -47,13 +47,6 @@ export const PoziceBlock = ({ block, onUpdate }: PoziceBlockProps) => {
       buttonText: 'Mám zájem',
       buttonUrl: '#',
       bgColor: '#F4F4F4'
-    },
-    { 
-      title: 'Skladník', 
-      description: 'Sit aliqu ip venim non nostrud consectetur consequ at conse ctetur conse qui incidid unt excepteur. expreat sit alqua re cupidat laboré commod tempor. In dolore magna adip isicing dolor en ea aliqu ea nostrud lorem repre henderit parida tur',
-      buttonText: 'Mám zájem',
-      buttonUrl: '#',
-      bgColor: '#F4F4F4'
     }
   ];
 
@@ -87,14 +80,14 @@ export const PoziceBlock = ({ block, onUpdate }: PoziceBlockProps) => {
   return (
     <div className="bg-white border border-border p-6">
       <div className="max-w-2xl mx-auto">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-6">
+        {/* Header - title 20px bold */}
+        <div className="flex justify-between items-center" style={{ marginBottom: '1rem' }}>
           <h2 
-            className="text-2xl font-normal"
+            className="font-bold"
             contentEditable
             suppressContentEditableWarning
             onBlur={(e) => onUpdate({ ...block.content, title: e.currentTarget.textContent || '' })}
-            style={{ color: '#212121' }}
+            style={{ color: '#212121', fontSize: '20px' }}
           >
             {block.content.title || 'Volné pozice'}
           </h2>
@@ -119,13 +112,13 @@ export const PoziceBlock = ({ block, onUpdate }: PoziceBlockProps) => {
           </div>
         </div>
 
-        {/* Positions grid - flex */}
-        <div style={{ display: 'flex', gap: '12px' }}>
-          {positions.map((position: Position, index: number) => (
+        {/* Positions grid - flex, max 3, fill container */}
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+          {positions.slice(0, 3).map((position: Position, index: number) => (
             <div 
               key={index} 
               className="group p-4 flex flex-col relative"
-              style={{ backgroundColor: position.bgColor || '#F4F4F4', flex: 1 }}
+              style={{ backgroundColor: position.bgColor || '#F4F4F4', flex: '1 1 0' }}
             >
               {/* Remove button */}
               <button
@@ -147,18 +140,18 @@ export const PoziceBlock = ({ block, onUpdate }: PoziceBlockProps) => {
                 <span className="text-[10px] text-muted-foreground">{position.bgColor}</span>
               </div>
 
-              {/* Position title - 16px, black text */}
+              {/* Position title - 16px, font-weight 700, black text */}
               <h3 
-                className="font-medium mb-3 cursor-pointer"
+                className="mb-3 cursor-pointer"
                 onClick={() => setEditingPosition(index)}
-                style={{ color: '#000000', fontSize: '16px' }}
+                style={{ color: '#000000', fontSize: '16px', fontWeight: 700 }}
               >
                 {position.title}
               </h3>
 
               {/* Position description - black text */}
               <p 
-                className="text-xs mb-4 flex-grow cursor-pointer"
+                className="text-xs mb-4 cursor-pointer"
                 onClick={() => setEditingPosition(index)}
                 style={{ color: '#000000' }}
               >
@@ -183,15 +176,17 @@ export const PoziceBlock = ({ block, onUpdate }: PoziceBlockProps) => {
         </div>
 
         {/* Add position button */}
-        <div className="mt-4 flex justify-center">
-          <button
-            onClick={addPosition}
-            className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500 transition-colors"
-          >
-            <Plus className="w-4 h-4" />
-            Přidat pozici
-          </button>
-        </div>
+        {positions.length < 3 && (
+          <div className="mt-4 flex justify-center">
+            <button
+              onClick={addPosition}
+              className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500 transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+              Přidat pozici
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Edit Dialog */}
