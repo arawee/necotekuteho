@@ -1,5 +1,5 @@
 import React, { useRef, useCallback, useState } from 'react';
-import { Bold, Italic, Underline, Strikethrough, Link, Heading1, Heading2, Heading3 } from 'lucide-react';
+import { Bold, Italic, Underline, Strikethrough, Link, Heading1, Heading2, Heading3, Heading4, Type } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { sanitizeHTML } from '@/lib/sanitize';
@@ -114,7 +114,7 @@ export const RichTextEditor = ({ value, onChange, placeholder, className }: Rich
   const handleStrikethrough = () => execCommand('strikeThrough');
   
   // Heading handlers - wrap selection in heading tags with specific styles
-  const handleHeading = (level: 1 | 2 | 3) => {
+  const handleHeading = (level: 1 | 2 | 3 | 4) => {
     const selection = window.getSelection();
     if (!selection || selection.rangeCount === 0) return;
     
@@ -141,6 +141,10 @@ export const RichTextEditor = ({ value, onChange, placeholder, className }: Rich
         heading.style.fontSize = '16px';
         heading.style.fontWeight = 'bold';
         break;
+      case 4:
+        heading.style.fontSize = '14px';
+        heading.style.fontWeight = '700';
+        break;
     }
     heading.style.margin = '0';
     heading.style.lineHeight = '1.2';
@@ -151,6 +155,38 @@ export const RichTextEditor = ({ value, onChange, placeholder, className }: Rich
     // Move cursor after the heading
     range.setStartAfter(heading);
     range.setEndAfter(heading);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    
+    if (editorRef.current) {
+      const clean = sanitizeInline(editorRef.current.innerHTML);
+      onChange(clean);
+    }
+  };
+
+  // Paragraph handler - reset to default paragraph styling
+  const handleParagraph = () => {
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return;
+    
+    const range = selection.getRangeAt(0);
+    const selectedText = range.toString();
+    
+    if (!selectedText) return;
+    
+    // Create span with paragraph styling
+    const span = document.createElement('span');
+    span.textContent = selectedText;
+    span.style.fontSize = '12px';
+    span.style.fontWeight = '500';
+    span.style.lineHeight = '120%';
+    
+    range.deleteContents();
+    range.insertNode(span);
+    
+    // Move cursor after the span
+    range.setStartAfter(span);
+    range.setEndAfter(span);
     selection.removeAllRanges();
     selection.addRange(range);
     
@@ -254,6 +290,9 @@ export const RichTextEditor = ({ value, onChange, placeholder, className }: Rich
             <Link className="h-4 w-4" />
           </Button>
           <div className="w-px h-6 bg-border mx-1" />
+          <Button type="button" variant="ghost" size="sm" onClick={handleParagraph} className="h-8 px-2" title="Paragraph (12px, 500 weight)">
+            <Type className="h-4 w-4" />
+          </Button>
           <Button type="button" variant="ghost" size="sm" onClick={() => handleHeading(1)} className="h-8 px-2" title="Heading 1 (30px bold)">
             <Heading1 className="h-4 w-4" />
           </Button>
@@ -262,6 +301,9 @@ export const RichTextEditor = ({ value, onChange, placeholder, className }: Rich
           </Button>
           <Button type="button" variant="ghost" size="sm" onClick={() => handleHeading(3)} className="h-8 px-2" title="Heading 3 (16px bold)">
             <Heading3 className="h-4 w-4" />
+          </Button>
+          <Button type="button" variant="ghost" size="sm" onClick={() => handleHeading(4)} className="h-8 px-2" title="Heading 4 (14px, 700 weight)">
+            <Heading4 className="h-4 w-4" />
           </Button>
         </div>
 

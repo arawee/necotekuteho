@@ -28,7 +28,7 @@ export const TextTwoColumnsBlock = ({ block, onUpdate }: TextTwoColumnsBlockProp
           {/* Left column (1/6) */}
           <div className="w-1/6">
             <p 
-              style={{ color: '#212121', fontWeight: 900, fontSize: '14px' }}
+              style={{ color: '#212121', fontWeight: 900, fontSize: '12px' }}
             >
               {leftColumn}
             </p>

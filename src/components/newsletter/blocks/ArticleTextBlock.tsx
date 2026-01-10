@@ -141,12 +141,14 @@ export const ArticleTextBlock = ({ block, onUpdate }: ArticleTextBlockProps) => 
               {tags.map(t => t.text).join(', ')}
             </span>
           </div>
-          <div className="flex gap-2">
-            <span className="font-medium">Sdílet →</span>
-            <span className="text-muted-foreground underline">
-              {shareLinks.map(s => s.text).join(', ')}
-            </span>
-          </div>
+          {shareLinks.filter(s => s.url && s.url.trim() !== '' && s.url !== '#').length > 0 && (
+            <div className="flex gap-2">
+              <span className="font-medium">Sdílet →</span>
+              <span className="text-muted-foreground underline">
+                {shareLinks.filter(s => s.url && s.url.trim() !== '' && s.url !== '#').map(s => s.text).join(', ')}
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
