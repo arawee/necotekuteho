@@ -367,19 +367,17 @@ function generateProductListHTML(block: NewsletterBlock): string {
         ? `<span style="color:#FF4C4C;font-weight:700;">${p.salePrice}</span> <span style="font-size:10px;color:#666;text-decoration:line-through;">${p.price}</span>`
         : `<span style="color:#212121;font-weight:700;">${p.price}</span>`;
 
+      let paddingLeft = "4px";
+      let paddingRight = "4px";
+
       if (idx === 0) {
-        const paddingLeft = "0";
-        const paddingRight = "8px";
-      } 
-      
+        paddingLeft = "0";
+        paddingRight = "8px";
+      }
+
       if (idx === productCount - 1) {
-        const paddingLeft = "0";
-        const paddingRight = "8px";
-      } 
-      
-      if (idx != 0 and idx != productCount - 1) {
-        const paddingLeft = "4px";
-        const paddingRight = "4px";
+        paddingLeft = "8px";
+        paddingRight = "0";
       }
 
       return `
