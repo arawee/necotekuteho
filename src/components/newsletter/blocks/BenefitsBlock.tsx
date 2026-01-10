@@ -87,7 +87,7 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
                 <Trash2 className="w-3 h-3 text-red-500" />
               </button>
 
-              {/* Icon - replaceable image */}
+              {/* Icon - replaceable image 48px */}
               <div 
                 className="mb-4 flex justify-center cursor-pointer"
                 onClick={() => setEditingBenefit(index)}
@@ -96,12 +96,12 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
                   <img 
                     src={benefit.icon} 
                     alt={benefit.title} 
-                    className="w-12 h-12 object-contain"
+                    style={{ width: '48px', height: '48px', objectFit: 'contain' }}
                   />
                 ) : (
                   <div 
-                    className="w-12 h-12 border border-dashed border-gray-300 flex items-center justify-center text-2xl"
-                    style={{ color: '#00C322' }}
+                    className="border border-dashed border-gray-300 flex items-center justify-center text-2xl"
+                    style={{ width: '48px', height: '48px', color: '#00C322' }}
                   >
                     □
                   </div>
