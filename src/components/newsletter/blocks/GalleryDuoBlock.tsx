@@ -19,10 +19,10 @@ export const GalleryDuoBlock = ({ block, onUpdate }: GalleryDuoBlockProps) => {
   };
 
   return (
-    <div className="bg-white rounded-lg border border-border p-6">
+    <div className="bg-white border border-border">
       <div className="max-w-2xl mx-auto">
-        <div className="grid grid-cols-2 gap-4">
-          <div className="aspect-square rounded-lg overflow-hidden">
+        <div className="grid grid-cols-2">
+          <div className="aspect-square overflow-hidden">
             <ImageUpload
               currentImage={photos[0]?.url}
               onImageUploaded={(url) => updatePhoto(0, url)}
@@ -32,7 +32,7 @@ export const GalleryDuoBlock = ({ block, onUpdate }: GalleryDuoBlockProps) => {
               showBorder={false}
             />
           </div>
-          <div className="aspect-square rounded-lg overflow-hidden">
+          <div className="aspect-square overflow-hidden">
             <ImageUpload
               currentImage={photos[1]?.url}
               onImageUploaded={(url) => updatePhoto(1, url)}

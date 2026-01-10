@@ -20,11 +20,11 @@ export const GalleryTrioBlock = ({ block, onUpdate }: GalleryTrioBlockProps) => 
   };
 
   return (
-    <div className="bg-white rounded-lg border border-border p-6">
+    <div className="bg-white border border-border">
       <div className="max-w-2xl mx-auto">
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1">
           {/* Main large image */}
-          <div className="aspect-[4/3] rounded-lg overflow-hidden">
+          <div className="aspect-[4/3] overflow-hidden">
             <ImageUpload
               currentImage={photos[0]?.url}
               onImageUploaded={(url) => updatePhoto(0, url)}
@@ -36,8 +36,8 @@ export const GalleryTrioBlock = ({ block, onUpdate }: GalleryTrioBlockProps) => 
           </div>
           
           {/* Two smaller images */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="aspect-[4/3] rounded-lg overflow-hidden">
+          <div className="grid grid-cols-2">
+            <div className="aspect-[4/3] overflow-hidden">
               <ImageUpload
                 currentImage={photos[1]?.url}
                 onImageUploaded={(url) => updatePhoto(1, url)}
@@ -47,7 +47,7 @@ export const GalleryTrioBlock = ({ block, onUpdate }: GalleryTrioBlockProps) => 
                 showBorder={false}
               />
             </div>
-            <div className="aspect-[4/3] rounded-lg overflow-hidden">
+            <div className="aspect-[4/3] overflow-hidden">
               <ImageUpload
                 currentImage={photos[2]?.url}
                 onImageUploaded={(url) => updatePhoto(2, url)}
