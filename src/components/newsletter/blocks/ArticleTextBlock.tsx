@@ -116,7 +116,7 @@ export const ArticleTextBlock = ({ block, onUpdate }: ArticleTextBlockProps) => 
               dangerouslySetInnerHTML={{ 
                 __html: block.content.text || 'PA, tedy Oat Pale Ale, představuje moderní variaci na klasické světlé styly, která si díky své hladké textury a vysoké přístupnosti získává stále větší pozornost mezi pivovary i konzumenty. Na rozdíl od tradičních Pale Ale využívá ve větší míře ovesné vločky, které pivu dodávají hedvábnou plnost a příjemný zakulacený charakter. OPA tak stojí na pomezí mezi svěžím, chmelovým pivem a jemně krémovými stylem.' 
               }}
-              style={{ color: '#212121', lineHeight: '1.6' }}
+              style={{ color: '#212121', lineHeight: '120%' }}
             />
           )}
         </div>
