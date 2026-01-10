@@ -122,7 +122,8 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
           <div>
             <p style={{ fontFamily: "'JetBrains Mono', monospace", color: '#212121', fontWeight: 'bold', textDecoration: 'underline', marginBottom: '1rem' }}>
               <span 
-                className="hover:bg-black/10 px-1 cursor-pointer"
+                className="hover:bg-black/10 cursor-pointer"
+                style={{ paddingLeft: 0, paddingRight: 0 }}
                 onClick={() => setEditingPhone(true)}
               >
                 {(block.content.footerText || '602 555 555').replace(/^\+420\s*/, '').replace(/^tel\.\s*/i, '')}

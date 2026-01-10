@@ -172,13 +172,14 @@ export const PoziceBlock = ({ block, onUpdate }: PoziceBlockProps) => {
 
               {/* Action button - sized to text like promo boxes, dynamic colors */}
               <button 
-                className="text-xs border inline-flex items-center"
+                className="text-xs border inline-flex items-center self-start"
                 style={{ 
                   borderColor: isColorDark(position.bgColor || '#F4F4F4') ? '#FFFFFF' : '#212121', 
                   color: isColorDark(position.bgColor || '#F4F4F4') ? '#FFFFFF' : '#212121',
                   backgroundColor: 'transparent',
                   padding: '12px 24px',
-                  borderWidth: '1px'
+                  borderWidth: '1px',
+                  width: 'auto'
                 }}
                 onClick={() => setEditingPosition(index)}
                 >
