@@ -108,10 +108,10 @@ export const BlogPostsBlock = ({ block, onUpdate }: BlogPostsBlockProps) => {
           </div>
         </div>
 
-        {/* Blog posts grid - flex with gap 12px */}
-        <div style={{ display: 'flex', gap: '12px' }}>
-          {posts.slice(0, 4).map((post: BlogPost, index: number) => (
-            <div key={index} className="group relative" style={{ flex: '1 1 0' }}>
+        {/* Blog posts grid - flex with gap 12px, equal height cards */}
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'stretch' }}>
+          {posts.slice(0, 3).map((post: BlogPost, index: number) => (
+            <div key={index} className="group relative flex flex-col" style={{ flex: '1 1 0' }}>
               {/* Remove button */}
               <button
                 onClick={() => removePost(index)}
@@ -132,9 +132,9 @@ export const BlogPostsBlock = ({ block, onUpdate }: BlogPostsBlockProps) => {
                 />
               </div>
 
-              {/* Grey box for title, excerpt and button - no gap to image */}
+              {/* Grey box for title, excerpt and button - flex grow for equal height */}
               <div 
-                className="p-3 relative"
+                className="p-3 relative flex-1 flex flex-col"
                 style={{ backgroundColor: '#F4F4F4' }}
               >
                 {/* Title - 20px bold */}
@@ -146,40 +146,41 @@ export const BlogPostsBlock = ({ block, onUpdate }: BlogPostsBlockProps) => {
                   {post.title}
                 </h3>
                 
-                {/* Excerpt */}
+                {/* Excerpt - full text, black color */}
                 <p 
-                  className="text-xs text-muted-foreground line-clamp-3 cursor-pointer mb-3"
+                  className="text-xs cursor-pointer mb-3"
                   onClick={() => setEditingPost(index)}
+                  style={{ color: '#212121' }}
                 >
                   {post.excerpt}
                 </p>
 
-                {/* Spacer for button positioning */}
-                <div style={{ height: '44px' }}></div>
+                {/* Spacer to push button to bottom */}
+                <div className="flex-1"></div>
 
                 {/* Action button - 36px circular outline, positioned bottom right */}
-                <button 
-                  className="blog-circle-btn flex items-center justify-center absolute"
-                  style={{ 
-                    width: '36px', 
-                    height: '36px', 
-                    backgroundColor: 'transparent',
-                    border: '1px solid #00C322',
-                    borderRadius: '100%',
-                    bottom: '12px',
-                    right: '12px'
-                  }}
-                  onClick={() => setEditingPost(index)}
-                >
-                  <ArrowRight style={{ width: '12px', height: '12px', color: '#00C322' }} />
-                </button>
+                <div className="flex justify-end mt-3">
+                  <button 
+                    className="blog-circle-btn flex items-center justify-center"
+                    style={{ 
+                      width: '36px', 
+                      height: '36px', 
+                      backgroundColor: 'transparent',
+                      border: '1px solid #00C322',
+                      borderRadius: '100%'
+                    }}
+                    onClick={() => setEditingPost(index)}
+                  >
+                    <ArrowRight style={{ width: '12px', height: '12px', color: '#00C322' }} />
+                  </button>
+                </div>
               </div>
             </div>
           ))}
         </div>
 
         {/* Add post button */}
-        {posts.length < 4 && (
+        {posts.length < 3 && (
           <div className="mt-4 flex justify-center">
             <button
               onClick={addPost}
