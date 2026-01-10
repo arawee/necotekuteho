@@ -146,7 +146,7 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
         {/* Products flex */}
         <div style={{ display: 'flex', gap: '12px' }}>
           {products.map((product: Product, index: number) => (
-            <div key={index} className="group relative">
+            <div key={index} className="group relative" style={{ flex: 1 }}>
               {/* Remove button */}
               <button
                 onClick={() => removeProduct(index)}
