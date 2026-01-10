@@ -40,10 +40,10 @@ const isVeryDarkBg = (color: string): boolean => {
 // Default benefit icons from the editor - these must match src/assets/benefit-icon-*.png
 // In production, these should be uploaded to a CDN or embedded as base64
 const DEFAULT_BENEFIT_ICONS = [
-  '/src/assets/benefit-icon-1.png',
-  '/src/assets/benefit-icon-2.png',
-  '/src/assets/benefit-icon-3.png',
-  '/src/assets/benefit-icon-4.png'
+  'https://yzbjnjhrrvqcdwfdoksa.supabase.co/storage/v1/object/public/newsletter-images/images/benefit-icon-1.png',
+  'https://yzbjnjhrrvqcdwfdoksa.supabase.co/storage/v1/object/public/newsletter-images/images/benefit-icon-2.png',
+  'https://yzbjnjhrrvqcdwfdoksa.supabase.co/storage/v1/object/public/newsletter-images/images/benefit-icon-3.png',
+  'https://yzbjnjhrrvqcdwfdoksa.supabase.co/storage/v1/object/public/newsletter-images/images/benefit-icon-4.png'
 ];
 
 const getBenefitIcon = (icon: string | undefined, index: number): string => {
@@ -151,7 +151,7 @@ function generateZichovecHeaderWithMenuHTML(block: NewsletterBlock): string {
         </td>
       </tr>
       <tr>
-        <td align="center" style="padding:0 24px 16px 24px;">
+        <td align="center" style="padding:0 16px 16px 16px;line-height:120%;">
           ${menuHTML}
         </td>
       </tr>
@@ -303,7 +303,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
         </tr>
         <tr>
           <td style="padding-top:0;font-family:'JetBrains Mono',monospace;">
-            <div style="margin-bottom:8px;">${tagsHTML}</div>
+            <div style="margin-top:-4px;margin-bottom:8px;">${tagsHTML}</div>
             <h3 style="margin:0 0 4px 0;font-size:16px;font-weight:700;color:#212121;line-height:150%;">${p.name}</h3>
             <div style="font-size:10px;color:#000000;margin-bottom:8px;">
               <span><strong>Alk. →</strong> ${p.alcohol}% obj.</span>
@@ -386,15 +386,15 @@ function generateMistaHTML(block: NewsletterBlock): string {
         </tr>
         <tr>
           <td style="font-family:'JetBrains Mono',monospace;">
-            <table role="presentation" border="0" cellspacing="0" cellpadding="0">
+            <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
               <tr>
-                <td style="padding-right:12px;">
+                <td style="padding-right:12px;width:60px;">
                   <a href="${place.buttonUrl || '#'}" style="display:inline-block;width:36px;height:36px;border:1px solid #00C322;border-radius:50%;text-align:center;line-height:36px;text-decoration:none;">
                     ${ARROW_ICON_SVG('#00C322')}
                   </a>
                 </td>
-                <td>
-                  <h3 style="margin:0;font-size:16px;font-weight:700;color:#212121;">${place.name}</h3>
+                <td align="right" style="width:100%;text-align:right;">
+                  <h3 style="margin:0;font-size:16px;font-weight:700;color:#212121;text-align:right;">${place.name}</h3>
                 </td>
               </tr>
             </table>
