@@ -112,7 +112,7 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
     <div className="bg-white border border-border p-6">
       <div className="max-w-2xl mx-auto">
         {/* Header - title 20px bold */}
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center" style={{ marginBottom: '1rem' }}>
           <h2 
             className="font-bold"
             contentEditable
