@@ -192,7 +192,7 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
               
               {/* Alcohol and volume - 10px black, volume right aligned */}
               <div className="mb-2 flex items-center justify-between" style={{ fontSize: '10px', color: '#000000' }}>
-                <span>Alk. → {product.alcohol}% obj.</span>
+                <span><strong>Alk. →</strong> {product.alcohol}% obj.</span>
                 <span>{product.volume}</span>
               </div>
               
