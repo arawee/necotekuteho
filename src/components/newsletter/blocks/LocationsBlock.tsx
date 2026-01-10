@@ -201,7 +201,7 @@ export const LocationsBlock = ({ block, onUpdate }: LocationsBlockProps) => {
                   <h3 
                     className="mb-1 cursor-pointer"
                     onClick={() => setEditingLocation(index)}
-                    style={{ color: '#000000', fontSize: '16px', fontWeight: 700, marginTop: '0.25rem' }}
+                    style={{ color: '#000000', fontSize: '16px', fontWeight: 700, marginTop: '0.5rem' }}
                   >
                     {location.name}
                   </h3>
