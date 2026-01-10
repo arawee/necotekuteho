@@ -118,7 +118,7 @@ export const blockTemplates: BlockTemplate[] = [
     thumbnail: '/api/placeholder/200/150',
     color: 'yellow',
     defaultContent: {
-      title: 'Magop',
+      title: 'Magor',
       text: 'V pátce roku 2019 vyhlášena servrem Untapped.com nejlepším pivem v České republice.'
     }
   },

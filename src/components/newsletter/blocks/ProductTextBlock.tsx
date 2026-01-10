@@ -17,7 +17,7 @@ export const ProductTextBlock = ({ block, onUpdate }: ProductTextBlockProps) => 
   const [isEditing, setIsEditing] = useState(false);
 
   const productImage = block.content.image || '';
-  const productName = block.content.title || 'Magop';
+  const productName = block.content.title || 'Magor';
   const productText = block.content.text || 'V pátce roku 2019 vyhlášena servrem Untapped.com nejlepším pivem v České republice. New England IPA je moderním stylem, který vznikl v roce 2008 na východním pobřeží Spojených Států. Přinesl úplně nový pohled na stavbu americké IPA, zabil, který dařena velmi velké důraz na chmelovou arovatiku a hořkost se tak stavěla jen právhy doplńkem.';
 
   return (
@@ -41,10 +41,10 @@ export const ProductTextBlock = ({ block, onUpdate }: ProductTextBlockProps) => 
           style={{ backgroundColor: '#F4F4F4' }}
           onClick={() => setIsEditing(true)}
         >
-          {/* Product name - 20px with 16px margin below */}
+          {/* Product name - 16px weight 700 with 16px margin below */}
           <h2 
-            className="font-normal"
-            style={{ color: '#212121', fontSize: '20px', marginBottom: '16px' }}
+            className="font-bold"
+            style={{ color: '#212121', fontSize: '16px', marginBottom: '16px' }}
           >
             {productName}
           </h2>
