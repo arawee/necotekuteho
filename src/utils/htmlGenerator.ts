@@ -370,13 +370,17 @@ function generateProductListHTML(block: NewsletterBlock): string {
       if (idx === 0) {
         const paddingLeft = "0";
         const paddingRight = "8px";
-      } else if (idx === productCount - 1) {
+      } 
+      
+      if (idx === productCount - 1) {
         const paddingLeft = "0";
         const paddingRight = "8px";
-      } else (
+      } 
+      
+      if (idx != 0 and idx != productCount - 1) {
         const paddingLeft = "4px";
         const paddingRight = "4px";
-      )
+      }
 
       return `
     <td valign="top" class="stack" style="padding:0 ${paddingRight} 0 ${paddingLeft};">
