@@ -42,7 +42,7 @@ export function BlockSelectionDialog({ onAddBlock, children }: BlockSelectionDia
             size="sm"
             className="w-full border-dashed border-2 hover:border-primary hover:bg-primary/5 text-muted-foreground hover:text-primary"
           >
-            <CustomPlusIcon className="mr-2" color="currentColor" />
+            <CustomPlusIcon className="mr-2" color="currentColor" style={{ width: '8px', height: '8px' }} />
             Přidat blok
           </Button>
         )}

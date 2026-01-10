@@ -115,7 +115,7 @@ export const MistaBlock = ({ block, onUpdate }: MistaBlockProps) => {
               </div>
 
               {/* Button and name row */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center" style={{ gap: '0.75rem' }}>
                 <button 
                   className="mista-circle-btn flex items-center justify-center flex-shrink-0"
                   style={{ 
