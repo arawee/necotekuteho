@@ -122,34 +122,63 @@ export const ArticleTextBlock = ({ block, onUpdate }: ArticleTextBlockProps) => 
         </div>
 
         {/* Metadata - in grey box, width fits content */}
-        <div 
-          className="p-4 space-y-1 text-sm cursor-pointer inline-block"
-          style={{ backgroundColor: '#F4F4F4' }}
-          onClick={() => setIsEditingMeta(true)}
-        >
-          <div className="flex gap-2">
-            <span className="font-medium">Datum →</span>
-            <span className="text-muted-foreground">{date}</span>
-          </div>
-          <div className="flex gap-2">
-            <span className="font-medium">Autor →</span>
-            <span className="text-muted-foreground">{author}</span>
-          </div>
-          <div className="flex gap-2">
-            <span className="font-medium">Tag →</span>
-            <span className="text-muted-foreground underline">
-              {tags.map(t => t.text).join(', ')}
-            </span>
-          </div>
-          {shareLinks.filter(s => s.url && s.url.trim() !== '' && s.url !== '#').length > 0 && (
-            <div className="flex gap-2">
-              <span className="font-medium">Sdílet →</span>
-              <span className="text-muted-foreground underline">
-                {shareLinks.filter(s => s.url && s.url.trim() !== '' && s.url !== '#').map(s => s.text).join(', ')}
-              </span>
+        {(() => {
+          const hasDate = date && date.trim() !== '';
+          const hasAuthor = author && author.trim() !== '';
+          const hasTags = tags.length > 0 && tags.some(t => t.text && t.text.trim() !== '');
+          const validShareLinks = shareLinks.filter(s => s.url && s.url.trim() !== '' && s.url !== '#');
+          const hasShares = validShareLinks.length > 0;
+          
+          const hasAnyMeta = hasDate || hasAuthor || hasTags || hasShares;
+          
+          if (!hasAnyMeta) {
+            return (
+              <button
+                className="text-xs px-3 py-1 border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500"
+                onClick={() => setIsEditingMeta(true)}
+              >
+                + Přidat metadata
+              </button>
+            );
+          }
+          
+          return (
+            <div 
+              className="p-4 space-y-1 text-sm cursor-pointer inline-block"
+              style={{ backgroundColor: '#F4F4F4' }}
+              onClick={() => setIsEditingMeta(true)}
+            >
+              {hasDate && (
+                <div className="flex gap-2">
+                  <span className="font-medium">Datum →</span>
+                  <span className="text-muted-foreground">{date}</span>
+                </div>
+              )}
+              {hasAuthor && (
+                <div className="flex gap-2">
+                  <span className="font-medium">Autor →</span>
+                  <span className="text-muted-foreground">{author}</span>
+                </div>
+              )}
+              {hasTags && (
+                <div className="flex gap-2">
+                  <span className="font-medium">Tag →</span>
+                  <span className="text-muted-foreground underline">
+                    {tags.filter(t => t.text && t.text.trim() !== '').map(t => t.text).join(', ')}
+                  </span>
+                </div>
+              )}
+              {hasShares && (
+                <div className="flex gap-2">
+                  <span className="font-medium">Sdílet →</span>
+                  <span className="text-muted-foreground underline">
+                    {validShareLinks.map(s => s.text).join(', ')}
+                  </span>
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          );
+        })()}
       </div>
 
       {/* Edit Metadata Dialog */}
