@@ -52,6 +52,7 @@ const paymentIcons = [
 export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProps) => {
   const [editingColumn, setEditingColumn] = useState<{ colIdx: number; linkIdx: number } | null>(null);
   const [editingSocial, setEditingSocial] = useState<number | null>(null);
+  const [editingPhone, setEditingPhone] = useState(false);
 
   const defaultColumns: FooterColumn[] = [
     {
@@ -117,12 +118,12 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
           {/* Contact column - first column bold and underlined */}
           <div>
             <p style={{ fontFamily: "'JetBrains Mono', monospace", color: '#212121', fontWeight: 'bold', textDecoration: 'underline', marginBottom: '1rem' }}>
-              <a 
-                href="tel:+420602555555"
+              <span 
                 className="hover:bg-black/10 px-1 cursor-pointer"
+                onClick={() => setEditingPhone(true)}
               >
                 {(block.content.footerText || '602 555 555').replace(/^\+420\s*/, '').replace(/^tel\.\s*/i, '')}
-              </a>
+              </span>
             </p>
             <p className="mb-6">
               <a 
@@ -180,8 +181,8 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
           ))}
         </div>
 
-        {/* Payment icons - white background, 10px gap */}
-        <div className="px-8 py-4 flex justify-center border-t border-black/10" style={{ backgroundColor: '#FFFFFF', gap: '10px' }}>
+        {/* Payment icons - white background, 10px gap, flex wrap */}
+        <div className="px-8 py-4 flex justify-center flex-wrap border-t border-black/10" style={{ backgroundColor: '#FFFFFF', gap: '10px' }}>
           {paymentIcons.map((payment) => (
             <img 
               key={payment.name} 
@@ -262,6 +263,25 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
               </div>
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Phone Dialog */}
+      <Dialog open={editingPhone} onOpenChange={(open) => !open && setEditingPhone(false)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Upravit telefonní číslo</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium">Telefonní číslo (bez předvolby +420)</label>
+              <Input
+                value={(block.content.footerText || '602 555 555').replace(/^\+420\s*/, '').replace(/^tel\.\s*/i, '')}
+                onChange={(e) => onUpdate({ ...block.content, footerText: e.target.value })}
+                placeholder="602 555 555"
+              />
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
