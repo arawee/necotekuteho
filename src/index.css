@@ -538,3 +538,8 @@ All colors MUST be HSL.
 .blog-circle-btn {
   border-radius: 100% !important;
 }
+
+/* Locations block circular button */
+.locations-circle-btn {
+  border-radius: 100% !important;
+}
