@@ -201,7 +201,7 @@ export const LocationsBlock = ({ block, onUpdate }: LocationsBlockProps) => {
                   <h3 
                     className="mb-1 cursor-pointer"
                     onClick={() => setEditingLocation(index)}
-                    style={{ color: '#000000', fontSize: '16px', fontWeight: 700 }}
+                    style={{ color: '#000000', fontSize: '16px', fontWeight: 700, marginTop: '0.25rem' }}
                   >
                     {location.name}
                   </h3>
@@ -263,7 +263,7 @@ export const LocationsBlock = ({ block, onUpdate }: LocationsBlockProps) => {
                   <div style={{ flexGrow: 1 }} />
 
                   {/* Action buttons - 36px circular with green border, no background */}
-                  <div className="flex items-center gap-2 mt-auto" style={{ marginTop: '2rem' }}>
+                  <div className="flex items-center gap-2 mt-auto" style={{ marginTop: '1rem' }}>
                     <button 
                       className="flex items-center justify-center locations-circle-btn"
                       style={{ 
