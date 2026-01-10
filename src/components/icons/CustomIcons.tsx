@@ -8,8 +8,8 @@ interface IconProps {
 
 export const CustomPlusIcon = ({ className, style, color = '#161616' }: IconProps) => (
   <svg 
-    width="10" 
-    height="10" 
+    width="8" 
+    height="8" 
     viewBox="0 0 10 10" 
     fill="none" 
     xmlns="http://www.w3.org/2000/svg"
@@ -25,8 +25,8 @@ export const CustomPlusIcon = ({ className, style, color = '#161616' }: IconProp
 
 export const CustomArrowIcon = ({ className, style, color = '#00A51B' }: IconProps) => (
   <svg 
-    width="12" 
-    height="12" 
+    width="8" 
+    height="8" 
     viewBox="0 0 12 12" 
     fill="none" 
     xmlns="http://www.w3.org/2000/svg"
