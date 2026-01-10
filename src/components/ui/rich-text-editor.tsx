@@ -113,20 +113,50 @@ export const RichTextEditor = ({ value, onChange, placeholder, className }: Rich
   const handleUnderline = () => execCommand('underline');
   const handleStrikethrough = () => execCommand('strikeThrough');
   
-  // Heading handlers - wrap selection in heading tags with specific styles
+  // Heading handlers - apply heading styles without nesting
   const handleHeading = (level: 1 | 2 | 3 | 4) => {
     const selection = window.getSelection();
     if (!selection || selection.rangeCount === 0) return;
-    
+
     const range = selection.getRangeAt(0);
     const selectedText = range.toString();
-    
     if (!selectedText) return;
-    
+
+    const editor = editorRef.current;
+    if (!editor) return;
+
+    const findClosestFormattedElement = (startNode: Node | null) => {
+      let el: HTMLElement | null =
+        startNode instanceof HTMLElement
+          ? startNode
+          : (startNode?.parentElement ?? null);
+
+      while (el && el !== editor) {
+        if (/^H[1-4]$/.test(el.tagName)) return el;
+        el = el.parentElement;
+      }
+
+      el =
+        startNode instanceof HTMLElement
+          ? startNode
+          : (startNode?.parentElement ?? null);
+
+      while (el && el !== editor) {
+        if (el.tagName === 'SPAN' && el.getAttribute('style')) return el;
+        el = el.parentElement;
+      }
+
+      return null;
+    };
+
+    const closest = findClosestFormattedElement(selection.anchorNode);
+    const closestText = closest?.textContent?.trim() ?? '';
+    const selectionText = selectedText.trim();
+
     // Create heading element with inline styles for export
     const heading = document.createElement(`h${level}`);
     heading.textContent = selectedText;
-    
+
     // Apply styles based on level
     switch (level) {
       case 1:
@@ -148,52 +178,97 @@ export const RichTextEditor = ({ value, onChange, placeholder, className }: Rich
     }
     heading.style.margin = '0';
     heading.style.lineHeight = '1.2';
-    
-    range.deleteContents();
-    range.insertNode(heading);
-    
-    // Move cursor after the heading
-    range.setStartAfter(heading);
-    range.setEndAfter(heading);
-    selection.removeAllRanges();
-    selection.addRange(range);
-    
-    if (editorRef.current) {
-      const clean = sanitizeInline(editorRef.current.innerHTML);
-      onChange(clean);
+
+    // If the selection matches the full formatted element, replace it (prevents nesting)
+    if (closest && closestText === selectionText) {
+      closest.replaceWith(heading);
+
+      const newRange = document.createRange();
+      newRange.setStartAfter(heading);
+      newRange.setEndAfter(heading);
+      selection.removeAllRanges();
+      selection.addRange(newRange);
+    } else {
+      range.deleteContents();
+      range.insertNode(heading);
+
+      // Move cursor after the heading
+      range.setStartAfter(heading);
+      range.setEndAfter(heading);
+      selection.removeAllRanges();
+      selection.addRange(range);
     }
+
+    const clean = sanitizeInline(editor.innerHTML);
+    onChange(clean);
   };
 
-  // Paragraph handler - reset to default paragraph styling
+  // Paragraph handler - reset to default paragraph styling (without nesting)
   const handleParagraph = () => {
     const selection = window.getSelection();
     if (!selection || selection.rangeCount === 0) return;
-    
+
     const range = selection.getRangeAt(0);
     const selectedText = range.toString();
-    
     if (!selectedText) return;
-    
-    // Create span with paragraph styling
+
+    const editor = editorRef.current;
+    if (!editor) return;
+
+    const findClosestFormattedElement = (startNode: Node | null) => {
+      let el: HTMLElement | null =
+        startNode instanceof HTMLElement
+          ? startNode
+          : (startNode?.parentElement ?? null);
+
+      while (el && el !== editor) {
+        if (/^H[1-4]$/.test(el.tagName)) return el;
+        el = el.parentElement;
+      }
+
+      el =
+        startNode instanceof HTMLElement
+          ? startNode
+          : (startNode?.parentElement ?? null);
+
+      while (el && el !== editor) {
+        if (el.tagName === 'SPAN' && el.getAttribute('style')) return el;
+        el = el.parentElement;
+      }
+
+      return null;
+    };
+
+    const closest = findClosestFormattedElement(selection.anchorNode);
+    const closestText = closest?.textContent?.trim() ?? '';
+    const selectionText = selectedText.trim();
+
     const span = document.createElement('span');
     span.textContent = selectedText;
     span.style.fontSize = '12px';
     span.style.fontWeight = '500';
     span.style.lineHeight = '120%';
-    
-    range.deleteContents();
-    range.insertNode(span);
-    
-    // Move cursor after the span
-    range.setStartAfter(span);
-    range.setEndAfter(span);
-    selection.removeAllRanges();
-    selection.addRange(range);
-    
-    if (editorRef.current) {
-      const clean = sanitizeInline(editorRef.current.innerHTML);
-      onChange(clean);
+
+    if (closest && closestText === selectionText) {
+      closest.replaceWith(span);
+
+      const newRange = document.createRange();
+      newRange.setStartAfter(span);
+      newRange.setEndAfter(span);
+      selection.removeAllRanges();
+      selection.addRange(newRange);
+    } else {
+      range.deleteContents();
+      range.insertNode(span);
+
+      range.setStartAfter(span);
+      range.setEndAfter(span);
+      selection.removeAllRanges();
+      selection.addRange(range);
     }
+
+    const clean = sanitizeInline(editor.innerHTML);
+    onChange(clean);
   };
   
   const handleLinkClick = () => {
