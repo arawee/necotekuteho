@@ -151,9 +151,9 @@ export const PoziceBlock = ({ block, onUpdate }: PoziceBlockProps) => {
 
               {/* Position description - black text */}
               <p 
-                className="text-xs mb-4 cursor-pointer"
+                className="text-xs cursor-pointer"
                 onClick={() => setEditingPosition(index)}
-                style={{ color: '#000000' }}
+                style={{ color: '#000000', marginBottom: '1rem' }}
               >
                 {position.description}
               </p>
