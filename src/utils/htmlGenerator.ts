@@ -367,8 +367,16 @@ function generateProductListHTML(block: NewsletterBlock): string {
         ? `<span style="color:#FF4C4C;font-weight:700;">${p.salePrice}</span> <span style="font-size:10px;color:#666;text-decoration:line-through;">${p.price}</span>`
         : `<span style="color:#212121;font-weight:700;">${p.price}</span>`;
 
-      const paddingLeft = idx === 0 ? "0" : "6px";
-      const paddingRight = idx === productCount - 1 ? "0" : "6px";
+      if (idx === 0) {
+        const paddingLeft = "0";
+        const paddingRight = "8px";
+      } else if (idx === productCount - 1) {
+        const paddingLeft = "0";
+        const paddingRight = "8px";
+      } else (
+        const paddingLeft = "4px";
+        const paddingRight = "4px";
+      )
 
       return `
     <td valign="top" class="stack" style="padding:0 ${paddingRight} 0 ${paddingLeft};">
@@ -421,7 +429,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td style="padding-bottom:1rem;">
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
+          <table style="width: 100%; table-layout:fixed;" role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
             <tr>
               <td style="font-family:'JetBrains Mono',monospace;">
                 <h2 style="margin:0;font-size:20px;font-weight:700;color:#212121;">${content.title || "Mohlo by vám chutnat"}</h2>
@@ -1004,7 +1012,7 @@ function generateBenefitsHTML(block: NewsletterBlock): string {
         <img src="${getBenefitIcon(b.icon, index)}" width="48" height="48" alt="${b.title}" style="display:inline-block;width:48px;height:48px;object-fit:contain;"/>
       </div>
       <h4 style="margin:0 0 12px 0;font-size:16px;font-weight:700;color:#000000;line-height:120%;">${b.title}</h4>
-      <p style="margin:0;font-size:12px;font-weight:400;color:#000000;line-height:120%;">${b.description}</p>
+      <p style="margin:0 auto;max-width:35ch;font-size:12px;font-weight:400;color:#000000;line-height:120%;">${b.description}</p>
     </td>
   `;
     })
