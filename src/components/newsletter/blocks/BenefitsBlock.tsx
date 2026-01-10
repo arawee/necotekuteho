@@ -112,20 +112,20 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
                 )}
               </div>
 
-              {/* Title - 20px bold black with 12px margin below */}
+              {/* Title - 16px bold black with 12px margin below */}
               <h3 
                 className="cursor-pointer"
                 onClick={() => setEditingBenefit(index)}
-                style={{ color: '#000000', fontSize: '20px', lineHeight: '120%', fontWeight: 'bold', marginBottom: '12px' }}
+                style={{ color: '#000000', fontSize: '16px', lineHeight: '120%', fontWeight: 'bold', marginBottom: '12px' }}
               >
                 {benefit.title}
               </h3>
 
-              {/* Description - 14px regular black */}
+              {/* Description - 12px regular black */}
               <p 
                 className="cursor-pointer"
                 onClick={() => setEditingBenefit(index)}
-                style={{ color: '#000000', fontSize: '14px', fontStyle: 'normal', fontWeight: 'normal', lineHeight: '120%' }}
+                style={{ color: '#000000', fontSize: '12px', fontStyle: 'normal', fontWeight: 'normal', lineHeight: '120%' }}
               >
                 {benefit.description}
               </p>
