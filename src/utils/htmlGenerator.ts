@@ -431,7 +431,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td style="padding-bottom:1rem;">
-          <table style="width: 100%; table-layout:fixed;" role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
+          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
             <tr>
               <td style="font-family:'JetBrains Mono',monospace;">
                 <h2 style="margin:0;font-size:20px;font-weight:700;color:#212121;">${content.title || "Mohlo by vám chutnat"}</h2>
@@ -443,7 +443,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
       </tr>
       <tr>
         <td>
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
+          <table style="width: 100%; table-layout:fixed;" role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
             <tr>${productCards}</tr>
           </table>
         </td>
