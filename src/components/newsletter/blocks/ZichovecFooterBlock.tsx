@@ -8,6 +8,17 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 
+import paymentVisa from '@/assets/payment-visa.png';
+import paymentDiners from '@/assets/payment-diners.png';
+import paymentAmex from '@/assets/payment-amex.png';
+import paymentDiscover from '@/assets/payment-discover.png';
+import paymentMastercard from '@/assets/payment-mastercard.png';
+import paymentMaestro from '@/assets/payment-maestro.png';
+import paymentStripe from '@/assets/payment-stripe.png';
+import paymentPaypal from '@/assets/payment-paypal.png';
+import paymentGooglepay from '@/assets/payment-googlepay.png';
+import paymentApplepay from '@/assets/payment-applepay.png';
+
 interface FooterLink {
   text: string;
   url: string;
@@ -22,6 +33,19 @@ interface ZichovecFooterBlockProps {
   block: NewsletterBlock;
   onUpdate: (content: NewsletterBlock['content']) => void;
 }
+
+const paymentIcons = [
+  { name: 'VISA', src: paymentVisa },
+  { name: 'Diners', src: paymentDiners },
+  { name: 'Amex', src: paymentAmex },
+  { name: 'Discover', src: paymentDiscover },
+  { name: 'Mastercard', src: paymentMastercard },
+  { name: 'Maestro', src: paymentMaestro },
+  { name: 'Stripe', src: paymentStripe },
+  { name: 'PayPal', src: paymentPaypal },
+  { name: 'GPay', src: paymentGooglepay },
+  { name: 'ApplePay', src: paymentApplepay },
+];
 
 export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProps) => {
   const [editingColumn, setEditingColumn] = useState<{ colIdx: number; linkIdx: number } | null>(null);
@@ -68,7 +92,6 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
     { text: 'LinkedIn', url: '#' }
   ];
 
-  const email = (block.content as any).email || 'e-shop@pivovarzichovec.cz';
   const socials: FooterLink[] = (block.content as any).socials || defaultSocials;
   const columns: FooterColumn[] = (block.content as any).columns || defaultColumns;
 
@@ -98,19 +121,17 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
                 onBlur={(e) => onUpdate({ ...block.content, footerText: e.currentTarget.textContent || '' })}
                 className="hover:bg-black/10 px-1 cursor-text"
               >
-                {block.content.footerText || '+420 602 555 555'}
+                {block.content.footerText || '602 555 555'}
               </span>
             </p>
             <p className="mb-6">
-              <span 
-                contentEditable 
-                suppressContentEditableWarning
-                onBlur={(e) => onUpdate({ ...block.content, email: e.currentTarget.textContent || '' } as any)}
-                className="underline hover:no-underline cursor-text" 
+              <a 
+                href="mailto:e-shop@pivovarzichovec.cz"
+                className="underline hover:no-underline cursor-pointer" 
                 style={{ color: '#212121' }}
               >
-                {email}
-              </span>
+                Email
+              </a>
             </p>
             <div className="flex flex-col gap-1">
               {socials.map((social, idx) => (
@@ -129,7 +150,7 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
           {/* Link columns - editable */}
           {columns.map((column, colIdx) => (
             <div key={colIdx}>
-              {/* Headings 20px fontsize */}
+              {/* Headings 16px fontsize */}
               <h4 
                 className="mb-4 cursor-text" 
                 contentEditable 
@@ -139,7 +160,7 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
                   newColumns[colIdx] = { ...newColumns[colIdx], title: e.currentTarget.textContent || '' };
                   onUpdate({ ...block.content, columns: newColumns } as any);
                 }}
-                style={{ color: '#212121', fontSize: '20px', fontWeight: 'normal' }}
+                style={{ color: '#212121', fontSize: '16px', fontWeight: 'normal' }}
               >
                 {column.title}
               </h4>
@@ -161,30 +182,24 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
 
         {/* Payment icons - white background */}
         <div className="px-8 py-4 flex justify-center gap-3 border-t border-black/10" style={{ backgroundColor: '#FFFFFF' }}>
-          {['VISA', 'Diners', 'Amex', 'Discover', 'Mastercard', 'Maestro', 'Stripe', 'PayPal', 'GPay', 'ApplePay', 'BitPay'].map((payment) => (
-            <div 
-              key={payment} 
-              className="w-10 h-6 flex items-center justify-center text-[8px]"
-              style={{ backgroundColor: '#F4F4F4', color: '#212121' }}
-            >
-              {payment}
-            </div>
+          {paymentIcons.map((payment) => (
+            <img 
+              key={payment.name} 
+              src={payment.src}
+              alt={payment.name}
+              className="h-6 w-auto object-contain"
+            />
           ))}
         </div>
 
-        {/* Copyright - white background, 10px fontsize */}
+        {/* Copyright - white background, 10px fontsize, NOT editable */}
         <div className="px-8 py-4 flex justify-between items-center border-t border-black/10" style={{ backgroundColor: '#FFFFFF', color: '#212121', fontSize: '10px' }}>
-          <span
-            contentEditable 
-            suppressContentEditableWarning
-            onBlur={(e) => onUpdate({ ...block.content, copyright: e.currentTarget.textContent || '' })}
-            className="cursor-text"
-          >
+          <span>
             {block.content.copyright || 'Copyright © 2025 Pivovar ZICHOVEC. Všechna práva vyhrazena.'}
           </span>
           <div className="flex gap-4">
-            <span>Vývoj <a href="#" className="underline">FY STUDIO</a> + <a href="#" className="underline">Shoptet</a></span>
-            <span>Design <a href="#" className="underline">Vende.Studio</a></span>
+            <span>Vývoj <a href="https://www.fv-studio.cz/" target="_blank" rel="noopener noreferrer" style={{ color: '#A073FF', textDecoration: 'underline' }}>FY STUDIO + Shoptet</a></span>
+            <span>Design <a href="https://www.vanek.studio" target="_blank" rel="noopener noreferrer" style={{ color: '#A073FF', textDecoration: 'underline' }}>Vaněk.Studio</a></span>
           </div>
         </div>
       </div>
