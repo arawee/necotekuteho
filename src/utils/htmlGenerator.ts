@@ -37,15 +37,20 @@ const isVeryDarkBg = (color: string): boolean => {
   return brightness < 60;
 };
 
-// Placeholder benefit icons (SVG data URIs)
-const BENEFIT_ICON_PLACEHOLDER = (index: number) => {
-  const icons = [
-    `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Crect fill='%23E5E5E5' width='48' height='48'/%3E%3Ctext x='24' y='28' text-anchor='middle' fill='%23999' font-size='12'%3E1%3C/text%3E%3C/svg%3E`,
-    `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Crect fill='%23E5E5E5' width='48' height='48'/%3E%3Ctext x='24' y='28' text-anchor='middle' fill='%23999' font-size='12'%3E2%3C/text%3E%3C/svg%3E`,
-    `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Crect fill='%23E5E5E5' width='48' height='48'/%3E%3Ctext x='24' y='28' text-anchor='middle' fill='%23999' font-size='12'%3E3%3C/text%3E%3C/svg%3E`,
-    `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Crect fill='%23E5E5E5' width='48' height='48'/%3E%3Ctext x='24' y='28' text-anchor='middle' fill='%23999' font-size='12'%3E4%3C/text%3E%3C/svg%3E`
-  ];
-  return icons[index] || icons[0];
+// Default benefit icons from the editor - these must match src/assets/benefit-icon-*.png
+// In production, these should be uploaded to a CDN or embedded as base64
+const DEFAULT_BENEFIT_ICONS = [
+  '/src/assets/benefit-icon-1.png',
+  '/src/assets/benefit-icon-2.png',
+  '/src/assets/benefit-icon-3.png',
+  '/src/assets/benefit-icon-4.png'
+];
+
+const getBenefitIcon = (icon: string | undefined, index: number): string => {
+  // If icon is provided and not empty, use it
+  if (icon && icon.trim() !== '') return icon;
+  // Otherwise use the default icon for this index
+  return DEFAULT_BENEFIT_ICONS[index] || DEFAULT_BENEFIT_ICONS[0];
 };
 
 export function generateHTMLFromBlocks(blocks: NewsletterBlock[]): string {
@@ -270,9 +275,12 @@ function generateProductListHTML(block: NewsletterBlock): string {
   };
 
   const productCount = Math.min(products.length, 4);
-  const colWidth = Math.floor(100 / productCount);
+  // Calculate width with gap consideration: total gap = (n-1) * 12px
+  const gapPx = 12;
+  const totalGapPercent = ((productCount - 1) * gapPx) / 6; // ~6px per 1% at 600px width
+  const colWidth = (100 - totalGapPercent) / productCount;
 
-  const productCards = products.slice(0, 4).map((p: any) => {
+  const productCards = products.slice(0, 4).map((p: any, idx: number) => {
     const tagsHTML = (p.tags || []).map((tag: any) => `
       <span style="display:inline-block;background-color:${getTagBgColor(tag.color)};color:#FFFFFF;font-size:10px;padding:2px 8px;margin-right:4px;margin-bottom:4px;">${tag.text}</span>
     `).join('');
@@ -281,8 +289,11 @@ function generateProductListHTML(block: NewsletterBlock): string {
       ? `<span style="color:#FF4C4C;font-weight:700;">${p.salePrice}</span> <span style="font-size:10px;color:#666;text-decoration:line-through;">${p.price}</span>`
       : `<span style="color:#212121;font-weight:700;">${p.price}</span>`;
 
+    const paddingLeft = idx === 0 ? '0' : '6px';
+    const paddingRight = idx === productCount - 1 ? '0' : '6px';
+
     return `
-    <td valign="top" width="${colWidth}%" class="stack" style="padding:0;">
+    <td valign="top" class="stack" style="padding:0 ${paddingRight} 0 ${paddingLeft};">
       <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
         <tr>
           <td style="background-color:#F5F5F5;">
@@ -323,7 +334,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
   return `<!-- List produktů -->
 <tr>
   <td align="center" style="padding:24px;margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td style="padding-bottom:1rem;">
           <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -359,10 +370,13 @@ function generateMistaHTML(block: NewsletterBlock): string {
   const viewAllUrl = (content as any).viewAllUrl || '#';
 
   const placeCount = Math.min(places.length, 3);
-  const colWidth = Math.floor(100 / placeCount);
 
-  const placeCards = places.slice(0, 3).map((place: any) => `
-    <td valign="top" width="${colWidth}%" class="stack" style="padding:0;">
+  const placeCards = places.slice(0, 3).map((place: any, idx: number) => {
+    const paddingLeft = idx === 0 ? '0' : '6px';
+    const paddingRight = idx === placeCount - 1 ? '0' : '6px';
+    
+    return `
+    <td valign="top" class="stack" style="padding:0 ${paddingRight} 0 ${paddingLeft};">
       <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
         <tr>
           <td>
@@ -388,7 +402,7 @@ function generateMistaHTML(block: NewsletterBlock): string {
         </tr>
       </table>
     </td>
-  `).join('');
+  `}).join('');
 
   const viewAllHTML = showViewAll ? `
     <a href="${viewAllUrl}" style="color:#000000;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;">
@@ -399,7 +413,7 @@ function generateMistaHTML(block: NewsletterBlock): string {
   return `<!-- Místa -->
 <tr>
   <td align="center" style="padding:24px;margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td style="padding-bottom:1rem;">
           <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -434,10 +448,16 @@ function generateLocationsHTML(block: NewsletterBlock): string {
   const viewAllUrl = content.viewAllUrl || '#';
 
   const locCount = Math.min(locations.length, 6);
-  const colWidth = locCount > 3 ? 33 : Math.floor(100 / locCount);
+  // For locations, we use a max of 3 per row
+  const colsPerRow = Math.min(locCount, 3);
 
-  const locationCards = locations.slice(0, 6).map((loc: any) => `
-    <td valign="top" width="${colWidth}%" class="stack" style="padding:0 0 12px 0;">
+  const locationCards = locations.slice(0, 6).map((loc: any, idx: number) => {
+    const colIdx = idx % colsPerRow;
+    const paddingLeft = colIdx === 0 ? '0' : '6px';
+    const paddingRight = colIdx === colsPerRow - 1 ? '0' : '6px';
+    
+    return `
+    <td valign="top" class="stack" style="padding:0 ${paddingRight} 12px ${paddingLeft};">
       <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="background-color:#F4F4F4;">
         <tr>
           <td>
@@ -475,7 +495,7 @@ function generateLocationsHTML(block: NewsletterBlock): string {
         </tr>
       </table>
     </td>
-  `).join('');
+  `}).join('');
 
   const viewAllHTML = showViewAll ? `
     <a href="${viewAllUrl}" style="color:#212121;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;">
@@ -486,7 +506,7 @@ function generateLocationsHTML(block: NewsletterBlock): string {
   return `<!-- Lokace -->
 <tr>
   <td align="center" style="padding:24px;margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td style="padding-bottom:24px;">
           <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -521,10 +541,13 @@ function generateBlogPostsHTML(block: NewsletterBlock): string {
   const viewAllUrl = content.viewAllUrl || '#';
 
   const postCount = Math.min(posts.length, 3);
-  const colWidth = Math.floor(100 / postCount);
 
-  const postCards = posts.slice(0, 3).map((post: any) => `
-    <td valign="top" width="${colWidth}%" class="stack" style="padding:0;">
+  const postCards = posts.slice(0, 3).map((post: any, idx: number) => {
+    const paddingLeft = idx === 0 ? '0' : '6px';
+    const paddingRight = idx === postCount - 1 ? '0' : '6px';
+    
+    return `
+    <td valign="top" class="stack" style="padding:0 ${paddingRight} 0 ${paddingLeft};">
       <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
         <tr>
           <td>
@@ -545,7 +568,7 @@ function generateBlogPostsHTML(block: NewsletterBlock): string {
         </tr>
       </table>
     </td>
-  `).join('');
+  `}).join('');
 
   const viewAllHTML = showViewAll ? `
     <a href="${viewAllUrl}" style="color:#000000;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;">
@@ -556,7 +579,7 @@ function generateBlogPostsHTML(block: NewsletterBlock): string {
   return `<!-- Blog posty -->
 <tr>
   <td align="center" style="padding:24px;margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td style="padding-bottom:1rem;">
           <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -598,13 +621,15 @@ function generatePromoBoxHTML(block: NewsletterBlock): string {
   ];
 
   const boxCount = Math.min(boxes.length, 3);
-  const colWidth = Math.floor(100 / boxCount);
 
-  const boxCards = boxes.map((box: any) => {
+  const boxCards = boxes.slice(0, 3).map((box: any, idx: number) => {
     const isDark = isVeryDarkBg(box.bgColor || '#00C322');
     const textColor = isDark ? '#FFFFFF' : '#000000';
     const valueColor = isDark ? '#CCC' : '#000000';
     const borderColor = isDark ? '#FFFFFF' : '#000000';
+    
+    const paddingLeft = idx === 0 ? '0' : '6px';
+    const paddingRight = idx === boxCount - 1 ? '0' : '6px';
 
     const featuresHTML = (box.features || []).map((f: any) => `
       <tr>
@@ -617,7 +642,7 @@ function generatePromoBoxHTML(block: NewsletterBlock): string {
     `).join('');
 
     return `
-    <td valign="top" width="${colWidth}%" class="stack" style="padding:0;">
+    <td valign="top" class="stack" style="padding:0 ${paddingRight} 0 ${paddingLeft};">
       <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="background-color:${box.bgColor || '#00C322'};">
         <tr>
           <td style="padding:24px;font-family:'JetBrains Mono',monospace;">
@@ -637,7 +662,7 @@ function generatePromoBoxHTML(block: NewsletterBlock): string {
   return `<!-- Promo boxy -->
 <tr>
   <td align="center" style="padding:24px;margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>${boxCards}</tr>
     </table>
   </td>
@@ -650,8 +675,8 @@ function generateGalleryTrioHTML(block: NewsletterBlock): string {
 
   return `<!-- Galerie trio -->
 <tr>
-  <td align="center" style="margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
+  <td align="center" style="margin-top:2rem;margin-bottom:32px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <!-- Main image 1:1 -->
       <tr>
         <td>
@@ -659,17 +684,17 @@ function generateGalleryTrioHTML(block: NewsletterBlock): string {
             `<div style="width:100%;padding-top:100%;background:#E5E5E5;"></div>`}
         </td>
       </tr>
-      <!-- Two smaller images 3:4 -->
+      <!-- Two smaller images 3:4 with 12px gap -->
       <tr>
         <td>
           <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
             <tr>
-              <td width="50%">
-                ${photos[1]?.url ? `<img src="${photos[1].url}" width="300" alt="${photos[1].alt || ''}" style="display:block;width:100%;aspect-ratio:3/4;object-fit:cover;"/>` :
+              <td style="padding-right:6px;">
+                ${photos[1]?.url ? `<img src="${photos[1].url}" width="294" alt="${photos[1].alt || ''}" style="display:block;width:100%;aspect-ratio:3/4;object-fit:cover;"/>` :
                   `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`}
               </td>
-              <td width="50%">
-                ${photos[2]?.url ? `<img src="${photos[2].url}" width="300" alt="${photos[2].alt || ''}" style="display:block;width:100%;aspect-ratio:3/4;object-fit:cover;"/>` :
+              <td style="padding-left:6px;">
+                ${photos[2]?.url ? `<img src="${photos[2].url}" width="294" alt="${photos[2].alt || ''}" style="display:block;width:100%;aspect-ratio:3/4;object-fit:cover;"/>` :
                   `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`}
               </td>
             </tr>
@@ -687,15 +712,15 @@ function generateGalleryDuoHTML(block: NewsletterBlock): string {
 
   return `<!-- Galerie duo -->
 <tr>
-  <td align="center" style="margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
+  <td align="center" style="margin-top:2rem;margin-bottom:32px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
-        <td width="50%">
-          ${photos[0]?.url ? `<img src="${photos[0].url}" width="300" alt="${photos[0].alt || ''}" style="display:block;width:100%;aspect-ratio:3/4;object-fit:cover;"/>` :
+        <td style="padding-right:6px;">
+          ${photos[0]?.url ? `<img src="${photos[0].url}" width="294" alt="${photos[0].alt || ''}" style="display:block;width:100%;aspect-ratio:3/4;object-fit:cover;"/>` :
             `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`}
         </td>
-        <td width="50%">
-          ${photos[1]?.url ? `<img src="${photos[1].url}" width="300" alt="${photos[1].alt || ''}" style="display:block;width:100%;aspect-ratio:3/4;object-fit:cover;"/>` :
+        <td style="padding-left:6px;">
+          ${photos[1]?.url ? `<img src="${photos[1].url}" width="294" alt="${photos[1].alt || ''}" style="display:block;width:100%;aspect-ratio:3/4;object-fit:cover;"/>` :
             `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`}
         </td>
       </tr>
@@ -709,8 +734,8 @@ function generateGallerySingleHTML(block: NewsletterBlock): string {
 
   return `<!-- Galerie single -->
 <tr>
-  <td align="center" style="margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
+  <td align="center" style="margin-top:2rem;margin-bottom:32px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td>
           ${photo?.url ? `<img src="${photo.url}" width="600" alt="${photo.alt || ''}" style="display:block;width:100%;aspect-ratio:1/1;object-fit:cover;"/>` :
@@ -783,22 +808,25 @@ function generateBenefitsHTML(block: NewsletterBlock): string {
   ];
 
   const benefitCount = Math.min(benefits.length, 4);
-  const colWidth = Math.floor(100 / benefitCount);
 
-  const benefitCells = benefits.slice(0, 4).map((b: any, index: number) => `
-    <td valign="top" width="${colWidth}%" class="stack" style="padding:0;text-align:center;font-family:'JetBrains Mono',monospace;">
+  const benefitCells = benefits.slice(0, 4).map((b: any, index: number) => {
+    const paddingLeft = index === 0 ? '0' : '6px';
+    const paddingRight = index === benefitCount - 1 ? '0' : '6px';
+    
+    return `
+    <td valign="top" class="stack" style="padding:0 ${paddingRight} 0 ${paddingLeft};text-align:center;font-family:'JetBrains Mono',monospace;">
       <div style="margin-bottom:1rem;">
-        <img src="${b.icon || BENEFIT_ICON_PLACEHOLDER(index)}" width="48" height="48" alt="${b.title}" style="display:inline-block;width:48px;height:48px;object-fit:contain;"/>
+        <img src="${getBenefitIcon(b.icon, index)}" width="48" height="48" alt="${b.title}" style="display:inline-block;width:48px;height:48px;object-fit:contain;"/>
       </div>
       <h4 style="margin:0 0 12px 0;font-size:16px;font-weight:700;color:#000000;line-height:120%;">${b.title}</h4>
       <p style="margin:0;font-size:12px;font-weight:400;color:#000000;line-height:120%;">${b.description}</p>
     </td>
-  `).join('');
+  `}).join('');
 
   return `<!-- Benefity -->
 <tr>
   <td align="center" style="padding:32px 24px;margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>${benefitCells}</tr>
     </table>
   </td>
@@ -817,10 +845,13 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
   const viewAllUrl = (content as any).viewAllUrl || '#';
 
   const catCount = Math.min(categories.length, 4);
-  const colWidth = Math.floor(100 / catCount);
 
-  const catCells = categories.slice(0, 4).map((c: any) => `
-    <td valign="top" width="${colWidth}%" class="stack" style="padding:0;">
+  const catCells = categories.slice(0, 4).map((c: any, idx: number) => {
+    const paddingLeft = idx === 0 ? '0' : '6px';
+    const paddingRight = idx === catCount - 1 ? '0' : '6px';
+    
+    return `
+    <td valign="top" class="stack" style="padding:0 ${paddingRight} 0 ${paddingLeft};">
       <a href="${c.url || '#'}" style="text-decoration:none;">
         <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
           <tr>
@@ -837,7 +868,7 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
         </table>
       </a>
     </td>
-  `).join('');
+  `}).join('');
 
   const viewAllHTML = showViewAll ? `
     <a href="${viewAllUrl}" style="color:#000000;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;">
@@ -848,7 +879,7 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
   return `<!-- Kategorie -->
 <tr>
   <td align="center" style="padding:24px;margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td style="padding-bottom:1rem;">
           <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -883,15 +914,16 @@ function generatePoziceHTML(block: NewsletterBlock): string {
   const viewAllUrl = (content as any).viewAllUrl || '#';
 
   const posCount = Math.min(positions.length, 3);
-  const colWidth = Math.floor(100 / posCount);
 
-  const positionCells = positions.slice(0, 3).map((p: any) => {
+  const positionCells = positions.slice(0, 3).map((p: any, idx: number) => {
     const isDark = isColorDark(p.bgColor || '#F4F4F4');
     const textColor = isDark ? '#FFFFFF' : '#000000';
     const borderColor = isDark ? '#FFFFFF' : '#212121';
+    const paddingLeft = idx === 0 ? '0' : '6px';
+    const paddingRight = idx === posCount - 1 ? '0' : '6px';
 
     return `
-    <td valign="top" width="${colWidth}%" class="stack" style="padding:0;">
+    <td valign="top" class="stack" style="padding:0 ${paddingRight} 0 ${paddingLeft};">
       <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="background-color:${p.bgColor || '#F4F4F4'};">
         <tr>
           <td style="padding:16px;font-family:'JetBrains Mono',monospace;">
@@ -916,7 +948,7 @@ function generatePoziceHTML(block: NewsletterBlock): string {
   return `<!-- Pozice -->
 <tr>
   <td align="center" style="padding:24px;margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td style="padding-bottom:1rem;">
           <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -1033,12 +1065,18 @@ function getNewsletterCSS(): string {
     
     /* Responsive - Mobile */
     @media only screen and (max-width: 620px) {
+      body, table, td {
+        width: 100% !important;
+        min-width: 100% !important;
+      }
       table.wrap {
         width: 100% !important;
+        max-width: 100% !important;
       }
       td.stack {
         display: block !important;
         width: 100% !important;
+        box-sizing: border-box !important;
         padding: 0 0 16px 0 !important;
       }
       td.stack:last-child {
@@ -1054,6 +1092,10 @@ function getNewsletterCSS(): string {
         display: block !important;
         width: 100% !important;
         padding-bottom: 24px !important;
+      }
+      /* Ensure proper padding on mobile */
+      td[style*="padding:24px"] {
+        padding: 16px !important;
       }
     }
   `;
