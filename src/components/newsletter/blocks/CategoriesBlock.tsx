@@ -29,8 +29,7 @@ export const CategoriesBlock = ({ block, onUpdate }: CategoriesBlockProps) => {
   const defaultCategories: Category[] = [
     { image: '', tag: '→ IPA, APA a NEIPA', url: '#' },
     { image: '', tag: '→ Sour a Ovocné', url: '#' },
-    { image: '', tag: '→ Ležáky a klasika', url: '#' },
-    { image: '', tag: '→ Relax a osvěžení', url: '#' }
+    { image: '', tag: '→ Ležáky a klasika', url: '#' }
   ];
 
   const categories: Category[] = (block.content as any).categories || defaultCategories;
