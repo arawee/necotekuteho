@@ -121,7 +121,7 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
                 href="tel:+420602555555"
                 className="hover:bg-black/10 px-1 cursor-pointer"
               >
-                {block.content.footerText || 'tel. 602 555 555'}
+                {(block.content.footerText || 'tel. 602 555 555').replace(/^\+420\s*/, 'tel. ')}
               </a>
             </p>
             <p className="mb-6">
@@ -194,9 +194,10 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
 
         {/* Copyright - white background, 10px fontsize, NOT editable */}
         <div className="px-8 py-4 flex justify-between items-start border-t border-black/10" style={{ backgroundColor: '#FFFFFF', color: '#212121', fontSize: '10px' }}>
-          <span>
-            {block.content.copyright || 'Copyright © 2025 Pivovar ZICHOVEC. Všechna práva vyhrazena.'}
-          </span>
+          <div>
+            <div>{block.content.copyright || 'Copyright © 2025 Pivovar ZICHOVEC.'}</div>
+            <div>Všechna práva vyhrazena.</div>
+          </div>
           <div className="flex gap-4">
             <div className="flex flex-col">
               <span>Vývoj</span>
