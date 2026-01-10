@@ -168,7 +168,7 @@ export const LocationsBlock = ({ block, onUpdate }: LocationsBlockProps) => {
             return (
               <div 
                 key={index} 
-                className="group relative"
+                className="group relative flex flex-col"
                 style={{ 
                   backgroundColor: '#F4F4F4', 
                   flex: `0 0 ${flexBasis}`,
@@ -195,8 +195,8 @@ export const LocationsBlock = ({ block, onUpdate }: LocationsBlockProps) => {
                   />
                 </div>
 
-                {/* Content with padding */}
-                <div className="p-3">
+                {/* Content with padding - flex column to push buttons to bottom */}
+                <div className="p-3 flex flex-col" style={{ flexGrow: 1 }}>
                   {/* Location info - Název with font-weight 700 */}
                   <h3 
                     className="mb-1 cursor-pointer"
@@ -259,8 +259,11 @@ export const LocationsBlock = ({ block, onUpdate }: LocationsBlockProps) => {
                     </div>
                   )}
 
+                  {/* Spacer to push buttons to bottom */}
+                  <div style={{ flexGrow: 1 }} />
+
                   {/* Action buttons - 36px circular with green border, no background */}
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 mt-auto">
                     <button 
                       className="flex items-center justify-center locations-circle-btn"
                       style={{ 
