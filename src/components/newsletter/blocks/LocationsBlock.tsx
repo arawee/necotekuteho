@@ -263,7 +263,7 @@ export const LocationsBlock = ({ block, onUpdate }: LocationsBlockProps) => {
                   <div style={{ flexGrow: 1 }} />
 
                   {/* Action buttons - 36px circular with green border, no background */}
-                  <div className="flex items-center gap-2 mt-auto">
+                  <div className="flex items-center gap-2 mt-auto" style={{ marginTop: '2rem' }}>
                     <button 
                       className="flex items-center justify-center locations-circle-btn"
                       style={{ 
