@@ -127,7 +127,7 @@ export const LocationsBlock = ({ block, onUpdate }: LocationsBlockProps) => {
             contentEditable
             suppressContentEditableWarning
             onBlur={(e) => onUpdate({ ...block.content, title: e.currentTarget.textContent || '' })}
-            style={{ color: '#212121', fontSize: '24px', fontWeight: 400, margin: 0 }}
+            style={{ color: '#212121', fontSize: '24px', fontWeight: 700, margin: 0 }}
           >
             {block.content.title || 'Kde nás ochutnáte?'}
           </h2>
@@ -227,31 +227,37 @@ export const LocationsBlock = ({ block, onUpdate }: LocationsBlockProps) => {
                     {location.weekendHours}
                   </p>
                   
-                  {/* Social links - underlined */}
-                  <div className="flex gap-2 text-xs mb-2">
-                    <a 
-                      href={location.facebookUrl || '#'} 
-                      className="cursor-pointer"
-                      style={{ color: '#000000', textDecoration: 'underline' }}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setEditingLocation(index);
-                      }}
-                    >
-                      Facebook
-                    </a>
-                    <a 
-                      href={location.instagramUrl || '#'} 
-                      className="cursor-pointer"
-                      style={{ color: '#000000', textDecoration: 'underline' }}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setEditingLocation(index);
-                      }}
-                    >
-                      Instagram
-                    </a>
-                  </div>
+                  {/* Social links - underlined, only show if URL exists */}
+                  {(location.facebookUrl || location.instagramUrl) && (
+                    <div className="flex gap-2 text-xs mb-2">
+                      {location.facebookUrl && (
+                        <a 
+                          href={location.facebookUrl} 
+                          className="cursor-pointer"
+                          style={{ color: '#000000', textDecoration: 'underline' }}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setEditingLocation(index);
+                          }}
+                        >
+                          Facebook
+                        </a>
+                      )}
+                      {location.instagramUrl && (
+                        <a 
+                          href={location.instagramUrl} 
+                          className="cursor-pointer"
+                          style={{ color: '#000000', textDecoration: 'underline' }}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setEditingLocation(index);
+                          }}
+                        >
+                          Instagram
+                        </a>
+                      )}
+                    </div>
+                  )}
 
                   {/* Action buttons - 36px circular with green border, no background */}
                   <div className="flex items-center gap-2">
