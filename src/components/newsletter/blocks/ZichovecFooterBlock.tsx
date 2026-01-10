@@ -184,8 +184,8 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
           ))}
         </div>
 
-        {/* Payment icons - white background, 10px gap, flex wrap */}
-        <div className="px-8 py-4 flex justify-center flex-wrap border-t border-black/10" style={{ backgroundColor: '#FFFFFF', gap: '10px' }}>
+        {/* Payment icons - white background, 8px gap, flex wrap */}
+        <div className="py-4 flex justify-center flex-wrap border-t border-black/10" style={{ backgroundColor: '#FFFFFF', gap: '8px', paddingLeft: 0, paddingRight: 0 }}>
           {paymentIcons.map((payment) => (
             <img 
               key={payment.name} 
