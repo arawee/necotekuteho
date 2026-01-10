@@ -40,7 +40,7 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
         { label: '8-12 piv', value: 'Každý měsíc' },
         { label: 'Magazín', value: 'Online mag ke každému předplatnému.' }
       ],
-      buttonText: '+ objevit předplatné',
+      buttonText: '→ objevit předplatné',
       buttonUrl: '#',
       bgColor: '#00C322'
     },
@@ -53,7 +53,7 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
         { label: '8-12 piv', value: 'Každý měsíc' },
         { label: 'Magazín', value: 'Online mag ke každému předplatnému.' }
       ],
-      buttonText: '+ objevit',
+      buttonText: '→ objevit',
       buttonUrl: '#',
       bgColor: '#F4F4F4'
     }
@@ -93,7 +93,7 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
       features: [
         { label: 'Funkce', value: 'Popis funkce' }
       ],
-      buttonText: '+ akce',
+      buttonText: '→ akce',
       buttonUrl: '#',
       bgColor: '#F4F4F4'
     };
