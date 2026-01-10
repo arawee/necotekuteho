@@ -92,11 +92,11 @@ export const PoziceBlock = ({ block, onUpdate }: PoziceBlockProps) => {
             </label>
             {showViewAll && (
               <span 
-                className="text-sm cursor-pointer"
-                style={{ color: '#212121' }}
+                className="text-sm cursor-pointer underline"
+                style={{ color: '#000000' }}
                 onClick={() => setEditingPosition(-1)}
               >
-                → {viewAllText}
+                {viewAllText}
               </span>
             )}
           </div>

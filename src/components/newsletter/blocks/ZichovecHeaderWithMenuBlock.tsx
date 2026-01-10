@@ -20,7 +20,7 @@ interface ZichovecHeaderWithMenuBlockProps {
 }
 
 const ZichovecLogo = () => (
-  <svg width="1258" height="143" viewBox="0 0 1258 143" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full max-w-md h-auto">
+  <svg width="1258" height="143" viewBox="0 0 1258 143" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '1258px', maxWidth: '100%', height: 'auto' }}>
     <path d="M1177.26 143C1225.76 143 1255.72 119.372 1257.97 81.8424L1220.08 79.8804C1217.99 98.4351 1203.22 109.394 1177.26 109.394C1149.78 109.394 1133.5 94.9316 1133.5 71.5C1133.5 48.0684 1149.78 33.6058 1177.26 33.6058C1203.03 33.6058 1217.82 44.5368 1220.08 63.1196L1257.97 60.7652C1254.93 23.6558 1225.19 0 1177.26 0C1126.67 0 1095.22 27.7479 1095.22 71.5C1095.22 115.252 1126.67 143 1177.26 143ZM945.709 3.13916V139.889H1081.96V106.283H983.984V87.1397H1071.71V55.2997H983.984V36.745H1081.96V3.13916H945.709ZM937.2 3.13916H894.766L846.269 106.283L796.223 3.13916H752.647L818.406 139.889H872.801L937.2 3.13916ZM674.003 109.394C645.759 109.394 627.573 94.9316 627.573 71.5C627.573 48.0684 645.759 33.6058 674.003 33.6058C702.248 33.6058 720.434 48.0684 720.434 71.5C720.434 94.9316 702.248 109.394 674.003 109.394ZM674.003 143C725.354 143 758.709 115.252 758.709 71.5C758.709 27.7479 725.354 0 674.003 0C622.653 0 589.298 27.7479 589.298 71.5C589.298 115.252 622.653 143 674.003 143ZM411.187 3.13916V139.889H449.462V88.3169H532.075V139.889H570.35V3.13916H532.075V54.7111H449.462V3.13916H411.187ZM311.503 143C359.999 143 389.956 119.372 392.213 81.8424L354.318 79.8804C352.225 98.4351 337.464 109.394 311.503 109.394C284.02 109.394 267.737 94.9316 267.737 71.5C267.737 48.0684 284.02 33.6058 311.503 33.6058C337.274 33.6058 352.062 44.5368 354.318 63.1196L392.213 60.7652C389.168 23.6558 359.429 0 311.503 0C260.913 0 229.461 27.7479 229.461 71.5C229.461 115.252 260.913 143 311.503 143ZM172.239 3.13916V139.889H210.514V3.13916H172.239ZM0 111.16V139.889H155.194V106.283H64.0458L152.53 31.8401V3.13916H1.90289V36.745H89.0552L0 111.16Z" fill="black"/>
   </svg>
 );
@@ -55,20 +55,27 @@ export const ZichovecHeaderWithMenuBlock = ({ block, onUpdate }: ZichovecHeaderW
 
   return (
     <div 
-      className="w-full flex flex-col items-center py-12"
-      style={{ backgroundColor: '#00C322', minHeight: '200px' }}
+      className="w-full flex flex-col justify-between"
+      style={{ 
+        backgroundColor: '#00C322', 
+        width: '1440px',
+        maxWidth: '100%',
+        height: '416px',
+        aspectRatio: '1440/416'
+      }}
     >
-      <div className="w-full max-w-md mb-8 px-8">
+      {/* Logo - centered in upper area */}
+      <div className="flex-1 flex items-center justify-center px-8">
         <ZichovecLogo />
       </div>
 
-      {/* Menu */}
-      <div className="flex flex-wrap justify-center gap-6 text-sm" style={{ color: '#212121' }}>
+      {/* Menu - aligned to bottom */}
+      <div className="flex flex-wrap justify-center pb-8" style={{ gap: '16px' }}>
         {menuItems.map((item, index) => (
           <div key={index} className="group flex items-center gap-1">
             <span
-              className="cursor-pointer hover:underline"
-              style={{ color: '#212121', fontStyle: 'italic' }}
+              className="cursor-pointer hover:underline text-sm font-bold"
+              style={{ color: '#212121', fontStyle: 'normal' }}
               onClick={() => setEditingMenuItem(index)}
             >
               {item.text}

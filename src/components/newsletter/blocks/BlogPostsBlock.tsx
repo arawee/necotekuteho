@@ -88,11 +88,11 @@ export const BlogPostsBlock = ({ block, onUpdate }: BlogPostsBlockProps) => {
             </label>
             {showViewAll && (
               <span 
-                className="text-sm cursor-pointer"
-                style={{ color: '#212121' }}
+                className="text-sm cursor-pointer underline"
+                style={{ color: '#000000' }}
                 onClick={() => setEditingPost(-1)}
               >
-                → {viewAllText}
+                {viewAllText}
               </span>
             )}
           </div>

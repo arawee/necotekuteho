@@ -21,27 +21,35 @@ interface BenefitsBlockProps {
   onUpdate: (content: NewsletterBlock['content']) => void;
 }
 
+// Default SVG icons as data URIs
+const defaultIcons = [
+  `data:image/svg+xml,${encodeURIComponent('<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_9658_6090)"><path d="M47 1V47H1V1H47ZM48 0H0V48H48V0Z" fill="#00A51B"/><path d="M37.1716 24.0034C45.0416 35.2134 35.6216 44.2934 24.0016 36.7034C12.3816 44.2934 2.96157 35.2034 10.8316 24.0034C2.96157 12.7934 12.3816 3.71342 24.0016 11.3034C35.6216 3.71342 45.0416 12.8034 37.1716 24.0034Z" stroke="#00A51B" stroke-miterlimit="10"/></g><defs><clipPath id="clip0_9658_6090"><rect width="48" height="48" fill="white"/></clipPath></defs></svg>')}`,
+  `data:image/svg+xml,${encodeURIComponent('<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_9658_6096)"><path d="M47 1V47H1V1H47ZM48 0H0V48H48V0Z" fill="#00A51B"/><path d="M39.2909 24.2578C39.2909 32.6978 32.4509 39.5478 24.0009 39.5478C15.5509 39.5478 8.71094 32.7078 8.71094 24.2578" stroke="#00A51B" stroke-miterlimit="10"/></g><defs><clipPath id="clip0_9658_6096"><rect width="48" height="48" fill="white"/></clipPath></defs></svg>')}`,
+  `data:image/svg+xml,${encodeURIComponent('<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_9658_6102)"><path d="M47 1V47H1V1H47ZM48 0H0V48H48V0Z" fill="#00A51B"/><path d="M15.6317 27.7791C20.2543 27.7791 24.0017 24.0317 24.0017 19.4091C24.0017 14.7864 20.2543 11.0391 15.6317 11.0391C11.0091 11.0391 7.26172 14.7864 7.26172 19.4091C7.26172 24.0317 11.0091 27.7791 15.6317 27.7791Z" stroke="#00A51B" stroke-miterlimit="10"/><path d="M32.37 36.9587C36.9926 36.9587 40.74 33.2114 40.74 28.5888C40.74 23.9661 36.9926 20.2188 32.37 20.2188C27.7474 20.2188 24 23.9661 24 28.5888C24 33.2114 27.7474 36.9587 32.37 36.9587Z" stroke="#00A51B" stroke-miterlimit="10"/></g><defs><clipPath id="clip0_9658_6102"><rect width="48" height="48" fill="white"/></clipPath></defs></svg>')}`,
+  `data:image/svg+xml,${encodeURIComponent('<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_9658_6109)"><path d="M47 1V47H1V1H47ZM48 0H0V48H48V0Z" fill="#00A51B"/><path d="M24 3.25V42.77" stroke="#00A51B" stroke-miterlimit="10"/><path d="M37.9713 9.03906L10.0312 36.9891" stroke="#00A51B" stroke-miterlimit="10"/><path d="M43.7583 23.0078H4.23828" stroke="#00A51B" stroke-miterlimit="10"/><path d="M37.9713 36.9891L10.0312 9.03906" stroke="#00A51B" stroke-miterlimit="10"/></g><defs><clipPath id="clip0_9658_6109"><rect width="48" height="48" fill="white"/></clipPath></defs></svg>')}`
+];
+
 export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
   const [editingBenefit, setEditingBenefit] = useState<number | null>(null);
 
   const defaultBenefits: Benefit[] = [
     { 
-      icon: '', 
+      icon: defaultIcons[0], 
       title: 'Experiment', 
       description: 'Náš pivovar rád experimentuje a neustále objevuje nové chutě a způsoby vaření piva.' 
     },
     { 
-      icon: '', 
+      icon: defaultIcons[1], 
       title: 'Radost', 
       description: 'Pivo jako radost, zážitek, komunita.' 
     },
     { 
-      icon: '', 
+      icon: defaultIcons[2], 
       title: 'Komunita', 
       description: 'Propojujeme zákazníky s výrobou, sládky, inspirací, chutěmi i místem.' 
     },
     { 
-      icon: '', 
+      icon: defaultIcons[3], 
       title: 'Kvalita', 
       description: 'Dbáme na autenticitu a kvalitu vstupních surovin.' 
     }
@@ -89,7 +97,6 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
                     src={benefit.icon} 
                     alt={benefit.title} 
                     className="w-12 h-12 object-contain"
-                    style={{ color: '#00C322' }}
                   />
                 ) : (
                   <div 
@@ -101,20 +108,20 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
                 )}
               </div>
 
-              {/* Title */}
+              {/* Title - 20px bold black */}
               <h3 
-                className="font-medium text-base mb-2 cursor-pointer"
+                className="font-bold mb-2 cursor-pointer"
                 onClick={() => setEditingBenefit(index)}
-                style={{ color: '#212121' }}
+                style={{ color: '#000000', fontSize: '20px' }}
               >
                 {benefit.title}
               </h3>
 
-              {/* Description */}
+              {/* Description - 14px regular black */}
               <p 
-                className="text-xs text-muted-foreground leading-relaxed cursor-pointer"
+                className="leading-relaxed cursor-pointer"
                 onClick={() => setEditingBenefit(index)}
-                style={{ fontStyle: 'italic' }}
+                style={{ color: '#000000', fontSize: '14px', fontStyle: 'normal', fontWeight: 'normal' }}
               >
                 {benefit.description}
               </p>
