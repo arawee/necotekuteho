@@ -83,7 +83,7 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
       <div className="max-w-3xl mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {benefits.map((benefit, index) => (
-            <div key={index} className="group relative text-center" style={{ flex: 1 }}>
+            <div key={index} className="group relative text-center">
               {/* Remove button */}
               <button
                 onClick={() => removeBenefit(index)}
@@ -148,7 +148,7 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
         </div>
 
         {/* Add button - only show if less than 4 benefits */}
-        {benefits.length < 4 && (
+        {benefits.length < 6 && (
           <div className="mt-6 flex justify-center">
             <button
               onClick={addBenefit}
