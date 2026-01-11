@@ -50,12 +50,12 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
     }
   ];
 
-  // Use saved benefits, but apply default icons if icon is empty (max 6, max 3 per row)
+  // Use saved benefits, but apply default icons if icon is empty (max 4)
   const savedBenefits: Benefit[] = (block.content as any).benefits;
   const benefits: Benefit[] = savedBenefits 
-    ? savedBenefits.slice(0, 6).map((b, i) => ({
+    ? savedBenefits.slice(0, 4).map((b, i) => ({
         ...b,
-        icon: b.icon || defaultIcons[i % defaultIcons.length] || defaultIcons[0]
+        icon: b.icon || defaultIcons[i] || defaultIcons[0]
       }))
     : defaultBenefits;
 
@@ -66,9 +66,9 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
   };
 
   const addBenefit = () => {
-    if (benefits.length >= 6) return;
+    if (benefits.length >= 4) return;
     const newIndex = benefits.length;
-    const newBenefits = [...benefits, { icon: defaultIcons[newIndex % defaultIcons.length] || '', title: 'Nový benefit', description: 'Popis benefitu' }];
+    const newBenefits = [...benefits, { icon: defaultIcons[newIndex] || '', title: 'Nový benefit', description: 'Popis benefitu' }];
     onUpdate({ ...block.content, benefits: newBenefits } as any);
   };
 
@@ -77,16 +77,12 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
     onUpdate({ ...block.content, benefits: newBenefits } as any);
   };
 
-  // Split benefits into rows of max 3
-  const row1 = benefits.slice(0, 3);
-  const row2 = benefits.slice(3, 6);
-
   return (
     <div className="bg-white border border-border p-8">
       <div className="max-w-3xl mx-auto">
-        <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-          {row1.map((benefit, index) => (
-            <div key={index} className="group relative text-center" style={{ flex: '1 1 calc(33.333% - 12px)', minWidth: '150px' }}>
+        <div style={{ display: 'flex', gap: '16px' }}>
+          {benefits.map((benefit, index) => (
+            <div key={index} className="group relative text-center" style={{ flex: 1 }}>
               {/* Remove button */}
               <button
                 onClick={() => removeBenefit(index)}
@@ -137,64 +133,9 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
             </div>
           ))}
         </div>
-        {row2.length > 0 && (
-          <div style={{ display: 'flex', gap: '16px', marginTop: '16px' }}>
-            {row2.map((benefit, index) => (
-              <div key={index + 3} className="group relative text-center" style={{ flex: '1 1 calc(33.333% - 12px)', minWidth: '150px' }}>
-                {/* Remove button */}
-                <button
-                  onClick={() => removeBenefit(index + 3)}
-                  className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 bg-white shadow hover:bg-red-50"
-                >
-                  <Trash2 className="w-3 h-3 text-red-500" />
-                </button>
 
-                {/* Icon - replaceable image 48px with margin-bottom 1rem */}
-                <div 
-                  className="flex justify-center cursor-pointer"
-                  style={{ marginBottom: '1rem' }}
-                  onClick={() => setEditingBenefit(index + 3)}
-                >
-                  {benefit.icon ? (
-                    <img 
-                      src={benefit.icon} 
-                      alt={benefit.title} 
-                      style={{ width: '48px', height: '48px', objectFit: 'contain' }}
-                    />
-                  ) : (
-                    <div 
-                      className="border border-dashed border-gray-300 flex items-center justify-center text-2xl"
-                      style={{ width: '48px', height: '48px', color: '#00C322' }}
-                    >
-                      □
-                    </div>
-                  )}
-                </div>
-
-                {/* Title - 16px bold black with 12px margin below */}
-                <h3 
-                  className="cursor-pointer"
-                  onClick={() => setEditingBenefit(index + 3)}
-                  style={{ color: '#000000', fontSize: '16px', lineHeight: '120%', fontWeight: 'bold', marginBottom: '12px' }}
-                >
-                  {benefit.title}
-                </h3>
-
-                {/* Description - 12px regular black */}
-                <p 
-                  className="cursor-pointer"
-                  onClick={() => setEditingBenefit(index + 3)}
-                  style={{ color: '#000000', fontSize: '12px', fontStyle: 'normal', fontWeight: 'normal', lineHeight: '120%' }}
-                >
-                  {benefit.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Add button - only show if less than 6 benefits */}
-        {benefits.length < 6 && (
+        {/* Add button - only show if less than 4 benefits */}
+        {benefits.length < 4 && (
           <div className="mt-6 flex justify-center">
             <button
               onClick={addBenefit}
@@ -206,6 +147,8 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
           </div>
         )}
       </div>
+
+      {/* Edit Dialog */}
       <Dialog open={editingBenefit !== null} onOpenChange={(open) => !open && setEditingBenefit(null)}>
         <DialogContent>
           <DialogHeader>

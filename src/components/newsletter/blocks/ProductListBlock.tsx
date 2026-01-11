@@ -44,9 +44,9 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
     { image: '', name: 'Milky', alcohol: '5,9', volume: '750 ml', price: '113 Kč', tags: [{ text: 'Neipa', color: 'dark' }, { text: 'Novinka', color: 'green' }], url: '#' }
   ];
 
-  // Max 6 products, max 3 per row
+  // Max 4 products
   const allProducts: Product[] = (block.content as any).products || defaultProducts;
-  const products: Product[] = allProducts.slice(0, 6);
+  const products: Product[] = allProducts.slice(0, 4);
   const showViewAll = (block.content as any).showViewAll !== false;
   const viewAllText = (block.content as any).viewAllText || 'zobrazit vše';
   const viewAllUrl = (block.content as any).viewAllUrl || '#';
@@ -58,7 +58,7 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
   };
 
   const addProduct = () => {
-    if (products.length >= 6) return;
+    if (products.length >= 4) return;
     const newProduct: Product = {
       image: '',
       name: 'Nový produkt',
@@ -144,10 +144,10 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
           </div>
         </div>
 
-        {/* Products grid - max 3 per row */}
-        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+        {/* Products flex */}
+        <div style={{ display: 'flex', gap: '12px' }}>
           {products.map((product: Product, index: number) => (
-            <div key={index} className="group relative" style={{ flex: '1 1 calc(33.333% - 8px)', minWidth: '150px', maxWidth: 'calc(33.333% - 8px)' }}>
+            <div key={index} className="group relative" style={{ flex: 1 }}>
               {/* Remove button */}
               <button
                 onClick={() => removeProduct(index)}
@@ -231,8 +231,8 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
           ))}
         </div>
 
-        {/* Add product button - only show if less than 6 products */}
-        {products.length < 6 && (
+        {/* Add product button - only show if less than 4 products */}
+        {products.length < 4 && (
           <div className="mt-4 flex justify-center">
             <button
               onClick={addProduct}

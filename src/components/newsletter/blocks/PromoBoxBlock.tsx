@@ -89,7 +89,6 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
   };
 
   const addBox = () => {
-    if (boxes.length >= 4) return;
     const newBox: PromoBox = {
       title: 'Nový box',
       features: [
@@ -117,18 +116,15 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
     return brightness < 60; // Much lower threshold - only very dark colors get white text
   };
 
-  // Max 4 boxes, max 2 per row
-  const displayBoxes = boxes.slice(0, 4);
-
   return (
     <div className="bg-white border border-border p-6">
       <div className="max-w-2xl mx-auto">
-        <div className="grid gap-4" style={{ gridTemplateColumns: `repeat(${Math.min(displayBoxes.length, 2)}, 1fr)` }}>
-          {displayBoxes.map((box, index) => (
+        <div className="grid gap-4" style={{ gridTemplateColumns: `repeat(${boxes.length}, 1fr)` }}>
+          {boxes.map((box, index) => (
             <div 
               key={index} 
               className="p-6 group relative"
-              style={{
+              style={{ 
                 backgroundColor: box.bgColor,
                 border: box.bgColor === '#FFFFFF' || box.bgColor === '#F4F4F4' ? '1px solid #E5E5E5' : 'none'
               }}
@@ -218,18 +214,16 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
           ))}
         </div>
 
-        {/* Add box button - only show if less than 4 boxes */}
-        {displayBoxes.length < 4 && (
-          <div className="mt-4 flex justify-center">
-            <button
-              onClick={addBox}
-              className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500 transition-colors"
-            >
-              <CustomPlusIcon color="currentColor" />
-              Přidat box
-            </button>
-          </div>
-        )}
+        {/* Add box button */}
+        <div className="mt-4 flex justify-center">
+          <button
+            onClick={addBox}
+            className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500 transition-colors"
+          >
+            <CustomPlusIcon color="currentColor" />
+            Přidat box
+          </button>
+        </div>
       </div>
 
       {/* Edit Button Dialog */}
