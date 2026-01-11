@@ -154,8 +154,9 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
 
           {/* Desktop */}
           <div className={isDesktop}>
-            <div className="grid grid-cols-3 gap-3">{row1.map((b, i) => renderBenefit(b, i))}</div>
-
+            <div className="grid gap-3" style={{ gridTemplateColumns: `repeat(${row1.length}, minmax(140px, 1fr))` }}>
+              {row1.map((b, i) => renderBenefit(b, i))}
+            </div>
             {row2.length > 0 && (
               <div className="flex justify-center mt-3">
                 <div
