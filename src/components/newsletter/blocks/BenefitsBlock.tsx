@@ -47,9 +47,9 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
   // Use saved benefits, but apply default icons if icon is empty (max 4)
   const savedBenefits: Benefit[] = (block.content as any).benefits;
   const benefits: Benefit[] = savedBenefits
-    ? savedBenefits.slice(0, 4).map((b, i) => ({
+    ? savedBenefits.slice(0, 6).map((b, i) => ({
         ...b,
-        icon: b.icon || defaultIcons[i] || defaultIcons[0],
+        icon: b.icon || defaultIcons[i % defaultIcons.length] || defaultIcons[0],
       }))
     : defaultBenefits;
 
@@ -147,7 +147,7 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
           ))}
         </div>
 
-        {/* Add button - only show if less than 4 benefits */}
+        {/* Add button - only show if less than 6 benefits */}
         {benefits.length < 6 && (
           <div className="mt-6 flex justify-center">
             <button
