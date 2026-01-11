@@ -8,6 +8,9 @@ import { CustomPlusIcon } from "@/components/icons/CustomIcons";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
+const MAX_PRODUCTS = 8;
+const COLS = 4;
+
 interface Product {
   image: string;
   name: string;
@@ -66,7 +69,7 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
 
   // Max 4 products
   const allProducts: Product[] = (block.content as any).products || defaultProducts;
-  const products: Product[] = allProducts.slice(0, 6);
+  const products: Product[] = allProducts.slice(0, 8);
   const showViewAll = (block.content as any).showViewAll !== false;
   const viewAllText = (block.content as any).viewAllText || "zobrazit vše";
   const viewAllUrl = (block.content as any).viewAllUrl || "#";
@@ -78,7 +81,7 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
   };
 
   const addProduct = () => {
-    if (products.length >= 6) return;
+    if (products.length >= 8) return;
     const newProduct: Product = {
       image: "",
       name: "Nový produkt",
@@ -165,7 +168,7 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
         </div>
 
         {/* Products flex */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {products.map((product: Product, index: number) => (
             <div key={index} className="group relative" style={{ flex: 1 }}>
               {/* Remove button */}

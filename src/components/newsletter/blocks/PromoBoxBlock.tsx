@@ -1,14 +1,11 @@
-import { NewsletterBlock } from '@/types/newsletter';
-import { Input } from '@/components/ui/input';
-import { Trash2 } from 'lucide-react';
-import { useState } from 'react';
-import { CustomPlusIcon, CustomArrowIcon } from '@/components/icons/CustomIcons';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { NewsletterBlock } from "@/types/newsletter";
+import { Input } from "@/components/ui/input";
+import { Trash2 } from "lucide-react";
+import { useState } from "react";
+import { CustomPlusIcon, CustomArrowIcon } from "@/components/icons/CustomIcons";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+
+const MAX_PROMOS = 4;
 
 interface Feature {
   label: string;
@@ -25,7 +22,7 @@ interface PromoBox {
 
 interface PromoBoxBlockProps {
   block: NewsletterBlock;
-  onUpdate: (content: NewsletterBlock['content']) => void;
+  onUpdate: (content: NewsletterBlock["content"]) => void;
 }
 
 export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
@@ -33,34 +30,35 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
 
   const defaultBoxes: PromoBox[] = [
     {
-      title: 'Pivní předplatné?',
+      title: "Pivní předplatné?",
       features: [
-        { label: 'Novinky', value: 'Nejnovější piva jako první.' },
-        { label: 'Všechno víš', value: 'Pravidelný přísun novinek.' },
-        { label: 'Doprava', value: 'Zdarma – navždy.' },
-        { label: '8-12 piv', value: 'Každý měsíc' },
-        { label: 'Magazín', value: 'Online mag ke každému předplatnému.' }
+        { label: "Novinky", value: "Nejnovější piva jako první." },
+        { label: "Všechno víš", value: "Pravidelný přísun novinek." },
+        { label: "Doprava", value: "Zdarma – navždy." },
+        { label: "8-12 piv", value: "Každý měsíc" },
+        { label: "Magazín", value: "Online mag ke každému předplatnému." },
       ],
-      buttonText: '→ objevit předplatné',
-      buttonUrl: '#',
-      bgColor: '#00C322'
+      buttonText: "→ objevit předplatné",
+      buttonUrl: "#",
+      bgColor: "#00C322",
     },
     {
-      title: 'Věrnostní program',
+      title: "Věrnostní program",
       features: [
-        { label: 'Novinky', value: 'Nejnovější piva jako první.' },
-        { label: 'Všechno víš', value: 'Pravidelný přísun novinek.' },
-        { label: 'Doprava', value: 'Zdarma – navždy.' },
-        { label: '8-12 piv', value: 'Každý měsíc' },
-        { label: 'Magazín', value: 'Online mag ke každému předplatnému.' }
+        { label: "Novinky", value: "Nejnovější piva jako první." },
+        { label: "Všechno víš", value: "Pravidelný přísun novinek." },
+        { label: "Doprava", value: "Zdarma – navždy." },
+        { label: "8-12 piv", value: "Každý měsíc" },
+        { label: "Magazín", value: "Online mag ke každému předplatnému." },
       ],
-      buttonText: '→ objevit',
-      buttonUrl: '#',
-      bgColor: '#F4F4F4'
-    }
+      buttonText: "→ objevit",
+      buttonUrl: "#",
+      bgColor: "#F4F4F4",
+    },
   ];
 
-  const boxes: PromoBox[] = (block.content as any).boxes || defaultBoxes;
+  const savedBoxes: PromoBox[] | undefined = (block.content as any).boxes;
+  const boxes: PromoBox[] = savedBoxes ? savedBoxes.slice(0, MAX_PROMOS) : defaultBoxes;
 
   const updateBox = (index: number, field: keyof PromoBox, value: any) => {
     const newBoxes = [...boxes];
@@ -78,7 +76,7 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
 
   const addFeature = (boxIndex: number) => {
     const newBoxes = [...boxes];
-    newBoxes[boxIndex].features = [...newBoxes[boxIndex].features, { label: 'Nový', value: 'Popis' }];
+    newBoxes[boxIndex].features = [...newBoxes[boxIndex].features, { label: "Nový", value: "Popis" }];
     onUpdate({ ...block.content, boxes: newBoxes } as any);
   };
 
@@ -89,14 +87,14 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
   };
 
   const addBox = () => {
+    if (boxes.length >= MAX_PROMOS) return;
+
     const newBox: PromoBox = {
-      title: 'Nový box',
-      features: [
-        { label: 'Funkce', value: 'Popis funkce' }
-      ],
-      buttonText: '→ akce',
-      buttonUrl: '#',
-      bgColor: '#F4F4F4'
+      title: "Nový box",
+      features: [{ label: "Funkce", value: "Popis funkce" }],
+      buttonText: "→ akce",
+      buttonUrl: "#",
+      bgColor: "#F4F4F4",
     };
     onUpdate({ ...block.content, boxes: [...boxes, newBox] } as any);
   };
@@ -108,7 +106,7 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
 
   // More restrictive threshold - only use white text on very dark backgrounds
   const isVeryDarkBg = (color: string) => {
-    const hex = color.replace('#', '');
+    const hex = color.replace("#", "");
     const r = parseInt(hex.substr(0, 2), 16);
     const g = parseInt(hex.substr(2, 2), 16);
     const b = parseInt(hex.substr(4, 2), 16);
@@ -119,14 +117,14 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
   return (
     <div className="bg-white border border-border p-6">
       <div className="max-w-2xl mx-auto">
-        <div className="grid gap-4" style={{ gridTemplateColumns: `repeat(${boxes.length}, 1fr)` }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {boxes.map((box, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className="p-6 group relative"
-              style={{ 
+              style={{
                 backgroundColor: box.bgColor,
-                border: box.bgColor === '#FFFFFF' || box.bgColor === '#F4F4F4' ? '1px solid #E5E5E5' : 'none'
+                border: box.bgColor === "#FFFFFF" || box.bgColor === "#F4F4F4" ? "1px solid #E5E5E5" : "none",
               }}
             >
               {/* Delete box button */}
@@ -142,40 +140,49 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
                 <input
                   type="color"
                   value={box.bgColor}
-                  onChange={(e) => updateBox(index, 'bgColor', e.target.value)}
+                  onChange={(e) => updateBox(index, "bgColor", e.target.value)}
                   className="w-6 h-6 cursor-pointer border-0"
                   title="Vybrat barvu"
                 />
               </div>
 
-              <h3 
+              <h3
                 contentEditable
                 suppressContentEditableWarning
-                onBlur={(e) => updateBox(index, 'title', e.currentTarget.textContent || '')}
-                style={{ color: isVeryDarkBg(box.bgColor) ? '#FFFFFF' : '#000000', fontSize: '24px', marginBottom: '1rem', fontWeight: 700 }}
+                onBlur={(e) => updateBox(index, "title", e.currentTarget.textContent || "")}
+                style={{
+                  color: isVeryDarkBg(box.bgColor) ? "#FFFFFF" : "#000000",
+                  fontSize: "24px",
+                  marginBottom: "1rem",
+                  fontWeight: 700,
+                }}
               >
                 {box.title}
               </h3>
-              
+
               <div className="space-y-2 mb-6">
                 {box.features.map((feature, fIdx) => (
-                  <div key={fIdx} className="text-xs flex items-start gap-1 group/feature" style={{ marginTop: '0.25rem' }}>
-                    <span 
+                  <div
+                    key={fIdx}
+                    className="text-xs flex items-start gap-1 group/feature"
+                    style={{ marginTop: "0.25rem" }}
+                  >
+                    <span
                       className="cursor-text"
                       contentEditable
                       suppressContentEditableWarning
-                      onBlur={(e) => updateFeature(index, fIdx, 'label', e.currentTarget.textContent || '')}
-                      style={{ color: isVeryDarkBg(box.bgColor) ? '#FFFFFF' : '#000000', fontWeight: 'bold' }}
+                      onBlur={(e) => updateFeature(index, fIdx, "label", e.currentTarget.textContent || "")}
+                      style={{ color: isVeryDarkBg(box.bgColor) ? "#FFFFFF" : "#000000", fontWeight: "bold" }}
                     >
                       {feature.label}
                     </span>
-                    <CustomArrowIcon color="#000000" style={{ flexShrink: 0, marginTop: '2px' }} />
-                    <span 
+                    <CustomArrowIcon color="#000000" style={{ flexShrink: 0, marginTop: "2px" }} />
+                    <span
                       className="cursor-text flex-1"
                       contentEditable
                       suppressContentEditableWarning
-                      onBlur={(e) => updateFeature(index, fIdx, 'value', e.currentTarget.textContent || '')}
-                      style={{ color: isVeryDarkBg(box.bgColor) ? '#CCC' : '#000000' }}
+                      onBlur={(e) => updateFeature(index, fIdx, "value", e.currentTarget.textContent || "")}
+                      style={{ color: isVeryDarkBg(box.bgColor) ? "#CCC" : "#000000" }}
                     >
                       {feature.value}
                     </span>
@@ -197,13 +204,13 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
 
               {/* Button - sized to text + 24px left/right, 12px top/bottom */}
               <div className="space-y-2">
-                <button 
+                <button
                   className="text-sm border inline-flex items-center"
-                  style={{ 
-                    borderColor: isVeryDarkBg(box.bgColor) ? '#FFFFFF' : '#000000',
-                    color: isVeryDarkBg(box.bgColor) ? '#FFFFFF' : '#000000',
-                    backgroundColor: 'transparent',
-                    padding: '12px 24px'
+                  style={{
+                    borderColor: isVeryDarkBg(box.bgColor) ? "#FFFFFF" : "#000000",
+                    color: isVeryDarkBg(box.bgColor) ? "#FFFFFF" : "#000000",
+                    backgroundColor: "transparent",
+                    padding: "12px 24px",
                   }}
                   onClick={() => setEditingButton(index)}
                 >
@@ -215,15 +222,17 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
         </div>
 
         {/* Add box button */}
-        <div className="mt-4 flex justify-center">
-          <button
-            onClick={addBox}
-            className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500 transition-colors"
-          >
-            <CustomPlusIcon color="currentColor" />
-            Přidat box
-          </button>
-        </div>
+        {boxes.length < MAX_PROMOS && (
+          <div className="mt-4 flex justify-center">
+            <button
+              onClick={addBox}
+              className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500 transition-colors"
+            >
+              <CustomPlusIcon color="currentColor" />
+              Přidat box
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Edit Button Dialog */}
@@ -237,15 +246,15 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
               <div>
                 <label className="text-sm font-medium">Text tlačítka</label>
                 <Input
-                  value={boxes[editingButton]?.buttonText || ''}
-                  onChange={(e) => updateBox(editingButton, 'buttonText', e.target.value)}
+                  value={boxes[editingButton]?.buttonText || ""}
+                  onChange={(e) => updateBox(editingButton, "buttonText", e.target.value)}
                 />
               </div>
               <div>
                 <label className="text-sm font-medium">URL</label>
                 <Input
-                  value={boxes[editingButton]?.buttonUrl || ''}
-                  onChange={(e) => updateBox(editingButton, 'buttonUrl', e.target.value)}
+                  value={boxes[editingButton]?.buttonUrl || ""}
+                  onChange={(e) => updateBox(editingButton, "buttonUrl", e.target.value)}
                 />
               </div>
             </div>
