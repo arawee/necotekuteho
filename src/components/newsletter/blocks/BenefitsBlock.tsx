@@ -5,13 +5,6 @@ import { useState } from "react";
 import { CustomPlusIcon } from "@/components/icons/CustomIcons";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
-const defaultIcons = [
-  "https://yzbjnjhrrvqcdwfdoksa.supabase.co/storage/v1/object/public/newsletter-images/images/benefit-icon-1.png",
-  "https://yzbjnjhrrvqcdwfdoksa.supabase.co/storage/v1/object/public/newsletter-images/images/benefit-icon-2.png",
-  "https://yzbjnjhrrvqcdwfdoksa.supabase.co/storage/v1/object/public/newsletter-images/images/benefit-icon-3.png",
-  "https://yzbjnjhrrvqcdwfdoksa.supabase.co/storage/v1/object/public/newsletter-images/images/benefit-icon-4.png",
-];
-
 interface Benefit {
   icon: string;
   title: string;
@@ -23,8 +16,12 @@ interface BenefitsBlockProps {
   onUpdate: (content: NewsletterBlock["content"]) => void;
 }
 
-// Default icons from assets
-const defaultIcons = [benefitIcon1, benefitIcon2, benefitIcon3, benefitIcon4];
+const defaultIcons = [
+  "https://yzbjnjhrrvqcdwfdoksa.supabase.co/storage/v1/object/public/newsletter-images/images/benefit-icon-1.png",
+  "https://yzbjnjhrrvqcdwfdoksa.supabase.co/storage/v1/object/public/newsletter-images/images/benefit-icon-2.png",
+  "https://yzbjnjhrrvqcdwfdoksa.supabase.co/storage/v1/object/public/newsletter-images/images/benefit-icon-3.png",
+  "https://yzbjnjhrrvqcdwfdoksa.supabase.co/storage/v1/object/public/newsletter-images/images/benefit-icon-4.png",
+];
 
 export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
   const [editingBenefit, setEditingBenefit] = useState<number | null>(null);
@@ -63,15 +60,11 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
   };
 
   const addBenefit = () => {
-    if (benefits.length >= 6) return;
+    if (benefits.length >= 4) return;
     const newIndex = benefits.length;
     const newBenefits = [
       ...benefits,
-      {
-        icon: defaultIcons[newIndex % defaultIcons.length] || "",
-        title: "Nový benefit",
-        description: "Popis benefitu",
-      },
+      { icon: defaultIcons[newIndex] || "", title: "Nový benefit", description: "Popis benefitu" },
     ];
     onUpdate({ ...block.content, benefits: newBenefits } as any);
   };
@@ -84,9 +77,9 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
   return (
     <div className="bg-white border border-border p-8">
       <div className="max-w-3xl mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div style={{ display: "flex", gap: "16px" }}>
           {benefits.map((benefit, index) => (
-            <div key={index} className="group relative text-center">
+            <div key={index} className="group relative text-center" style={{ flex: 1 }}>
               {/* Remove button */}
               <button
                 onClick={() => removeBenefit(index)}
