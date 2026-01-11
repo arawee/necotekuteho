@@ -89,7 +89,7 @@ export const MistaBlock = ({ block, onUpdate }: MistaBlockProps) => {
         </div>
 
         {/* Places grid - flex with gap 12px */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
           {places.slice(0, MAX_PLACES).map((place, index) => (
             <div key={index} className="group relative min-w-0">
               {/* Remove button */}
