@@ -1053,7 +1053,7 @@ function generateBenefitsHTML(block: NewsletterBlock): string {
           }
 
           return `
-    <td valign="top" class="stack" style="padding:0 ${paddingRight} 0 ${paddingLeft};text-align:center;font-family:'JetBrains Mono',monospace;">
+    <td valign="top" class="stack" style="padding:0 ${paddingRight} 0 ${paddingLeft};text-align:center;font-family:'JetBrains Mono',monospace;margin-bottom:2rem;">
       <div style="margin-bottom:16px;">
         <img src="${getBenefitIcon(b.icon, idx)}" width="48" height="48" alt="" style="display:inline-block;width:48px;height:48px;object-fit:contain;"/>
       </div>
@@ -1346,7 +1346,10 @@ function getNewsletterCSS(): string {
         display: block !important;
         width: 100% !important;
         box-sizing: border-box !important;
-        padding: 0 0 1rem 0 !important;
+        padding: 0 0 16px 0 !important;
+      }
+      td.stack:last-child {
+        padding-bottom: 0 !important;
       }
       /* Make images responsive */
       img {
