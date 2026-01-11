@@ -121,7 +121,7 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
           {boxes.map((box, index) => (
             <div
               key={index}
-              className="p-6 group relative flex flex-col h-full"
+              className="p-6 group relative flex flex-col"
               style={{
                 backgroundColor: box.bgColor,
                 border: box.bgColor === "#FFFFFF" || box.bgColor === "#F4F4F4" ? "1px solid #E5E5E5" : "none",
@@ -203,7 +203,7 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
               </div>
 
               {/* Button - sized to text + 24px left/right, 12px top/bottom */}
-              <div className="space-y-2 mt-auto">
+              <div className="space-y-2">
                 <button
                   className="text-sm border inline-flex items-center"
                   style={{
