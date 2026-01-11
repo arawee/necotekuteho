@@ -178,7 +178,7 @@ function generateZichovecHeaderWithMenuHTML(block: NewsletterBlock): string {
 
             <!-- Menu inside header, anchored to bottom -->
             <div style="position:absolute;left:0;right:0;bottom:16px;text-align:center;font-size:0;line-height:0;padding:0 10px;">
-              <div style="display:inline-block;font-size:14px;line-height:120%;">${menuHTML}</div>
+              <div style="display:inline-block;font-size:14px;line-height:135%;">${menuHTML}</div>
             </div>
 
           </div>
