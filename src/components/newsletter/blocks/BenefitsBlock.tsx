@@ -60,11 +60,15 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
   };
 
   const addBenefit = () => {
-    if (benefits.length >= 4) return;
+    if (benefits.length >= 6) return;
     const newIndex = benefits.length;
     const newBenefits = [
       ...benefits,
-      { icon: defaultIcons[newIndex] || "", title: "Nový benefit", description: "Popis benefitu" },
+      {
+        icon: defaultIcons[newIndex % defaultIcons.length] || "",
+        title: "Nový benefit",
+        description: "Popis benefitu",
+      },
     ];
     onUpdate({ ...block.content, benefits: newBenefits } as any);
   };
@@ -77,9 +81,9 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
   return (
     <div className="bg-white border border-border p-8">
       <div className="max-w-3xl mx-auto">
-        <div style={{ display: "flex", gap: "16px" }}>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {benefits.map((benefit, index) => (
-            <div key={index} className="group relative text-center" style={{ flex: 1 }}>
+            <div key={index} className="group relative text-center">
               {/* Remove button */}
               <button
                 onClick={() => removeBenefit(index)}
