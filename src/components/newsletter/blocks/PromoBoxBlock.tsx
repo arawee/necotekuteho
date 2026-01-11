@@ -117,7 +117,8 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
   return (
     <div className="bg-white border border-border p-6">
       <div className="max-w-2xl mx-auto">
-        <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))" }}>
+        <div className="grid gap-3 items-start" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))" }}>
+          {" "}
           {boxes.map((box, index) => (
             <div
               key={index}
