@@ -821,7 +821,9 @@ function generatePromoBoxHTML(block: NewsletterBlock): string {
           </table>
         </td>
       </tr>
-      ${row2Boxes.length > 0 ? `
+      ${
+        row2Boxes.length > 0
+          ? `
       <tr>
         <td style="padding-top:12px;">
           <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
@@ -829,7 +831,9 @@ function generatePromoBoxHTML(block: NewsletterBlock): string {
           </table>
         </td>
       </tr>
-      ` : ""}
+      `
+          : ""
+      }
     </table>
   </td>
 </tr>`;
@@ -1018,23 +1022,48 @@ function generateBenefitsHTML(block: NewsletterBlock): string {
     },
   ];
 
-  const benefitCount = Math.min(benefits.length, 4);
+  const benefitCount = Math.min(benefits.length, 6);
 
-  const benefitCells = benefits
-    .slice(0, 4)
-    .map((b: any, index: number) => {
-      const paddingLeft = index === 0 ? "0" : "6px";
-      const paddingRight = index === benefitCount - 1 ? "0" : "6px";
+  const benefitCells = benefits.slice(0, 6);
 
-      return `
+  const benefitsLimited = benefits.slice(0, 6);
+
+  const chunked: any[][] = [];
+  for (let i = 0; i < benefitsLimited.length; i += 3) {
+    chunked.push(benefitsLimited.slice(i, i + 3));
+  }
+
+  const rowsHTML = chunked
+    .map((row, rowIndex) => {
+      const rowCount = row.length;
+
+      const cells = row
+        .map((b: any, idx: number) => {
+          // padding like you wanted: first 0/8, middle 4/4, last 8/0
+          let paddingLeft = "4px";
+          let paddingRight = "4px";
+
+          if (idx === 0) {
+            paddingLeft = "0";
+            paddingRight = "8px";
+          }
+          if (idx === rowCount - 1) {
+            paddingLeft = "8px";
+            paddingRight = "0";
+          }
+
+          return `
     <td valign="top" class="stack" style="padding:0 ${paddingRight} 0 ${paddingLeft};text-align:center;font-family:'JetBrains Mono',monospace;">
-      <div style="margin-bottom:1rem;">
-        <img src="${getBenefitIcon(b.icon, index)}" width="48" height="48" alt="${b.title}" style="display:inline-block;width:48px;height:48px;object-fit:contain;"/>
+      <div style="margin-bottom:16px;">
+        <img src="${getBenefitIcon(b.icon, idx)}" width="48" height="48" alt="" style="display:inline-block;width:48px;height:48px;object-fit:contain;"/>
       </div>
       <h4 style="margin:0 0 12px 0;font-size:16px;font-weight:700;color:#000000;line-height:120%;">${b.title}</h4>
       <p style="margin:0 auto;max-width:35ch;font-size:12px;font-weight:400;color:#000000;line-height:120%;">${b.description}</p>
-    </td>
-  `;
+    </td>`;
+        })
+        .join("");
+
+      return `<tr>${cells}</tr>`;
     })
     .join("");
 
@@ -1042,7 +1071,7 @@ function generateBenefitsHTML(block: NewsletterBlock): string {
 <tr>
   <td align="center" style="padding:32px 24px;margin-bottom:32px;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
-      <tr>${benefitCells}</tr>
+      <tr>${rowsHTML}</tr>
     </table>
   </td>
 </tr>`;

@@ -1,19 +1,16 @@
-import { NewsletterBlock } from '@/types/newsletter';
-import { Trash2 } from 'lucide-react';
-import { ImageUpload } from '@/components/ui/image-upload';
-import { useState } from 'react';
-import { CustomPlusIcon } from '@/components/icons/CustomIcons';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { NewsletterBlock } from "@/types/newsletter";
+import { Trash2 } from "lucide-react";
+import { ImageUpload } from "@/components/ui/image-upload";
+import { useState } from "react";
+import { CustomPlusIcon } from "@/components/icons/CustomIcons";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
-import benefitIcon1 from '@/assets/benefit-icon-1.png';
-import benefitIcon2 from '@/assets/benefit-icon-2.png';
-import benefitIcon3 from '@/assets/benefit-icon-3.png';
-import benefitIcon4 from '@/assets/benefit-icon-4.png';
+const defaultIcons = [
+  "https://yzbjnjhrrvqcdwfdoksa.supabase.co/storage/v1/object/public/newsletter-images/images/benefit-icon-1.png",
+  "https://yzbjnjhrrvqcdwfdoksa.supabase.co/storage/v1/object/public/newsletter-images/images/benefit-icon-2.png",
+  "https://yzbjnjhrrvqcdwfdoksa.supabase.co/storage/v1/object/public/newsletter-images/images/benefit-icon-3.png",
+  "https://yzbjnjhrrvqcdwfdoksa.supabase.co/storage/v1/object/public/newsletter-images/images/benefit-icon-4.png",
+];
 
 interface Benefit {
   icon: string;
@@ -23,7 +20,7 @@ interface Benefit {
 
 interface BenefitsBlockProps {
   block: NewsletterBlock;
-  onUpdate: (content: NewsletterBlock['content']) => void;
+  onUpdate: (content: NewsletterBlock["content"]) => void;
 }
 
 // Default icons from assets
@@ -33,29 +30,29 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
   const [editingBenefit, setEditingBenefit] = useState<number | null>(null);
 
   const defaultBenefits: Benefit[] = [
-    { 
-      icon: defaultIcons[0], 
-      title: 'Experiment', 
-      description: 'Náš pivovar rád experimentuje a neustále objevuje nové chutě a způsoby vaření piva.' 
+    {
+      icon: defaultIcons[0],
+      title: "Experiment",
+      description: "Náš pivovar rád experimentuje a neustále objevuje nové chutě a způsoby vaření piva.",
     },
-    { 
-      icon: defaultIcons[1], 
-      title: 'Radost', 
-      description: 'Pivo jako radost, zážitek, komunita.' 
+    {
+      icon: defaultIcons[1],
+      title: "Radost",
+      description: "Pivo jako radost, zážitek, komunita.",
     },
-    { 
-      icon: defaultIcons[2], 
-      title: 'Komunita', 
-      description: 'Propojujeme zákazníky s výrobou, sládky, inspirací, chutěmi i místem.' 
-    }
+    {
+      icon: defaultIcons[2],
+      title: "Komunita",
+      description: "Propojujeme zákazníky s výrobou, sládky, inspirací, chutěmi i místem.",
+    },
   ];
 
   // Use saved benefits, but apply default icons if icon is empty (max 4)
   const savedBenefits: Benefit[] = (block.content as any).benefits;
-  const benefits: Benefit[] = savedBenefits 
+  const benefits: Benefit[] = savedBenefits
     ? savedBenefits.slice(0, 4).map((b, i) => ({
         ...b,
-        icon: b.icon || defaultIcons[i] || defaultIcons[0]
+        icon: b.icon || defaultIcons[i] || defaultIcons[0],
       }))
     : defaultBenefits;
 
@@ -66,9 +63,16 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
   };
 
   const addBenefit = () => {
-    if (benefits.length >= 4) return;
+    if (benefits.length >= 6) return;
     const newIndex = benefits.length;
-    const newBenefits = [...benefits, { icon: defaultIcons[newIndex] || '', title: 'Nový benefit', description: 'Popis benefitu' }];
+    const newBenefits = [
+      ...benefits,
+      {
+        icon: defaultIcons[newIndex % defaultIcons.length] || "",
+        title: "Nový benefit",
+        description: "Popis benefitu",
+      },
+    ];
     onUpdate({ ...block.content, benefits: newBenefits } as any);
   };
 
@@ -80,9 +84,9 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
   return (
     <div className="bg-white border border-border p-8">
       <div className="max-w-3xl mx-auto">
-        <div style={{ display: 'flex', gap: '16px' }}>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {benefits.map((benefit, index) => (
-            <div key={index} className="group relative text-center" style={{ flex: 1 }}>
+            <div key={index} className="group relative text-center">
               {/* Remove button */}
               <button
                 onClick={() => removeBenefit(index)}
@@ -92,21 +96,21 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
               </button>
 
               {/* Icon - replaceable image 48px with margin-bottom 1rem */}
-              <div 
+              <div
                 className="flex justify-center cursor-pointer"
-                style={{ marginBottom: '1rem' }}
+                style={{ marginBottom: "1rem" }}
                 onClick={() => setEditingBenefit(index)}
               >
                 {benefit.icon ? (
-                  <img 
-                    src={benefit.icon} 
-                    alt={benefit.title} 
-                    style={{ width: '48px', height: '48px', objectFit: 'contain' }}
+                  <img
+                    src={benefit.icon}
+                    alt={benefit.title}
+                    style={{ width: "48px", height: "48px", objectFit: "contain" }}
                   />
                 ) : (
-                  <div 
+                  <div
                     className="border border-dashed border-gray-300 flex items-center justify-center text-2xl"
-                    style={{ width: '48px', height: '48px', color: '#00C322' }}
+                    style={{ width: "48px", height: "48px", color: "#00C322" }}
                   >
                     □
                   </div>
@@ -114,19 +118,31 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
               </div>
 
               {/* Title - 16px bold black with 12px margin below */}
-              <h3 
+              <h3
                 className="cursor-pointer"
                 onClick={() => setEditingBenefit(index)}
-                style={{ color: '#000000', fontSize: '16px', lineHeight: '120%', fontWeight: 'bold', marginBottom: '12px' }}
+                style={{
+                  color: "#000000",
+                  fontSize: "16px",
+                  lineHeight: "120%",
+                  fontWeight: "bold",
+                  marginBottom: "12px",
+                }}
               >
                 {benefit.title}
               </h3>
 
               {/* Description - 12px regular black */}
-              <p 
+              <p
                 className="cursor-pointer"
                 onClick={() => setEditingBenefit(index)}
-                style={{ color: '#000000', fontSize: '12px', fontStyle: 'normal', fontWeight: 'normal', lineHeight: '120%' }}
+                style={{
+                  color: "#000000",
+                  fontSize: "12px",
+                  fontStyle: "normal",
+                  fontWeight: "normal",
+                  lineHeight: "120%",
+                }}
               >
                 {benefit.description}
               </p>
@@ -159,8 +175,8 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
               <div>
                 <label className="text-sm font-medium">Ikona (obrázek)</label>
                 <ImageUpload
-                  currentImage={benefits[editingBenefit]?.icon || ''}
-                  onImageUploaded={(url) => updateBenefit(editingBenefit, 'icon', url)}
+                  currentImage={benefits[editingBenefit]?.icon || ""}
+                  onImageUploaded={(url) => updateBenefit(editingBenefit, "icon", url)}
                   aspectRatio="square"
                   placeholder="Nahrát ikonu (SVG, PNG, JPG)"
                   className="w-24 h-24"
@@ -170,8 +186,8 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
                 <label className="text-sm font-medium">Titulek</label>
                 <input
                   className="w-full border p-2 text-sm"
-                  value={benefits[editingBenefit]?.title || ''}
-                  onChange={(e) => updateBenefit(editingBenefit, 'title', e.target.value)}
+                  value={benefits[editingBenefit]?.title || ""}
+                  onChange={(e) => updateBenefit(editingBenefit, "title", e.target.value)}
                 />
               </div>
               <div>
@@ -179,8 +195,8 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
                 <textarea
                   className="w-full border p-2 text-sm"
                   rows={3}
-                  value={benefits[editingBenefit]?.description || ''}
-                  onChange={(e) => updateBenefit(editingBenefit, 'description', e.target.value)}
+                  value={benefits[editingBenefit]?.description || ""}
+                  onChange={(e) => updateBenefit(editingBenefit, "description", e.target.value)}
                 />
               </div>
             </div>
