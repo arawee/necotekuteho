@@ -159,24 +159,26 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
           </div>
         
           {/* Desktop: 3 + centered row */}
-<div className={isDesktop}>
-  {/* Row 1 */}
-  <div className="grid grid-cols-3 gap-3">
-    {row1.map((benefit, index) => renderBenefit(benefit, index))}
-  </div>
-
-  {/* Row 2 */}
-  {row2.length > 0 && (
-    <div className="flex justify-center mt-3">
-      <div
-        className="grid gap-3"
-        style={{ gridTemplateColumns: `repeat(${row2.length}, minmax(140px, 1fr))` }}
-      >
-        {row2.map((benefit, i) => renderBenefit(benefit, i + 3))}
+          <div className={isDesktop}>
+            {/* Row 1 */}
+            <div className="grid grid-cols-3 gap-3">
+              {row1.map((benefit, index) => renderBenefit(benefit, index))}
+            </div>
+          
+            {/* Row 2 */}
+            {row2.length > 0 && (
+              <div className="flex justify-center mt-3">
+                <div
+                  className="grid gap-3"
+                  style={{ gridTemplateColumns: `repeat(${row2.length}, minmax(140px, 1fr))` }}
+                >
+                  {row2.map((benefit, i) => renderBenefit(benefit, i + 3))}
+                </div>
+              </div>
+            )}
+          </div>        
+        </div>
       </div>
-    </div>
-  )}
-</div>
 
         {/* Add button - only show if less than 6 benefits */}
         {benefits.length < 6 && (
