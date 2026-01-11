@@ -78,73 +78,155 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
     onUpdate({ ...block.content, benefits: newBenefits } as any);
   };
 
+  const visibleBenefits = benefits.slice(0, 6);
+  const row1 = visibleBenefits.slice(0, 3);
+  const row2 = visibleBenefits.slice(3, 6);
+
   return (
     <div className="bg-white border border-border p-8">
       <div className="max-w-3xl mx-auto">
-        <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))" }}>
-          {benefits.map((benefit, index) => (
-            <div key={index} className="group relative text-center">
-              {/* Remove button */}
-              <button
-                onClick={() => removeBenefit(index)}
-                className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 bg-white shadow hover:bg-red-50"
-              >
-                <Trash2 className="w-3 h-3 text-red-500" />
-              </button>
+        <div className="space-y-3">
+          {/* Row 1: up to 3, normal left-to-right */}
+          <div className="grid grid-cols-3 gap-3">
+            {row1.map((benefit, index) => (
+              <div key={index} className="group relative text-center">
+                {/* Remove button */}
+                <button
+                  onClick={() => removeBenefit(index)}
+                  className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 bg-white shadow hover:bg-red-50"
+                >
+                  <Trash2 className="w-3 h-3 text-red-500" />
+                </button>
 
-              {/* Icon - replaceable image 48px with margin-bottom 1rem */}
-              <div
-                className="flex justify-center cursor-pointer"
-                style={{ marginBottom: "1rem" }}
-                onClick={() => setEditingBenefit(index)}
-              >
-                {benefit.icon ? (
-                  <img
-                    src={benefit.icon}
-                    alt={benefit.title}
-                    style={{ width: "48px", height: "48px", objectFit: "contain" }}
-                  />
-                ) : (
-                  <div
-                    className="border border-dashed border-gray-300 flex items-center justify-center text-2xl"
-                    style={{ width: "48px", height: "48px", color: "#00C322" }}
-                  >
-                    □
-                  </div>
-                )}
+                {/* Icon */}
+                <div
+                  className="flex justify-center cursor-pointer"
+                  style={{ marginBottom: "1rem" }}
+                  onClick={() => setEditingBenefit(index)}
+                >
+                  {benefit.icon ? (
+                    <img
+                      src={benefit.icon}
+                      alt={benefit.title}
+                      style={{ width: "48px", height: "48px", objectFit: "contain" }}
+                    />
+                  ) : (
+                    <div
+                      className="border border-dashed border-gray-300 flex items-center justify-center text-2xl"
+                      style={{ width: "48px", height: "48px", color: "#00C322" }}
+                    >
+                      □
+                    </div>
+                  )}
+                </div>
+
+                <h3
+                  className="cursor-pointer"
+                  onClick={() => setEditingBenefit(index)}
+                  style={{
+                    color: "#000000",
+                    fontSize: "16px",
+                    lineHeight: "120%",
+                    fontWeight: "bold",
+                    marginBottom: "12px",
+                  }}
+                >
+                  {benefit.title}
+                </h3>
+
+                <p
+                  className="cursor-pointer"
+                  onClick={() => setEditingBenefit(index)}
+                  style={{
+                    color: "#000000",
+                    fontSize: "12px",
+                    fontStyle: "normal",
+                    fontWeight: "normal",
+                    lineHeight: "120%",
+                  }}
+                >
+                  {benefit.description}
+                </p>
               </div>
+            ))}
+          </div>
 
-              {/* Title - 16px bold black with 12px margin below */}
-              <h3
-                className="cursor-pointer"
-                onClick={() => setEditingBenefit(index)}
+          {/* Row 2: up to 3, centered */}
+          {row2.length > 0 && (
+            <div className="flex justify-center">
+              <div
+                className="grid gap-3"
                 style={{
-                  color: "#000000",
-                  fontSize: "16px",
-                  lineHeight: "120%",
-                  fontWeight: "bold",
-                  marginBottom: "12px",
+                  gridTemplateColumns: `repeat(${row2.length}, minmax(140px, 1fr))`,
                 }}
               >
-                {benefit.title}
-              </h3>
+                {row2.map((benefit, i) => {
+                  const index = i + 3; // original index in visibleBenefits/benefits
+                  return (
+                    <div key={index} className="group relative text-center">
+                      {/* Remove button */}
+                      <button
+                        onClick={() => removeBenefit(index)}
+                        className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 bg-white shadow hover:bg-red-50"
+                      >
+                        <Trash2 className="w-3 h-3 text-red-500" />
+                      </button>
 
-              {/* Description - 12px regular black */}
-              <p
-                className="cursor-pointer"
-                onClick={() => setEditingBenefit(index)}
-                style={{
-                  color: "#000000",
-                  fontSize: "12px",
-                  fontStyle: "normal",
-                  fontWeight: "normal",
-                  lineHeight: "120%",
-                }}
-              >
-                {benefit.description}
-              </p>
+                      {/* Icon */}
+                      <div
+                        className="flex justify-center cursor-pointer"
+                        style={{ marginBottom: "1rem" }}
+                        onClick={() => setEditingBenefit(index)}
+                      >
+                        {benefit.icon ? (
+                          <img
+                            src={benefit.icon}
+                            alt={benefit.title}
+                            style={{ width: "48px", height: "48px", objectFit: "contain" }}
+                          />
+                        ) : (
+                          <div
+                            className="border border-dashed border-gray-300 flex items-center justify-center text-2xl"
+                            style={{ width: "48px", height: "48px", color: "#00C322" }}
+                          >
+                            □
+                          </div>
+                        )}
+                      </div>
+
+                      <h3
+                        className="cursor-pointer"
+                        onClick={() => setEditingBenefit(index)}
+                        style={{
+                          color: "#000000",
+                          fontSize: "16px",
+                          lineHeight: "120%",
+                          fontWeight: "bold",
+                          marginBottom: "12px",
+                        }}
+                      >
+                        {benefit.title}
+                      </h3>
+
+                      <p
+                        className="cursor-pointer"
+                        onClick={() => setEditingBenefit(index)}
+                        style={{
+                          color: "#000000",
+                          fontSize: "12px",
+                          fontStyle: "normal",
+                          fontWeight: "normal",
+                          lineHeight: "120%",
+                        }}
+                      >
+                        {benefit.description}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-          ))}
+          )}
         </div>
 
         {/* Add button - only show if less than 6 benefits */}
