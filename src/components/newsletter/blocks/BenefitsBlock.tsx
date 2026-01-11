@@ -102,11 +102,7 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
         onClick={() => setEditingBenefit(index)}
       >
         {benefit.icon ? (
-          <img
-            src={benefit.icon}
-            alt={benefit.title}
-            style={{ width: "48px", height: "48px", objectFit: "contain" }}
-          />
+          <img src={benefit.icon} alt={benefit.title} style={{ width: "48px", height: "48px", objectFit: "contain" }} />
         ) : (
           <div
             className="border border-dashed border-gray-300 flex items-center justify-center text-2xl"
@@ -146,41 +142,34 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
       </p>
     </div>
   );
-  
+
   return (
     <div className="bg-white border border-border p-8">
       <div className="max-w-3xl mx-auto">
         <div className="space-y-3">
-          {/* Mobile: simple single column */}
+          {/* Mobile */}
           <div className={isSingleColumn}>
-            <div className="space-y-4">
-              {visibleBenefits.map((benefit, index) => renderBenefit(benefit, index))}
-            </div>
+            <div className="space-y-4">{visibleBenefits.map((b, i) => renderBenefit(b, i))}</div>
           </div>
-        
-          {/* Desktop: 3 + centered row */}
+
+          {/* Desktop */}
           <div className={isDesktop}>
-            {/* Row 1 */}
-            <div className="grid grid-cols-3 gap-3">
-              {row1.map((benefit, index) => renderBenefit(benefit, index))}
-            </div>
-          
-            {/* Row 2 */}
+            <div className="grid grid-cols-3 gap-3">{row1.map((b, i) => renderBenefit(b, i))}</div>
+
             {row2.length > 0 && (
               <div className="flex justify-center mt-3">
                 <div
                   className="grid gap-3"
                   style={{ gridTemplateColumns: `repeat(${row2.length}, minmax(140px, 1fr))` }}
                 >
-                  {row2.map((benefit, i) => renderBenefit(benefit, i + 3))}
+                  {row2.map((b, i) => renderBenefit(b, i + 3))}
                 </div>
               </div>
             )}
-          </div>        
+          </div>
         </div>
-      </div>
 
-        {/* Add button - only show if less than 6 benefits */}
+        {/* Add button */}
         {benefits.length < 6 && (
           <div className="mt-6 flex justify-center">
             <button
@@ -200,6 +189,7 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
           <DialogHeader>
             <DialogTitle>Upravit benefit</DialogTitle>
           </DialogHeader>
+
           {editingBenefit !== null && (
             <div className="space-y-4">
               <div>
@@ -212,6 +202,7 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
                   className="w-24 h-24"
                 />
               </div>
+
               <div>
                 <label className="text-sm font-medium">Titulek</label>
                 <input
@@ -220,6 +211,7 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
                   onChange={(e) => updateBenefit(editingBenefit, "title", e.target.value)}
                 />
               </div>
+
               <div>
                 <label className="text-sm font-medium">Popis</label>
                 <textarea
