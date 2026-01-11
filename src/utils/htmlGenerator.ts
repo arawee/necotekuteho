@@ -333,10 +333,6 @@ function generateProductListHTML(block: NewsletterBlock): string {
         },
       ];
 
-  const visible = products.slice(0, 8);
-  const row1 = visible.slice(0, 4);
-  const row2 = visible.slice(4, 8);
-
   const showViewAll = (content as any).showViewAll !== false;
   const viewAllText = (content as any).viewAllText || "zobrazit vše";
   const viewAllUrl = (content as any).viewAllUrl || "#";
@@ -352,11 +348,21 @@ function generateProductListHTML(block: NewsletterBlock): string {
     }
   };
 
-  const renderProductCell = (p: any, idx: number, rowLen: number) => {
+  // ✅ 4 columns, up to 8 products (2 rows)
+  const COLS = 4;
+  const MAX = 8;
+  const tableWidth = 600;
+  const colWidth = Math.floor(tableWidth / COLS); // 150
+
+  const items = products.slice(0, MAX);
+
+  const renderProductCell = (p: any) => {
     const tagsHTML = (p.tags || [])
       .map(
         (tag: any) => `
-          <span style="display:inline-block;background-color:${getTagBgColor(tag.color)};color:#FFFFFF;font-size:10px;padding:2px 8px;margin-right:4px;margin-bottom:4px;">${tag.text}</span>
+          <span style="display:inline-block;background-color:${getTagBgColor(tag.color)};color:#FFFFFF;font-size:10px;padding:2px 8px;margin-right:4px;margin-bottom:4px;">
+            ${tag.text}
+          </span>
         `,
       )
       .join("");
@@ -365,21 +371,9 @@ function generateProductListHTML(block: NewsletterBlock): string {
       ? `<span style="color:#FF4C4C;font-weight:700;">${p.salePrice}</span> <span style="font-size:10px;color:#666;text-decoration:line-through;">${p.price}</span>`
       : `<span style="color:#212121;font-weight:700;">${p.price}</span>`;
 
-    // row-aware padding so 1/2/3 items look correct too
-    let paddingLeft = "4px";
-    let paddingRight = "4px";
-    if (idx === 0) {
-      paddingLeft = "0";
-      paddingRight = rowLen === 1 ? "0" : "8px";
-    }
-    if (idx === rowLen - 1) {
-      paddingLeft = rowLen === 1 ? "0" : "8px";
-      paddingRight = "0";
-    }
-
     return `
-      <td valign="top" class="stack" style="padding:0 ${paddingRight} 0 ${paddingLeft};">
-        <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
+      <td valign="top" width="${colWidth}" style="width:${colWidth}px;padding:0 6px 0 6px;">
+        <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
           <tr>
             <td style="background-color:#F5F5F5;">
               ${
@@ -389,15 +383,26 @@ function generateProductListHTML(block: NewsletterBlock): string {
               }
             </td>
           </tr>
+
           <tr>
             <td style="padding-top:0;font-family:'JetBrains Mono',monospace;">
-              <div style="margin-top:-4px;margin-bottom:8px;">${tagsHTML}</div>
+              <div style="margin-top:8px;margin-bottom:8px;">${tagsHTML}</div>
+
               <h3 style="margin:0 0 4px 0;font-size:16px;font-weight:700;color:#212121;line-height:150%;">${p.name}</h3>
-              <div style="font-size:10px;color:#000000;margin-bottom:8px;">
-                <span><strong>Alk. →</strong> ${p.alcohol}% obj.</span>
-                <span style="float:right;">${p.volume}</span>
-              </div>
-              <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
+
+              <!-- ✅ Use a table instead of float for consistent spacing -->
+              <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;margin-bottom:8px;">
+                <tr>
+                  <td style="font-size:10px;color:#000000;font-family:'JetBrains Mono',monospace;">
+                    <strong>Alk. →</strong> ${p.alcohol}% obj.
+                  </td>
+                  <td align="right" style="font-size:10px;color:#000000;font-family:'JetBrains Mono',monospace;">
+                    ${p.volume}
+                  </td>
+                </tr>
+              </table>
+
+              <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
                 <tr>
                   <td style="font-family:'JetBrains Mono',monospace;">${priceHTML}</td>
                   <td align="right">
@@ -414,8 +419,38 @@ function generateProductListHTML(block: NewsletterBlock): string {
     `;
   };
 
-  const row1HTML = row1.map((p: any, idx: number) => renderProductCell(p, idx, row1.length)).join("");
-  const row2HTML = row2.map((p: any, idx: number) => renderProductCell(p, idx, row2.length)).join("");
+  // ✅ Center last row with real spacer widths (keeps same card widths)
+  const renderRow = (rowItems: any[]) => {
+    const n = rowItems.length;
+    const used = n * colWidth;
+    const remaining = tableWidth - used;
+
+    const leftSpacer = Math.floor(remaining / 2);
+    const rightSpacer = remaining - leftSpacer;
+
+    const leftTD =
+      leftSpacer > 0
+        ? `<td width="${leftSpacer}" style="width:${leftSpacer}px;font-size:0;line-height:0;">&nbsp;</td>`
+        : "";
+    const rightTD =
+      rightSpacer > 0
+        ? `<td width="${rightSpacer}" style="width:${rightSpacer}px;font-size:0;line-height:0;">&nbsp;</td>`
+        : "";
+
+    return `
+      <table role="presentation" border="0" cellspacing="0" cellpadding="0"
+             width="600" style="width:600px;max-width:600px;table-layout:fixed;">
+        <tr>
+          ${leftTD}
+          ${rowItems.map(renderProductCell).join("")}
+          ${rightTD}
+        </tr>
+      </table>
+    `;
+  };
+
+  const row1 = items.slice(0, COLS);
+  const row2 = items.slice(COLS, COLS * 2);
 
   const viewAllHTML = showViewAll
     ? `
@@ -428,7 +463,8 @@ function generateProductListHTML(block: NewsletterBlock): string {
   return `<!-- List produktů -->
 <tr>
   <td align="center" style="padding:24px;margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0"
+           width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td style="padding-bottom:1rem;">
           <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -444,10 +480,8 @@ function generateProductListHTML(block: NewsletterBlock): string {
 
       <!-- Row 1 -->
       <tr>
-        <td>
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
-            <tr>${row1HTML}</tr>
-          </table>
+        <td align="center">
+          ${renderRow(row1)}
         </td>
       </tr>
 
@@ -456,10 +490,8 @@ function generateProductListHTML(block: NewsletterBlock): string {
         row2.length > 0
           ? `
       <tr>
-        <td style="padding-top:12px;">
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
-            <tr>${row2HTML}</tr>
-          </table>
+        <td align="center" style="padding-top:12px;">
+          ${renderRow(row2)}
         </td>
       </tr>
       `
