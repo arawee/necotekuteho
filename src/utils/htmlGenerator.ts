@@ -641,116 +641,89 @@ function generateMistaHTML(block: NewsletterBlock): string {
 
 function generateLocationsHTML(block: NewsletterBlock): string {
   const { content } = block;
-  const locations = (content as any).locations || [
-    {
-      image: "",
-      name: "Pivovar v Lounech",
-      address: "5. května 2789, Louny\n440 01",
-      hours: "Po–Pá 9–17 h",
-      weekendHours: "So–Ne 9–22 h",
-      facebookUrl: "#",
-      instagramUrl: "#",
-      primaryButtonUrl: "#",
-      secondaryButtonText: "Rezervace",
-      secondaryButtonUrl: "#",
-    },
-  ];
+
+  const locations = (content as any).locations || [];
   const showViewAll = (content as any).showViewAll !== false;
   const viewAllText = content.viewAllText || "zobrazit vše";
   const viewAllUrl = content.viewAllUrl || "#";
 
-  const locCount = Math.min(locations.length, 6);
-  // For locations, we use a max of 3 per row
-  const colsPerRow = Math.min(locCount, 3);
+  const COLS = 3;
+  const MAX = 6;
+  const TABLE_WIDTH = 600;
+  const COL_WIDTH = Math.floor(TABLE_WIDTH / COLS); // 200px
 
-  const locationCards = locations
-    .slice(0, 6)
-    .map((loc: any, idx: number) => {
-      const colIdx = idx % colsPerRow;
-      const paddingLeft = colIdx === 0 ? "0" : "6px";
-      const paddingRight = colIdx === colsPerRow - 1 ? "0" : "6px";
+  const items = locations.slice(0, MAX);
+  const row1 = items.slice(0, COLS);
+  const row2 = items.slice(COLS, COLS * 2);
 
-      return `
-    <td valign="top" class="stack" style="padding:0 ${paddingRight} 12px ${paddingLeft};">
-      <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="background-color:#F4F4F4;">
-        <tr>
-          <td>
-            ${
-              loc.image
-                ? `<img src="${loc.image}" width="100%" alt="${loc.name}" style="display:block;width:100%;aspect-ratio:5/4;object-fit:cover;"/>`
-                : `<div style="width:100%;padding-top:80%;background:#E5E5E5;"></div>`
-            }
-          </td>
-        </tr>
-        <tr>
-          <td style="padding:12px;font-family:'JetBrains Mono',monospace;">
-            <h3 style="margin:0.5rem 0 4px 0;font-size:16px;font-weight:700;color:#000000;">${loc.name}</h3>
-            <p style="margin:0 0 4px 0;font-size:12px;color:#000000;white-space:pre-line;">${loc.address}</p>
-            <p style="margin:0 0 4px 0;font-size:12px;color:#000000;">${loc.hours}</p>
-            <p style="margin:0 0 8px 0;font-size:12px;color:#000000;">${loc.weekendHours}</p>
-            ${
-              loc.facebookUrl || loc.instagramUrl
-                ? `
-              <div style="margin-bottom:8px;font-size:12px;">
-                ${loc.facebookUrl ? `<a href="${loc.facebookUrl}" style="color:#000000;text-decoration:underline;margin-right:8px;">Facebook</a>` : ""}
-                ${loc.instagramUrl ? `<a href="${loc.instagramUrl}" style="color:#000000;text-decoration:underline;">Instagram</a>` : ""}
-              </div>
-            `
-                : ""
-            }
-            <div style="margin-top:28px;">
-              <table role="presentation" border="0" cellspacing="0" cellpadding="0">
-                <tr>
-                  <td style="padding-right:8px;">
-                    <a href="${loc.primaryButtonUrl || "#"}" style="display:inline-block;width:36px;height:36px;border:1px solid #00C322;border-radius:50%;text-align:center;line-height:36px;text-decoration:none;">
-                      ${ARROW_ICON_SVG("#00C322")}
-                    </a>
-                  </td>
-                  <td style="font-size:12px;color:#000000;">
-                    → ${loc.secondaryButtonText || "Rezervace"}
-                  </td>
-                </tr>
-              </table>
-            </div>
-          </td>
-        </tr>
-      </table>
-    </td>
-  `;
-    })
-    .join("");
+  const renderLocationCell = (loc: any) => {
+    return `
+<td valign="top" width="${COL_WIDTH}" style="width:${COL_WIDTH}px;padding:0 6px 12px 6px;">
+  <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="background:#F4F4F4;table-layout:fixed;">
+    <tr>
+      <td>
+        ${
+          loc.image
+            ? `<img src="${loc.image}" width="100%" style="display:block;width:100%;aspect-ratio:5/4;object-fit:cover;">`
+            : `<div style="width:100%;padding-top:80%;background:#E5E5E5;"></div>`
+        }
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:12px;font-family:'JetBrains Mono',monospace;">
+        <h3 style="margin:0 0 4px 0;font-size:16px;font-weight:700;">${loc.name}</h3>
+        <p style="margin:0 0 4px 0;font-size:12px;white-space:pre-line;">${loc.address}</p>
+        <p style="margin:0 0 4px 0;font-size:12px;">${loc.hours}</p>
+        <p style="margin:0 0 12px 0;font-size:12px;">${loc.weekendHours}</p>
+
+        <div style="margin-top:12px;">
+          <a href="${loc.primaryButtonUrl || "#"}" style="display:inline-block;width:36px;height:36px;border:1px solid #00C322;border-radius:50%;line-height:36px;text-align:center;text-decoration:none;">
+            ${ARROW_ICON_SVG("#00C322")}
+          </a>
+        </div>
+      </td>
+    </tr>
+  </table>
+</td>`;
+  };
+
+  const renderRow = (row: any[]) => {
+    const used = row.length * COL_WIDTH;
+    const remaining = TABLE_WIDTH - used;
+    const left = Math.floor(remaining / 2);
+    const right = remaining - left;
+
+    return `
+<table role="presentation" width="600" style="width:600px;table-layout:fixed;">
+  <tr>
+    ${left ? `<td width="${left}"></td>` : ""}
+    ${row.map(renderLocationCell).join("")}
+    ${right ? `<td width="${right}"></td>` : ""}
+  </tr>
+</table>`;
+  };
 
   const viewAllHTML = showViewAll
-    ? `
-    <a href="${viewAllUrl}" style="color:#212121;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;white-space:nowrap;">
-      <span style="text-decoration:none;">→ </span><span style="text-decoration:underline;">${viewAllText}</span>
-    </a>
-  `
+    ? `<a href="${viewAllUrl}" style="font-size:14px;text-decoration:underline;">${viewAllText}</a>`
     : "";
 
-  return `<!-- Lokace -->
+  return `
 <tr>
-  <td align="center" style="padding:24px;margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
+  <td align="center" style="padding:24px;">
+    <table role="presentation" width="600" class="wrap">
       <tr>
-        <td style="padding-bottom:24px;">
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
+        <td>
+          <table width="100%">
             <tr>
-              <td style="font-family:'JetBrains Mono',monospace;">
-                <h2 style="margin:0;font-size:20px;font-weight:700;color:#212121;">${content.title || "Kde nás ochutnáte?"}</h2>
-              </td>
+              <td><h2>${content.title || "Lokace"}</h2></td>
               <td align="right">${viewAllHTML}</td>
             </tr>
           </table>
         </td>
       </tr>
-      <tr>
-        <td>
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
-            <tr>${locationCards}</tr>
-          </table>
-        </td>
-      </tr>
+
+      <tr><td align="center">${renderRow(row1)}</td></tr>
+      ${row2.length ? `<tr><td align="center" style="padding-top:12px;">${renderRow(row2)}</td></tr>` : ""}
     </table>
   </td>
 </tr>`;
