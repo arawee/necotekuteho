@@ -167,10 +167,10 @@ function generateZichovecHeaderWithMenuHTML(block: NewsletterBlock): string {
       <tr>
         <td style="padding:0;margin:0;">
           <!-- Ratio box: 1440/416 => 28.8889% -->
-          <div style="width:100%;max-width:600px;margin:0 auto;height:0;padding-top:calc(28.8889% + 2rem);position:relative;overflow:hidden;">
+          <div id='top-container' style="width:100%;max-width:600px;margin:0 auto;height:0;padding-top:calc(28.8889% + 2rem);position:relative;overflow:hidden;">
             
             <!-- Logo centered (kept clear of bottom menu) -->
-            <div style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;padding-bottom:1rem;">
+            <div id='top-logo' style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;padding-bottom:1rem;">
               <div style="width:87.2917%;max-width:523.75px;">
                 ${ZICHOVEC_LOGO_SVG}
               </div>
@@ -1528,6 +1528,12 @@ function getNewsletterCSS(): string {
       img {
         max-width: 100% !important;
         height: auto !important;
+      }
+      #top-container {
+        padding-top: calc(28.8889% + 4rem);
+      }
+      #top-logo {
+        padding-bottom: 2rem;
       }
       /* Stack footer columns */
       .footer-col {
