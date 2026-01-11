@@ -1114,19 +1114,27 @@ function generateBenefitsHTML(block: NewsletterBlock): string {
       ];
 
   const visible = benefits.slice(0, 6);
+  const row1 = visible.slice(0, 3);
+  const row2 = visible.slice(3, 6);
 
-  // chunk into rows of max 3
-  const rows: any[][] = [];
-  for (let i = 0; i < visible.length; i += 3) {
-    rows.push(visible.slice(i, i + 3));
-  }
+  // Helper: render one benefit cell (200px column)
+  const renderCell = (b: any, globalIndex: number, isFirst: boolean, isLast: boolean) => {
+    let paddingLeft = "4px";
+    let paddingRight = "4px";
 
-  const renderBenefitCell = (b: any, globalIndex: number) => {
+    if (isFirst) {
+      paddingLeft = "0";
+      paddingRight = "8px";
+    }
+    if (isLast) {
+      paddingLeft = "8px";
+      paddingRight = "0";
+    }
+
     return `
-      <td valign="top" width="200" style="width:200px;text-align:center;font-family:'JetBrains Mono',monospace;padding:0 8px 16px 8px;">
+      <td valign="top" class="stack" width="200" style="width:200px;padding:0 ${paddingRight} 16px ${paddingLeft};text-align:center;font-family:'JetBrains Mono',monospace;">
         <div style="margin-bottom:16px;">
-          <img src="${getBenefitIcon(b.icon, globalIndex)}" width="48" height="48" alt=""
-               style="display:inline-block;width:48px;height:48px;object-fit:contain;"/>
+          <img src="${getBenefitIcon(b.icon, globalIndex)}" width="48" height="48" alt="" style="display:inline-block;width:48px;height:48px;object-fit:contain;"/>
         </div>
         <h4 style="margin:0 0 12px 0;font-size:16px;font-weight:700;color:#000000;line-height:120%;">${b.title}</h4>
         <p style="margin:0 auto;max-width:35ch;font-size:12px;font-weight:400;color:#000000;line-height:120%;">${b.description}</p>
@@ -1134,52 +1142,35 @@ function generateBenefitsHTML(block: NewsletterBlock): string {
     `;
   };
 
-  const renderRow = (row: any[], rowIndex: number) => {
-    const count = row.length;
+  // Helper: render a row table centered, with rowCount * 200px width on desktop
+  const renderRow = (row: any[], rowStartIndex: number) => {
+    if (row.length === 0) return "";
 
-    // Build centered row using spacers, but keep item width 200 always.
-    // Total width must remain 600.
-    //
-    // 3 items: [200][200][200]
-    // 2 items: [100 spacer][200][200][100 spacer]
-    // 1 item : [200 spacer][200][200 spacer]
-    const cells: string[] = [];
-
-    if (count === 1) {
-      cells.push(`<td width="200" style="width:200px;">&nbsp;</td>`);
-      cells.push(renderBenefitCell(row[0], rowIndex * 3 + 0));
-      cells.push(`<td width="200" style="width:200px;">&nbsp;</td>`);
-    } else if (count === 2) {
-      cells.push(`<td width="100" style="width:100px;">&nbsp;</td>`);
-      cells.push(renderBenefitCell(row[0], rowIndex * 3 + 0));
-      cells.push(renderBenefitCell(row[1], rowIndex * 3 + 1));
-      cells.push(`<td width="100" style="width:100px;">&nbsp;</td>`);
-    } else {
-      // 3 items
-      cells.push(renderBenefitCell(row[0], rowIndex * 3 + 0));
-      cells.push(renderBenefitCell(row[1], rowIndex * 3 + 1));
-      cells.push(renderBenefitCell(row[2], rowIndex * 3 + 2));
-    }
+    const rowWidth = row.length * 200; // 1=>200, 2=>400, 3=>600 (centers naturally)
+    const cellsHTML = row
+      .map((b, idx) => renderCell(b, rowStartIndex + idx, idx === 0, idx === row.length - 1))
+      .join("");
 
     return `
       <tr>
-        <td align="center" style="${rowIndex === 0 ? "" : "padding-top:12px;"}">
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0"
-                 width="600" style="width:600px;max-width:100%;table-layout:fixed;">
-            <tr>${cells.join("")}</tr>
+        <td align="center" style="padding:0;">
+          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="${rowWidth}" style="width:${rowWidth}px;max-width:600px;table-layout:fixed;">
+            <tr>${cellsHTML}</tr>
           </table>
         </td>
       </tr>
     `;
   };
 
-  const rowsHTML = rows.map((row, rowIndex) => renderRow(row, rowIndex)).join("");
+  const rowsHTML = `
+    ${renderRow(row1, 0)}
+    ${renderRow(row2, 3)}
+  `;
 
   return `<!-- Benefity -->
 <tr>
-  <td align="center" style="padding:32px 24px;padding-bottom:16px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0"
-           width="600" class="wrap" style="max-width:600px;width:100%;">
+  <td align="center" style="padding:32px 24px 16px 24px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;table-layout:fixed;">
       ${rowsHTML}
     </table>
   </td>
