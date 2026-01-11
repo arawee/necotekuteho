@@ -85,37 +85,84 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
   const isSingleColumn = "block sm:hidden";
   const isDesktop = "hidden sm:block";
 
+  const renderBenefit = (benefit: Benefit, index: number) => (
+    <div key={index} className="group relative text-center">
+      {/* Remove button */}
+      <button
+        onClick={() => removeBenefit(index)}
+        className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 bg-white shadow hover:bg-red-50"
+      >
+        <Trash2 className="w-3 h-3 text-red-500" />
+      </button>
+
+      {/* Icon */}
+      <div
+        className="flex justify-center cursor-pointer"
+        style={{ marginBottom: "1rem" }}
+        onClick={() => setEditingBenefit(index)}
+      >
+        {benefit.icon ? (
+          <img
+            src={benefit.icon}
+            alt={benefit.title}
+            style={{ width: "48px", height: "48px", objectFit: "contain" }}
+          />
+        ) : (
+          <div
+            className="border border-dashed border-gray-300 flex items-center justify-center text-2xl"
+            style={{ width: "48px", height: "48px", color: "#00C322" }}
+          >
+            □
+          </div>
+        )}
+      </div>
+
+      <h3
+        className="cursor-pointer"
+        onClick={() => setEditingBenefit(index)}
+        style={{
+          color: "#000000",
+          fontSize: "16px",
+          lineHeight: "120%",
+          fontWeight: "bold",
+          marginBottom: "12px",
+        }}
+      >
+        {benefit.title}
+      </h3>
+
+      <p
+        className="cursor-pointer"
+        onClick={() => setEditingBenefit(index)}
+        style={{
+          color: "#000000",
+          fontSize: "12px",
+          fontStyle: "normal",
+          fontWeight: "normal",
+          lineHeight: "120%",
+        }}
+      >
+        {benefit.description}
+      </p>
+    </div>
+  );
+  
   return (
     <div className="bg-white border border-border p-8">
       <div className="max-w-3xl mx-auto">
         <div className="space-y-3">
           {/* Mobile: simple single column */}
           <div className={isSingleColumn}>
-            {visibleBenefits.map((benefit, index) => (
-              <div key={index} className="group relative text-center mb-4">
-                <button
-                  onClick={() => removeBenefit(index)}
-                  className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 bg-white shadow hover:bg-red-50"
-                >
-                  <Trash2 className="w-3 h-3 text-red-500" />
-                </button>
-        
-                {/* Icon */}
-                <div className="flex justify-center mb-4" onClick={() => setEditingBenefit(index)}>
-                  <img src={benefit.icon} className="w-12 h-12 object-contain" />
-                </div>
-        
-                <h3 className="font-bold text-base mb-3">{benefit.title}</h3>
-                <p className="text-xs">{benefit.description}</p>
-              </div>
-            ))}
+            <div className="space-y-4">
+              {visibleBenefits.map((benefit, index) => renderBenefit(benefit, index))}
+            </div>
           </div>
         
           {/* Desktop: 3 + centered row */}
           <div className={isDesktop}>
             {/* Row 1 */}
             <div className="grid grid-cols-3 gap-3">
-              {row1.map((benefit, index) => (
+              {row1.map((benefit, index) => renderBenefit(benefit, index))}
                 <div key={index} className="group relative text-center">
 
                   
@@ -187,14 +234,7 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
                 className="grid gap-3"
                 style={{ gridTemplateColumns: `repeat(${row2.length}, minmax(140px, 1fr))` }}
               >
-                {row2.map((benefit, i) => {
-                  const index = i + 3;
-                  return (
-                    <div key={index} className="group relative text-center">
-                      {/* … SAME content as before … */}
-                    </div>
-                  );
-                })}
+                {row2.map((benefit, i) => renderBenefit(benefit, i + 3))}
               </div>
             </div>
           )}
