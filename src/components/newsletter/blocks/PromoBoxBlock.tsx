@@ -220,19 +220,6 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
             </div>
           ))}
         </div>
-
-        {/* Add box button */}
-        {boxes.length < MAX_PROMOS && (
-          <div className="mt-4 flex justify-center">
-            <button
-              onClick={addBox}
-              className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-400 hover:border-green-500 text-gray-500 hover:text-green-500 transition-colors"
-            >
-              <CustomPlusIcon color="currentColor" />
-              Přidat box
-            </button>
-          </div>
-        )}
       </div>
 
       {boxes.length < MAX_PROMOS && (
