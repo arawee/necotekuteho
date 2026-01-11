@@ -114,111 +114,114 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
     return brightness < 60; // Much lower threshold - only very dark colors get white text
   };
 
+  const renderBox = (box: PromoBox, index: number) => (
+    <div
+      key={index}
+      className="p-6 group relative flex flex-col"
+      style={{
+        backgroundColor: box.bgColor,
+        border: box.bgColor === "#FFFFFF" || box.bgColor === "#F4F4F4" ? "1px solid #E5E5E5" : "none",
+      }}
+    >
+      {/* Delete box button */}
+      <button
+        onClick={() => removeBox(index)}
+        className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 bg-white shadow hover:bg-red-50"
+      >
+        <Trash2 className="w-3 h-3 text-red-500" />
+      </button>
+
+      {/* HEX Color picker */}
+      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+        <input
+          type="color"
+          value={box.bgColor}
+          onChange={(e) => updateBox(index, "bgColor", e.target.value)}
+          className="w-6 h-6 cursor-pointer border-0"
+          title="Vybrat barvu"
+        />
+      </div>
+
+      <h3
+        contentEditable
+        suppressContentEditableWarning
+        onBlur={(e) => updateBox(index, "title", e.currentTarget.textContent || "")}
+        style={{
+          color: isVeryDarkBg(box.bgColor) ? "#FFFFFF" : "#000000",
+          fontSize: "24px",
+          marginBottom: "1rem",
+          fontWeight: 700,
+        }}
+      >
+        {box.title}
+      </h3>
+
+      <div className="space-y-2 mb-6">
+        {box.features.map((feature, fIdx) => (
+          <div key={fIdx} className="text-xs flex items-start gap-1 group/feature" style={{ marginTop: "0.25rem" }}>
+            <span
+              className="cursor-text"
+              contentEditable
+              suppressContentEditableWarning
+              onBlur={(e) => updateFeature(index, fIdx, "label", e.currentTarget.textContent || "")}
+              style={{ color: isVeryDarkBg(box.bgColor) ? "#FFFFFF" : "#000000", fontWeight: "bold" }}
+            >
+              {feature.label}
+            </span>
+            <CustomArrowIcon color="#000000" style={{ flexShrink: 0, marginTop: "2px" }} />
+            <span
+              className="cursor-text flex-1"
+              contentEditable
+              suppressContentEditableWarning
+              onBlur={(e) => updateFeature(index, fIdx, "value", e.currentTarget.textContent || "")}
+              style={{ color: isVeryDarkBg(box.bgColor) ? "#CCC" : "#000000" }}
+            >
+              {feature.value}
+            </span>
+            <button
+              onClick={() => removeFeature(index, fIdx)}
+              className="opacity-0 group-hover/feature:opacity-100 text-red-500 hover:text-red-700"
+            >
+              ×
+            </button>
+          </div>
+        ))}
+        <button
+          onClick={() => addFeature(index)}
+          className="text-xs px-2 py-0.5 border border-dashed border-gray-400 hover:border-green-500 text-gray-400 hover:text-green-500 flex items-center gap-1"
+        >
+          <CustomPlusIcon color="currentColor" /> přidat
+        </button>
+      </div>
+
+      <div className="space-y-2">
+        <button
+          className="text-sm border inline-flex items-center"
+          style={{
+            borderColor: isVeryDarkBg(box.bgColor) ? "#FFFFFF" : "#000000",
+            color: isVeryDarkBg(box.bgColor) ? "#FFFFFF" : "#000000",
+            backgroundColor: "transparent",
+            padding: "12px 24px",
+          }}
+          onClick={() => setEditingButton(index)}
+        >
+          {box.buttonText}
+        </button>
+      </div>
+    </div>
+  );
+
   return (
     <div className="bg-white border border-border p-6">
       <div className="max-w-2xl mx-auto">
-        <div className="grid gap-3 items-start" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))" }}>
-          {boxes.map((box, index) => (
-            <div
-              key={index}
-              className="p-6 group relative flex flex-col"
-              style={{
-                backgroundColor: box.bgColor,
-                border: box.bgColor === "#FFFFFF" || box.bgColor === "#F4F4F4" ? "1px solid #E5E5E5" : "none",
-              }}
-            >
-              {/* Delete box button */}
-              <button
-                onClick={() => removeBox(index)}
-                className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 bg-white shadow hover:bg-red-50"
-              >
-                <Trash2 className="w-3 h-3 text-red-500" />
-              </button>
+        <div className="flex flex-col sm:flex-row gap-3 items-start">
+          <div className="flex-1 min-w-0 flex flex-col gap-3">
+            {leftBoxes.map((box, colIndex) => renderBox(box, colIndex * 2))}
+          </div>
 
-              {/* HEX Color picker */}
-              <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <input
-                  type="color"
-                  value={box.bgColor}
-                  onChange={(e) => updateBox(index, "bgColor", e.target.value)}
-                  className="w-6 h-6 cursor-pointer border-0"
-                  title="Vybrat barvu"
-                />
-              </div>
-
-              <h3
-                contentEditable
-                suppressContentEditableWarning
-                onBlur={(e) => updateBox(index, "title", e.currentTarget.textContent || "")}
-                style={{
-                  color: isVeryDarkBg(box.bgColor) ? "#FFFFFF" : "#000000",
-                  fontSize: "24px",
-                  marginBottom: "1rem",
-                  fontWeight: 700,
-                }}
-              >
-                {box.title}
-              </h3>
-
-              <div className="space-y-2 mb-6">
-                {box.features.map((feature, fIdx) => (
-                  <div
-                    key={fIdx}
-                    className="text-xs flex items-start gap-1 group/feature"
-                    style={{ marginTop: "0.25rem" }}
-                  >
-                    <span
-                      className="cursor-text"
-                      contentEditable
-                      suppressContentEditableWarning
-                      onBlur={(e) => updateFeature(index, fIdx, "label", e.currentTarget.textContent || "")}
-                      style={{ color: isVeryDarkBg(box.bgColor) ? "#FFFFFF" : "#000000", fontWeight: "bold" }}
-                    >
-                      {feature.label}
-                    </span>
-                    <CustomArrowIcon color="#000000" style={{ flexShrink: 0, marginTop: "2px" }} />
-                    <span
-                      className="cursor-text flex-1"
-                      contentEditable
-                      suppressContentEditableWarning
-                      onBlur={(e) => updateFeature(index, fIdx, "value", e.currentTarget.textContent || "")}
-                      style={{ color: isVeryDarkBg(box.bgColor) ? "#CCC" : "#000000" }}
-                    >
-                      {feature.value}
-                    </span>
-                    <button
-                      onClick={() => removeFeature(index, fIdx)}
-                      className="opacity-0 group-hover/feature:opacity-100 text-red-500 hover:text-red-700"
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
-                <button
-                  onClick={() => addFeature(index)}
-                  className="text-xs px-2 py-0.5 border border-dashed border-gray-400 hover:border-green-500 text-gray-400 hover:text-green-500 flex items-center gap-1"
-                >
-                  <CustomPlusIcon color="currentColor" /> přidat
-                </button>
-              </div>
-
-              {/* Button - sized to text + 24px left/right, 12px top/bottom */}
-              <div className="space-y-2">
-                <button
-                  className="text-sm border inline-flex items-center"
-                  style={{
-                    borderColor: isVeryDarkBg(box.bgColor) ? "#FFFFFF" : "#000000",
-                    color: isVeryDarkBg(box.bgColor) ? "#FFFFFF" : "#000000",
-                    backgroundColor: "transparent",
-                    padding: "12px 24px",
-                  }}
-                  onClick={() => setEditingButton(index)}
-                >
-                  {box.buttonText}
-                </button>
-              </div>
-            </div>
-          ))}
+          <div className="flex-1 min-w-0 flex flex-col gap-3">
+            {rightBoxes.map((box, colIndex) => renderBox(box, colIndex * 2 + 1))}
+          </div>
         </div>
 
         {/* Add box button */}
