@@ -116,13 +116,13 @@ ${blockHTML}
 </html>`;
 }
 
-function generateZichovecHeaderHTML(block: NewsletterBlock): string {
+function generateZichovecHeaderHTML(_: NewsletterBlock): string {
   return `<!-- Záhlaví ZICHOVEC -->
 <tr>
   <td align="center" style="background-color:#00C322;padding:48px 24px;margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" style="max-width:600px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" class="wrap" style="max-width:600px;width:100%;">
       <tr>
-        <td align="center">
+        <td align="center" style="padding:0;">
           ${ZICHOVEC_LOGO_SVG}
         </td>
       </tr>
@@ -149,7 +149,7 @@ function generateZichovecHeaderWithMenuHTML(block: NewsletterBlock): string {
   return `<!-- Záhlaví ZICHOVEC s menu -->
 <tr>
   <td align="center" style="background-color:#00C322;margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" style="max-width:600px;height:auto;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td align="center" style="padding:0 16px 16px 16px;line-height:120%;">
           ${ZICHOVEC_LOGO_SVG}
@@ -157,7 +157,10 @@ function generateZichovecHeaderWithMenuHTML(block: NewsletterBlock): string {
       </tr>
       <tr>
         <td align="center" style="padding:0 24px 16px 24px;">
-          ${menuHTML}
+          <!-- allow wrapping so the row never forces extra width -->
+          <div style="display:block;max-width:100%;white-space:normal;">
+            ${menuHTML}
+          </div>
         </td>
       </tr>
     </table>
