@@ -123,7 +123,7 @@ function generateZichovecHeaderHTML(_: NewsletterBlock): string {
   <td align="center" style="background-color:#00C322;padding:0;margin:0;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" class="wrap" style="max-width:600px;width:100%;">
       <tr>
-        <td align="center" valign="middle" style="height:173px;padding:0;">
+        <td align="center" valign="middle" style="height:173px;padding:0 38px;">
           ${ZICHOVEC_LOGO_SVG}
         </td>
       </tr>
@@ -152,7 +152,7 @@ function generateZichovecHeaderWithMenuHTML(block: NewsletterBlock): string {
   <td align="center" style="background-color:#00C322;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="width:600px;max-width:600px;">
       <tr>
-        <td align="center" style="padding:0 16px 16px 16px;line-height:120%;">
+        <td align="center" style="padding:0 38px 16px 38px;line-height:120%;">
           ${ZICHOVEC_LOGO_SVG}
         </td>
       </tr>
