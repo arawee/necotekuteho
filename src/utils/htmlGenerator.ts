@@ -940,43 +940,36 @@ function generatePromoBoxHTML(block: NewsletterBlock): string {
 }
 
 function generateGalleryTrioHTML(block: NewsletterBlock): string {
-  const { content } = block;
-  const photos = content.photos || [
-    { url: "", alt: "" },
-    { url: "", alt: "" },
-    { url: "", alt: "" },
-  ];
+  const photos = block.content.photos || [];
 
-  return `<!-- Galerie trio -->
+  return `
 <tr>
-  <td align="center" style="margin-top:2rem;margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
-      <!-- Main image 1:1 -->
+  <td align="center" style="padding:32px 0;">
+    <table role="presentation" width="600" style="width:600px;table-layout:fixed;">
       <tr>
         <td>
           ${
             photos[0]?.url
-              ? `<img src="${photos[0].url}" width="600" alt="${photos[0].alt || ""}" style="display:block;width:100%;aspect-ratio:1/1;object-fit:cover;"/>`
+              ? `<img src="${photos[0].url}" width="600" style="display:block;width:100%;aspect-ratio:1/1;object-fit:cover;">`
               : `<div style="width:100%;padding-top:100%;background:#E5E5E5;"></div>`
           }
         </td>
       </tr>
-      <!-- Two smaller images 3:4 with 12px gap -->
       <tr>
         <td>
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
+          <table role="presentation" width="600" style="width:600px;table-layout:fixed;">
             <tr>
-              <td style="padding-right:6px;">
+              <td width="300">
                 ${
                   photos[1]?.url
-                    ? `<img src="${photos[1].url}" width="294" alt="${photos[1].alt || ""}" style="display:block;width:100%;aspect-ratio:3/4;object-fit:cover;"/>`
+                    ? `<img src="${photos[1].url}" width="300" style="display:block;width:100%;aspect-ratio:3/4;object-fit:cover;">`
                     : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
                 }
               </td>
-              <td style="padding-left:6px;">
+              <td width="300">
                 ${
                   photos[2]?.url
-                    ? `<img src="${photos[2].url}" width="294" alt="${photos[2].alt || ""}" style="display:block;width:100%;aspect-ratio:3/4;object-fit:cover;"/>`
+                    ? `<img src="${photos[2].url}" width="300" style="display:block;width:100%;aspect-ratio:3/4;object-fit:cover;">`
                     : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
                 }
               </td>
@@ -990,28 +983,24 @@ function generateGalleryTrioHTML(block: NewsletterBlock): string {
 }
 
 function generateGalleryDuoHTML(block: NewsletterBlock): string {
-  const { content } = block;
-  const photos = content.photos || [
-    { url: "", alt: "" },
-    { url: "", alt: "" },
-  ];
+  const photos = block.content.photos || [];
 
-  return `<!-- Galerie duo -->
+  return `
 <tr>
-  <td align="center" style="margin-top:2rem;margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;table-layout:fixed;">
+  <td align="center" style="padding:32px 0;">
+    <table role="presentation" width="600" style="width:600px;table-layout:fixed;">
       <tr>
-        <td style="padding-right:6px;">
+        <td width="300">
           ${
             photos[0]?.url
-              ? `<img src="${photos[0].url}" width="294" alt="${photos[0].alt || ""}" style="display:block;width:100%;aspect-ratio:3/4;object-fit:cover;"/>`
+              ? `<img src="${photos[0].url}" width="300" style="display:block;width:100%;aspect-ratio:3/4;object-fit:cover;">`
               : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
           }
         </td>
-        <td style="padding-left:6px;">
+        <td width="300">
           ${
             photos[1]?.url
-              ? `<img src="${photos[1].url}" width="294" alt="${photos[1].alt || ""}" style="display:block;width:100%;aspect-ratio:3/4;object-fit:cover;"/>`
+              ? `<img src="${photos[1].url}" width="300" style="display:block;width:100%;aspect-ratio:3/4;object-fit:cover;">`
               : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
           }
         </td>
@@ -1024,15 +1013,15 @@ function generateGalleryDuoHTML(block: NewsletterBlock): string {
 function generateGallerySingleHTML(block: NewsletterBlock): string {
   const photo = block.content.photos?.[0];
 
-  return `<!-- Galerie single -->
+  return `
 <tr>
-  <td align="center" style="margin-top:2rem;margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;margin-bottom: 2rem;margin-top:2rem;">
+  <td align="center" style="padding:32px 0;">
+    <table role="presentation" width="600" style="width:600px;table-layout:fixed;">
       <tr>
         <td>
           ${
             photo?.url
-              ? `<img src="${photo.url}" width="600" alt="${photo.alt || ""}" style="display:block;width:100%;aspect-ratio:1/1;object-fit:cover;"/>`
+              ? `<img src="${photo.url}" width="600" style="display:block;width:100%;aspect-ratio:1/1;object-fit:cover;">`
               : `<div style="width:100%;padding-top:100%;background:#E5E5E5;"></div>`
           }
         </td>
