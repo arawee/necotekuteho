@@ -168,7 +168,7 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
         </div>
 
         {/* Products flex */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
           {products.map((product: Product, index: number) => (
             <div key={index} className="group relative" style={{ flex: 1 }}>
               {/* Remove button */}
