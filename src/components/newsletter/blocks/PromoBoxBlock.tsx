@@ -114,6 +114,10 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
     return brightness < 60; // Much lower threshold - only very dark colors get white text
   };
 
+  const leftBoxes = boxes.map((box, index) => ({ box, index })).filter((_, i) => i % 2 === 0);
+
+  const rightBoxes = boxes.map((box, index) => ({ box, index })).filter((_, i) => i % 2 === 1);
+
   const renderBox = (box: PromoBox, index: number) => (
     <div
       key={index}
@@ -186,6 +190,7 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
             </button>
           </div>
         ))}
+
         <button
           onClick={() => addFeature(index)}
           className="text-xs px-2 py-0.5 border border-dashed border-gray-400 hover:border-green-500 text-gray-400 hover:text-green-500 flex items-center gap-1"
@@ -194,6 +199,7 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
         </button>
       </div>
 
+      {/* Button */}
       <div className="space-y-2">
         <button
           className="text-sm border inline-flex items-center"
@@ -216,11 +222,11 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
       <div className="max-w-2xl mx-auto">
         <div className="flex flex-col sm:flex-row gap-3 items-start">
           <div className="flex-1 min-w-0 flex flex-col gap-3">
-            {leftBoxes.map((box, colIndex) => renderBox(box, colIndex * 2))}
+            {leftBoxes.map(({ box, index }) => renderBox(box, index))}
           </div>
 
           <div className="flex-1 min-w-0 flex flex-col gap-3">
-            {rightBoxes.map((box, colIndex) => renderBox(box, colIndex * 2 + 1))}
+            {rightBoxes.map(({ box, index }) => renderBox(box, index))}
           </div>
         </div>
 
