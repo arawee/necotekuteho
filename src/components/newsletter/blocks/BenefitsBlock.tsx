@@ -81,7 +81,7 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
   return (
     <div className="bg-white border border-border p-8">
       <div className="max-w-3xl mx-auto">
-        <div className="grid grid-cols-3 sm:grid-cols-1 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {benefits.map((benefit, index) => (
             <div key={index} className="group relative text-center">
               {/* Remove button */}
