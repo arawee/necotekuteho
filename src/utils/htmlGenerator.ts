@@ -153,22 +153,38 @@ function generateZichovecHeaderWithMenuHTML(block: NewsletterBlock): string {
   const menuHTML = menuItems
     .map(
       (item: any) =>
-        `<a href="${item.url}" style="color:#212121;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;text-decoration:none;padding:0 8px;display:inline-block;line-height:120%;">${item.text}</a>`,
+        `<a href="${item.url}" style="display:inline-block;color:#212121;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;text-decoration:none;padding:0 8px;white-space:nowrap;">${item.text}</a>`,
     )
     .join("");
 
   return `<!-- Záhlaví ZICHOVEC s menu -->
 <tr>
-  <td align="center" style="background-color:#00C322;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="width:600px;max-width:600px;">
+  <td align="center" style="background-color:#00C322;padding:0;margin:0;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;margin:0 auto;">
+      <!-- Ratio header (1440/416) -->
       <tr>
-        <td align="center" style="padding:0 38px 16px 38px;line-height:120%;">
-          ${ZICHOVEC_LOGO_SVG}
+        <td style="padding:0;margin:0;">
+          <div style="width:100%;max-width:600px;margin:0 auto;height:0;padding-top:28.8889%;position:relative;overflow:hidden;">
+            <div style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;">
+              <div style="width:87.2917%;max-width:523.75px;">
+                ${ZICHOVEC_LOGO_SVG}
+              </div>
+            </div>
+          </div>
         </td>
       </tr>
+
+      <!-- Menu row -->
       <tr>
-        <td align="center" style="padding:0 24px 16px 24px;">
-          ${menuHTML}
+        <td align="center" style="padding:0 0 16px 0;margin:0;">
+          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
+            <tr>
+              <!-- Use inner padding here (NOT outer) so it can't expand the header/table -->
+              <td align="center" style="padding:0 24px;line-height:120%;font-size:0;">
+                <div style="font-size:12px;line-height:120%;">${menuHTML}</div>
+              </td>
+            </tr>
+          </table>
         </td>
       </tr>
     </table>
