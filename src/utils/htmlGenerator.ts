@@ -1348,9 +1348,6 @@ function getNewsletterCSS(): string {
         box-sizing: border-box !important;
         padding: 0 0 1rem 0 !important;
       }
-      td.stack:last-child {
-        padding-bottom: 0 !important;
-      }
       /* Make images responsive */
       img {
         max-width: 100% !important;
