@@ -927,7 +927,7 @@ function generateGallerySingleHTML(block: NewsletterBlock): string {
   return `<!-- Galerie single -->
 <tr>
   <td align="center" style="margin-top:2rem;margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;padding-bottom: 2rem;margin-top:2rem;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;margin-bottom: 2rem;margin-top:2rem;">
       <tr>
         <td>
           ${
@@ -1053,7 +1053,7 @@ function generateBenefitsHTML(block: NewsletterBlock): string {
           }
 
           return `
-    <td valign="top" class="stack" style="padding:0 ${paddingRight} 0 ${paddingLeft};text-align:center;font-family:'JetBrains Mono',monospace;">
+    <td valign="top" class="stack" style="padding:0 ${paddingRight} 0 ${paddingLeft};text-align:center;font-family:'JetBrains Mono',monospace;margin-bottom: 2rem !important;">
       <div style="margin-bottom:16px;">
         <img src="${getBenefitIcon(b.icon, idx)}" width="48" height="48" alt="" style="display:inline-block;width:48px;height:48px;object-fit:contain;"/>
       </div>
@@ -1347,10 +1347,9 @@ function getNewsletterCSS(): string {
         width: 100% !important;
         box-sizing: border-box !important;
         padding: 0 0 16px 0 !important;
-        padding-bottom: 0rem;
       }
       td.stack:last-child {
-        padding-bottom: 0 !important;
+        padding-bottom: 1rem !important;
       }
       /* Make images responsive */
       img {
