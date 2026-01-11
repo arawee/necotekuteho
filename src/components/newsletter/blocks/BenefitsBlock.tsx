@@ -81,7 +81,7 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
   return (
     <div className="bg-white border border-border p-8">
       <div className="max-w-3xl mx-auto">
-        <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))" }}>
+        <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))" }}>
           {benefits.map((benefit, index) => (
             <div key={index} className="group relative text-center">
               {/* Remove button */}
