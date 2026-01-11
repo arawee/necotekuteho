@@ -419,7 +419,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
 
   const viewAllHTML = showViewAll
     ? `
-    <a href="${viewAllUrl}" style="color:#000000;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;">
+    <a href="${viewAllUrl}" style="color:#000000;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;white-space:nowrap;">
       <span style="text-decoration:none;">→ </span><span style="text-decoration:underline;">${viewAllText}</span>
     </a>
   `
@@ -507,7 +507,7 @@ function generateMistaHTML(block: NewsletterBlock): string {
 
   const viewAllHTML = showViewAll
     ? `
-    <a href="${viewAllUrl}" style="color:#000000;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;">
+    <a href="${viewAllUrl}" style="color:#000000;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;white-space:nowrap;">
       <span style="text-decoration:none;">→ </span><span style="text-decoration:underline;">${viewAllText}</span>
     </a>
   `
@@ -531,7 +531,7 @@ function generateMistaHTML(block: NewsletterBlock): string {
       </tr>
       <tr>
         <td>
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
+          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
             <tr>${placeCards}</tr>
           </table>
         </td>
@@ -624,7 +624,7 @@ function generateLocationsHTML(block: NewsletterBlock): string {
 
   const viewAllHTML = showViewAll
     ? `
-    <a href="${viewAllUrl}" style="color:#212121;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;">
+    <a href="${viewAllUrl}" style="color:#212121;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;white-space:nowrap;">
       <span style="text-decoration:none;">→ </span><span style="text-decoration:underline;">${viewAllText}</span>
     </a>
   `
@@ -648,7 +648,7 @@ function generateLocationsHTML(block: NewsletterBlock): string {
       </tr>
       <tr>
         <td>
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
+          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
             <tr>${locationCards}</tr>
           </table>
         </td>
@@ -711,7 +711,7 @@ function generateBlogPostsHTML(block: NewsletterBlock): string {
 
   const viewAllHTML = showViewAll
     ? `
-    <a href="${viewAllUrl}" style="color:#000000;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;">
+    <a href="${viewAllUrl}" style="color:#000000;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;white-space:nowrap;">
       <span style="text-decoration:none;">→ </span><span style="text-decoration:underline;">${viewAllText}</span>
     </a>
   `
@@ -735,7 +735,7 @@ function generateBlogPostsHTML(block: NewsletterBlock): string {
       </tr>
       <tr>
         <td>
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
+          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
             <tr>${postCards}</tr>
           </table>
         </td>
@@ -761,22 +761,23 @@ function generatePromoBoxHTML(block: NewsletterBlock): string {
     },
   ];
 
-  const boxCount = Math.min(boxes.length, 3);
+  // Max 4 boxes, max 2 per row
+  const allBoxes = boxes.slice(0, 4);
+  const row1Boxes = allBoxes.slice(0, 2);
+  const row2Boxes = allBoxes.slice(2, 4);
 
-  const boxCards = boxes
-    .slice(0, 3)
-    .map((box: any, idx: number) => {
-      const isDark = isVeryDarkBg(box.bgColor || "#00C322");
-      const textColor = isDark ? "#FFFFFF" : "#000000";
-      const valueColor = isDark ? "#CCC" : "#000000";
-      const borderColor = isDark ? "#FFFFFF" : "#000000";
+  const generateBoxCard = (box: any, idx: number, rowLength: number) => {
+    const isDark = isVeryDarkBg(box.bgColor || "#00C322");
+    const textColor = isDark ? "#FFFFFF" : "#000000";
+    const valueColor = isDark ? "#CCC" : "#000000";
+    const borderColor = isDark ? "#FFFFFF" : "#000000";
 
-      const paddingLeft = idx === 0 ? "0" : "6px";
-      const paddingRight = idx === boxCount - 1 ? "0" : "6px";
+    const paddingLeft = idx === 0 ? "0" : "6px";
+    const paddingRight = idx === rowLength - 1 ? "0" : "6px";
 
-      const featuresHTML = (box.features || [])
-        .map(
-          (f: any) => `
+    const featuresHTML = (box.features || [])
+      .map(
+        (f: any) => `
       <tr>
         <td style="padding:2px 0;font-family:'JetBrains Mono',monospace;font-size:12px;">
           <span style="color:${textColor};font-weight:700;">${f.label}</span>
@@ -785,10 +786,10 @@ function generatePromoBoxHTML(block: NewsletterBlock): string {
         </td>
       </tr>
     `,
-        )
-        .join("");
+      )
+      .join("");
 
-      return `
+    return `
     <td valign="top" class="stack" style="padding:0 ${paddingRight} 0 ${paddingLeft};">
       <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="background-color:${box.bgColor || "#00C322"};">
         <tr>
@@ -804,14 +805,31 @@ function generatePromoBoxHTML(block: NewsletterBlock): string {
         </tr>
       </table>
     </td>`;
-    })
-    .join("");
+  };
+
+  const row1HTML = row1Boxes.map((box: any, idx: number) => generateBoxCard(box, idx, row1Boxes.length)).join("");
+  const row2HTML = row2Boxes.map((box: any, idx: number) => generateBoxCard(box, idx, row2Boxes.length)).join("");
 
   return `<!-- Promo boxy -->
 <tr>
   <td align="center" style="padding:24px;margin-bottom:32px;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
-      <tr>${boxCards}</tr>
+      <tr>
+        <td>
+          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
+            <tr>${row1HTML}</tr>
+          </table>
+        </td>
+      </tr>
+      ${row2Boxes.length > 0 ? `
+      <tr>
+        <td style="padding-top:12px;">
+          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
+            <tr>${row2HTML}</tr>
+          </table>
+        </td>
+      </tr>
+      ` : ""}
     </table>
   </td>
 </tr>`;
@@ -842,7 +860,7 @@ function generateGalleryTrioHTML(block: NewsletterBlock): string {
       <!-- Two smaller images 3:4 with 12px gap -->
       <tr>
         <td>
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
+          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
             <tr>
               <td style="padding-right:6px;">
                 ${
@@ -877,7 +895,7 @@ function generateGalleryDuoHTML(block: NewsletterBlock): string {
   return `<!-- Galerie duo -->
 <tr>
   <td align="center" style="margin-top:2rem;margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;table-layout:fixed;">
       <tr>
         <td style="padding-right:6px;">
           ${
@@ -1076,7 +1094,7 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
 
   const viewAllHTML = showViewAll
     ? `
-    <a href="${viewAllUrl}" style="color:#000000;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;">
+    <a href="${viewAllUrl}" style="color:#000000;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;white-space:nowrap;">
       <span style="text-decoration:none;">→ </span><span style="text-decoration:underline;">${viewAllText}</span>
     </a>
   `
@@ -1100,7 +1118,7 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
       </tr>
       <tr>
         <td>
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
+          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
             <tr>${catCells}</tr>
           </table>
         </td>
@@ -1156,7 +1174,7 @@ function generatePoziceHTML(block: NewsletterBlock): string {
 
   const viewAllHTML = showViewAll
     ? `
-    <a href="${viewAllUrl}" style="color:#000000;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;">
+    <a href="${viewAllUrl}" style="color:#000000;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;white-space:nowrap;">
       <span style="text-decoration:none;">→ </span><span style="text-decoration:underline;">${viewAllText}</span>
     </a>
   `
@@ -1180,7 +1198,7 @@ function generatePoziceHTML(block: NewsletterBlock): string {
       </tr>
       <tr>
         <td>
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
+          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
             <tr>${positionCells}</tr>
           </table>
         </td>
