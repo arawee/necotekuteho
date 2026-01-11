@@ -1530,10 +1530,10 @@ function getNewsletterCSS(): string {
         height: auto !important;
       }
       #top-container {
-        padding-top: calc(28.8889% + 4rem);
+        padding-top: calc(28.8889% + 4rem) !important;
       }
       #top-logo {
-        padding-bottom: 2rem;
+        padding-bottom: 2rem !important;
       }
       /* Stack footer columns */
       .footer-col {
