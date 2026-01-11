@@ -117,14 +117,24 @@ ${blockHTML}
 </html>`;
 }
 
-function generateZichovecHeaderHTML(_: NewsletterBlock): string {
+function generateZichovecHeaderHTML(block: NewsletterBlock): string {
+  // Header aspect ratio: 1440 / 416  => height = width * 0.288888...
+  // Logo width ratio: 1257 / 1440 => 0.872916... (87.2917% of header width)
   return `<!-- Záhlaví ZICHOVEC -->
 <tr>
   <td align="center" style="background-color:#00C322;padding:0;margin:0;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" class="wrap" style="max-width:600px;width:100%;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;margin:0 auto;">
       <tr>
-        <td align="center" valign="middle" style="height:173px;padding:0 38px;">
-          ${ZICHOVEC_LOGO_SVG}
+        <td style="padding:0;margin:0;">
+          <!-- Ratio box (responsive height) -->
+          <div style="width:100%;max-width:600px;margin:0 auto;height:0;padding-top:28.8889%;position:relative;overflow:hidden;">
+            <!-- Content centered inside the ratio box -->
+            <div style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;">
+              <div style="width:87.2917%;max-width:523.75px;">
+                ${ZICHOVEC_LOGO_SVG}
+              </div>
+            </div>
+          </div>
         </td>
       </tr>
     </table>
