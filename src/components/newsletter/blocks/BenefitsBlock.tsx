@@ -159,86 +159,24 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
           </div>
         
           {/* Desktop: 3 + centered row */}
-          <div className={isDesktop}>
-            {/* Row 1 */}
-            <div className="grid grid-cols-3 gap-3">
-              {row1.map((benefit, index) => renderBenefit(benefit, index))}
-                <div key={index} className="group relative text-center">
+<div className={isDesktop}>
+  {/* Row 1 */}
+  <div className="grid grid-cols-3 gap-3">
+    {row1.map((benefit, index) => renderBenefit(benefit, index))}
+  </div>
 
-                  
-                  {/* Remove button */}
-                  <button
-                    onClick={() => removeBenefit(index)}
-                    className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 bg-white shadow hover:bg-red-50"
-                  >
-                    <Trash2 className="w-3 h-3 text-red-500" />
-                  </button>
-  
-                  {/* Icon */}
-                  <div
-                    className="flex justify-center cursor-pointer"
-                    style={{ marginBottom: "1rem" }}
-                    onClick={() => setEditingBenefit(index)}
-                  >
-                    {benefit.icon ? (
-                      <img
-                        src={benefit.icon}
-                        alt={benefit.title}
-                        style={{ width: "48px", height: "48px", objectFit: "contain" }}
-                      />
-                    ) : (
-                      <div
-                        className="border border-dashed border-gray-300 flex items-center justify-center text-2xl"
-                        style={{ width: "48px", height: "48px", color: "#00C322" }}
-                      >
-                        □
-                      </div>
-                    )}
-                  </div>
-  
-                  <h3
-                    className="cursor-pointer"
-                    onClick={() => setEditingBenefit(index)}
-                    style={{
-                      color: "#000000",
-                      fontSize: "16px",
-                      lineHeight: "120%",
-                      fontWeight: "bold",
-                      marginBottom: "12px",
-                    }}
-                  >
-                    {benefit.title}
-                  </h3>
-  
-                  <p
-                    className="cursor-pointer"
-                    onClick={() => setEditingBenefit(index)}
-                    style={{
-                      color: "#000000",
-                      fontSize: "12px",
-                      fontStyle: "normal",
-                      fontWeight: "normal",
-                      lineHeight: "120%",
-                    }}
-                  >
-                    {benefit.description}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-          {/* Row 2 */}
-          {row2.length > 0 && (
-            <div className="flex justify-center mt-3">
-              <div
-                className="grid gap-3"
-                style={{ gridTemplateColumns: `repeat(${row2.length}, minmax(140px, 1fr))` }}
-              >
-                {row2.map((benefit, i) => renderBenefit(benefit, i + 3))}
-              </div>
-            </div>
-          )}
-        </div>
+  {/* Row 2 */}
+  {row2.length > 0 && (
+    <div className="flex justify-center mt-3">
+      <div
+        className="grid gap-3"
+        style={{ gridTemplateColumns: `repeat(${row2.length}, minmax(140px, 1fr))` }}
+      >
+        {row2.map((benefit, i) => renderBenefit(benefit, i + 3))}
+      </div>
+    </div>
+  )}
+</div>
 
         {/* Add button - only show if less than 6 benefits */}
         {benefits.length < 6 && (
