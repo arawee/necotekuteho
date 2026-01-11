@@ -69,7 +69,7 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
 
   // Max 4 products
   const allProducts: Product[] = (block.content as any).products || defaultProducts;
-  const products: Product[] = allProducts.slice(0, 8);
+  const products: Product[] = allProducts.slice(0, MAX_PRODUCTS);
   const showViewAll = (block.content as any).showViewAll !== false;
   const viewAllText = (block.content as any).viewAllText || "zobrazit vše";
   const viewAllUrl = (block.content as any).viewAllUrl || "#";
@@ -81,7 +81,7 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
   };
 
   const addProduct = () => {
-    if (products.length >= 8) return;
+    if (products.length >= MAX_PRODUCTS) return;
     const newProduct: Product = {
       image: "",
       name: "Nový produkt",
@@ -168,7 +168,7 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
         </div>
 
         {/* Products flex */}
-        <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+        <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))" }}>
           {products.map((product: Product, index: number) => (
             <div key={index} className="group relative" style={{ flex: 1 }}>
               {/* Remove button */}
@@ -252,8 +252,8 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
           ))}
         </div>
 
-        {/* Add product button - only show if less than 4 products */}
-        {products.length < 4 && (
+        {/* Add product button - only show if less than 8 products */}
+        {products.length < MAX_PRODUCTS && (
           <div className="mt-4 flex justify-center">
             <button
               onClick={addProduct}
