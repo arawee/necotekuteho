@@ -63,19 +63,19 @@ export const BenefitsBlock = ({ block, onUpdate }: BenefitsBlockProps) => {
     if (benefits.length >= 6) return;
     const newIndex = benefits.length;
     const newBenefits = [
-      ...benefits,
+      benefits,
       {
         icon: defaultIcons[newIndex % defaultIcons.length] || "",
         title: "Nový benefit",
         description: "Popis benefitu",
       },
     ];
-    onUpdate({ ...block.content, benefits: newBenefits } as any);
+    onUpdate({ block.content, benefits: newBenefits } as any);
   };
 
   const removeBenefit = (index: number) => {
     const newBenefits = benefits.filter((_, i) => i !== index);
-    onUpdate({ ...block.content, benefits: newBenefits } as any);
+    onUpdate({ block.content, benefits: newBenefits } as any);
   };
 
   return (
