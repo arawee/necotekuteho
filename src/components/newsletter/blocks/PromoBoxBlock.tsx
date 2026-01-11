@@ -220,15 +220,19 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
   return (
     <div className="bg-white border border-border p-6">
       <div className="max-w-2xl mx-auto">
-        <div className="flex flex-col sm:flex-row gap-3 items-start">
-          <div className="flex-1 min-w-0 flex flex-col gap-3">
-            {leftBoxes.map(({ box, index }) => renderBox(box, index))}
-          </div>
+        {boxes.length === 1 ? (
+          <div className="w-full">{renderBox(boxes[0], 0)}</div>
+        ) : (
+          <div className="flex flex-col sm:flex-row gap-3 items-start">
+            <div className="flex-1 min-w-0 flex flex-col gap-3">
+              {leftBoxes.map(({ box, index }) => renderBox(box, index))}
+            </div>
 
-          <div className="flex-1 min-w-0 flex flex-col gap-3">
-            {rightBoxes.map(({ box, index }) => renderBox(box, index))}
+            <div className="flex-1 min-w-0 flex flex-col gap-3">
+              {rightBoxes.map(({ box, index }) => renderBox(box, index))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Add box button */}
         {boxes.length < MAX_PROMOS && (
