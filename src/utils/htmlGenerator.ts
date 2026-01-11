@@ -346,41 +346,28 @@ function generateProductListHTML(block: NewsletterBlock): string {
     }
   };
 
-  const productCount = Math.min(products.length, 4);
-  // Calculate width with gap consideration: total gap = (n-1) * 12px
-  const gapPx = 12;
-  const totalGapPercent = ((productCount - 1) * gapPx) / 6; // ~6px per 1% at 600px width
-  const colWidth = (100 - totalGapPercent) / productCount;
+  // Max 6 products, max 3 per row
+  const allProducts = products.slice(0, 6);
+  const row1 = allProducts.slice(0, 3);
+  const row2 = allProducts.slice(3, 6);
 
-  const productCards = products
-    .slice(0, 4)
-    .map((p: any, idx: number) => {
-      const tagsHTML = (p.tags || [])
-        .map(
-          (tag: any) => `
+  const generateProductCard = (p: any, idx: number, rowLength: number) => {
+    const tagsHTML = (p.tags || [])
+      .map(
+        (tag: any) => `
       <span style="display:inline-block;background-color:${getTagBgColor(tag.color)};color:#FFFFFF;font-size:10px;padding:2px 8px;margin-right:4px;margin-bottom:4px;">${tag.text}</span>
     `,
-        )
-        .join("");
+      )
+      .join("");
 
-      const priceHTML = p.salePrice
-        ? `<span style="color:#FF4C4C;font-weight:700;">${p.salePrice}</span> <span style="font-size:10px;color:#666;text-decoration:line-through;">${p.price}</span>`
-        : `<span style="color:#212121;font-weight:700;">${p.price}</span>`;
+    const priceHTML = p.salePrice
+      ? `<span style="color:#FF4C4C;font-weight:700;">${p.salePrice}</span> <span style="font-size:10px;color:#666;text-decoration:line-through;">${p.price}</span>`
+      : `<span style="color:#212121;font-weight:700;">${p.price}</span>`;
 
-      let paddingLeft = "4px";
-      let paddingRight = "4px";
+    const paddingLeft = idx === 0 ? "0" : "6px";
+    const paddingRight = idx === rowLength - 1 ? "0" : "6px";
 
-      if (idx === 0) {
-        paddingLeft = "0";
-        paddingRight = "8px";
-      }
-
-      if (idx === productCount - 1) {
-        paddingLeft = "8px";
-        paddingRight = "0";
-      }
-
-      return `
+    return `
     <td valign="top" class="stack" style="padding:0 ${paddingRight} 0 ${paddingLeft};">
       <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
         <tr>
@@ -414,8 +401,10 @@ function generateProductListHTML(block: NewsletterBlock): string {
         </tr>
       </table>
     </td>`;
-    })
-    .join("");
+  };
+
+  const row1HTML = row1.map((p: any, idx: number) => generateProductCard(p, idx, row1.length)).join("");
+  const row2HTML = row2.map((p: any, idx: number) => generateProductCard(p, idx, row2.length)).join("");
 
   const viewAllHTML = showViewAll
     ? `
@@ -444,10 +433,19 @@ function generateProductListHTML(block: NewsletterBlock): string {
       <tr>
         <td>
           <table style="width: 100%; table-layout:fixed;" role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
-            <tr>${productCards}</tr>
+            <tr>${row1HTML}</tr>
           </table>
         </td>
       </tr>
+      ${row2.length > 0 ? `
+      <tr>
+        <td style="padding-top:12px;">
+          <table style="width: 100%; table-layout:fixed;" role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
+            <tr>${row2HTML}</tr>
+          </table>
+        </td>
+      </tr>
+      ` : ""}
     </table>
   </td>
 </tr>`;
@@ -1018,31 +1016,51 @@ function generateBenefitsHTML(block: NewsletterBlock): string {
     },
   ];
 
-  const benefitCount = Math.min(benefits.length, 4);
+  // Max 6 benefits, max 3 per row
+  const allBenefits = benefits.slice(0, 6);
+  const row1 = allBenefits.slice(0, 3);
+  const row2 = allBenefits.slice(3, 6);
 
-  const benefitCells = benefits
-    .slice(0, 4)
-    .map((b: any, index: number) => {
-      const paddingLeft = index === 0 ? "0" : "6px";
-      const paddingRight = index === benefitCount - 1 ? "0" : "6px";
+  const generateBenefitCell = (b: any, index: number, rowLength: number, rowStartIdx: number) => {
+    const idxInRow = index;
+    const paddingLeft = idxInRow === 0 ? "0" : "6px";
+    const paddingRight = idxInRow === rowLength - 1 ? "0" : "6px";
+    const globalIdx = rowStartIdx + index;
 
-      return `
+    return `
     <td valign="top" class="stack" style="padding:0 ${paddingRight} 0 ${paddingLeft};text-align:center;font-family:'JetBrains Mono',monospace;">
       <div style="margin-bottom:1rem;">
-        <img src="${getBenefitIcon(b.icon, index)}" width="48" height="48" alt="${b.title}" style="display:inline-block;width:48px;height:48px;object-fit:contain;"/>
+        <img src="${getBenefitIcon(b.icon, globalIdx)}" width="48" height="48" alt="${b.title}" style="display:inline-block;width:48px;height:48px;object-fit:contain;"/>
       </div>
       <h4 style="margin:0 0 12px 0;font-size:16px;font-weight:700;color:#000000;line-height:120%;">${b.title}</h4>
       <p style="margin:0 auto;max-width:35ch;font-size:12px;font-weight:400;color:#000000;line-height:120%;">${b.description}</p>
     </td>
   `;
-    })
-    .join("");
+  };
+
+  const row1HTML = row1.map((b: any, idx: number) => generateBenefitCell(b, idx, row1.length, 0)).join("");
+  const row2HTML = row2.map((b: any, idx: number) => generateBenefitCell(b, idx, row2.length, 3)).join("");
 
   return `<!-- Benefity -->
 <tr>
   <td align="center" style="padding:32px 24px;margin-bottom:32px;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
-      <tr>${benefitCells}</tr>
+      <tr>
+        <td>
+          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
+            <tr>${row1HTML}</tr>
+          </table>
+        </td>
+      </tr>
+      ${row2.length > 0 ? `
+      <tr>
+        <td style="padding-top:16px;">
+          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
+            <tr>${row2HTML}</tr>
+          </table>
+        </td>
+      </tr>
+      ` : ""}
     </table>
   </td>
 </tr>`;
