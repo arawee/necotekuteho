@@ -1,17 +1,14 @@
-import { NewsletterBlock } from '@/types/newsletter';
-import { ImageUpload } from '@/components/ui/image-upload';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Trash2 } from 'lucide-react';
-import { CustomPlusIcon, CustomArrowIcon } from '@/components/icons/CustomIcons';
-import { useState } from 'react';
-import { Checkbox } from '@/components/ui/checkbox';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { NewsletterBlock } from "@/types/newsletter";
+import { ImageUpload } from "@/components/ui/image-upload";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
+import { CustomPlusIcon, CustomArrowIcon } from "@/components/icons/CustomIcons";
+import { useState } from "react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+
+const MAX_PLACES = 6;
 
 interface Place {
   image: string;
@@ -22,21 +19,22 @@ interface Place {
 
 interface MistaBlockProps {
   block: NewsletterBlock;
-  onUpdate: (content: NewsletterBlock['content']) => void;
+  onUpdate: (content: NewsletterBlock["content"]) => void;
 }
 
 export const MistaBlock = ({ block, onUpdate }: MistaBlockProps) => {
   const [editingPlace, setEditingPlace] = useState<number | null>(null);
 
   const defaultPlaces: Place[] = [
-    { image: '', name: 'Kolbenova 9', buttonText: '→', buttonUrl: '#' },
-    { image: '', name: 'Pizza Rosa', buttonText: '→', buttonUrl: '#' }
+    { image: "", name: "Kolbenova 9", buttonText: "→", buttonUrl: "#" },
+    { image: "", name: "Pizza Rosa", buttonText: "→", buttonUrl: "#" },
   ];
 
-  const places: Place[] = (block.content as any).places || defaultPlaces;
+  const savedPlaces: Place[] | undefined = (block.content as any).places;
+  const places: Place[] = savedPlaces ? savedPlaces.slice(0, MAX_PLACES) : defaultPlaces;
   const showViewAll = (block.content as any).showViewAll !== false;
-  const viewAllText = (block.content as any).viewAllText || 'zobrazit vše';
-  const viewAllUrl = (block.content as any).viewAllUrl || '#';
+  const viewAllText = (block.content as any).viewAllText || "zobrazit vše";
+  const viewAllUrl = (block.content as any).viewAllUrl || "#";
 
   const updatePlace = (index: number, field: keyof Place, value: string) => {
     const newPlaces = [...places];
@@ -45,8 +43,8 @@ export const MistaBlock = ({ block, onUpdate }: MistaBlockProps) => {
   };
 
   const addPlace = () => {
-    if (places.length >= 3) return;
-    const newPlaces = [...places, { image: '', name: 'Nové místo', buttonText: '→', buttonUrl: '#' }];
+    if (places.length >= MAX_PLACES) return;
+    const newPlaces = [...places, { image: "", name: "Nové místo", buttonText: "→", buttonUrl: "#" }];
     onUpdate({ ...block.content, places: newPlaces } as any);
   };
 
@@ -59,15 +57,15 @@ export const MistaBlock = ({ block, onUpdate }: MistaBlockProps) => {
     <div className="bg-white border border-border p-6">
       <div className="max-w-2xl mx-auto">
         {/* Header - title 20px bold */}
-        <div className="flex justify-between items-center" style={{ marginBottom: '1rem' }}>
-          <h2 
+        <div className="flex justify-between items-center" style={{ marginBottom: "1rem" }}>
+          <h2
             className="font-bold"
             contentEditable
             suppressContentEditableWarning
-            onBlur={(e) => onUpdate({ ...block.content, title: e.currentTarget.textContent || '' })}
-            style={{ color: '#212121', fontSize: '20px' }}
+            onBlur={(e) => onUpdate({ ...block.content, title: e.currentTarget.textContent || "" })}
+            style={{ color: "#212121", fontSize: "20px" }}
           >
-            {block.content.title || 'Kde nás ochutnáte?'}
+            {block.content.title || "Kde nás ochutnáte?"}
           </h2>
           <div className="flex items-center gap-4">
             <label className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -78,22 +76,22 @@ export const MistaBlock = ({ block, onUpdate }: MistaBlockProps) => {
               Zobrazit vše
             </label>
             {showViewAll && (
-              <span 
+              <span
                 className="text-sm cursor-pointer"
-                style={{ color: '#000000', textUnderlineOffset: '2px' }}
+                style={{ color: "#000000", textUnderlineOffset: "2px" }}
                 onClick={() => setEditingPlace(-1)}
               >
-                <span style={{ textDecoration: 'none' }}>→ </span>
-                <span style={{ textDecoration: 'underline' }}>{viewAllText}</span>
+                <span style={{ textDecoration: "none" }}>→ </span>
+                <span style={{ textDecoration: "underline" }}>{viewAllText}</span>
               </span>
             )}
           </div>
         </div>
 
         {/* Places grid - flex with gap 12px */}
-        <div style={{ display: 'flex', gap: '12px' }}>
-          {places.slice(0, 3).map((place, index) => (
-            <div key={index} className="group relative" style={{ flex: '1 1 0', minWidth: 0 }}>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {places.slice(0, MAX_PLACES).map((place, index) => (
+            <div key={index} className="group relative min-w-0">
               {/* Remove button */}
               <button
                 onClick={() => removePlace(index)}
@@ -106,7 +104,7 @@ export const MistaBlock = ({ block, onUpdate }: MistaBlockProps) => {
               <div className="relative mb-3 aspect-[3/4] overflow-hidden">
                 <ImageUpload
                   currentImage={place.image}
-                  onImageUploaded={(url) => updatePlace(index, 'image', url)}
+                  onImageUploaded={(url) => updatePlace(index, "image", url)}
                   aspectRatio="portrait"
                   placeholder="Nahrát foto"
                   className="w-full h-full"
@@ -115,23 +113,23 @@ export const MistaBlock = ({ block, onUpdate }: MistaBlockProps) => {
               </div>
 
               {/* Button and name row */}
-              <div className="flex items-center" style={{ gap: '0.75rem' }}>
-                <button 
+              <div className="flex items-center" style={{ gap: "0.75rem" }}>
+                <button
                   className="mista-circle-btn flex items-center justify-center flex-shrink-0"
-                  style={{ 
-                    width: '36px', 
-                    height: '36px', 
-                    backgroundColor: 'transparent',
-                    border: '1px solid #00C322'
+                  style={{
+                    width: "36px",
+                    height: "36px",
+                    backgroundColor: "transparent",
+                    border: "1px solid #00C322",
                   }}
                   onClick={() => setEditingPlace(index)}
                 >
                   <CustomArrowIcon color="#00C322" />
                 </button>
-                <h3 
+                <h3
                   className="truncate cursor-pointer"
                   onClick={() => setEditingPlace(index)}
-                  style={{ color: '#212121', fontSize: '16px', fontWeight: 700 }}
+                  style={{ color: "#212121", fontSize: "16px", fontWeight: 700 }}
                 >
                   {place.name}
                 </h3>
@@ -141,7 +139,7 @@ export const MistaBlock = ({ block, onUpdate }: MistaBlockProps) => {
         </div>
 
         {/* Add button */}
-        {places.length < 3 && (
+        {places.length < MAX_PLACES && (
           <div className="mt-4 flex justify-center">
             <button
               onClick={addPlace}
@@ -158,7 +156,7 @@ export const MistaBlock = ({ block, onUpdate }: MistaBlockProps) => {
       <Dialog open={editingPlace !== null} onOpenChange={(open) => !open && setEditingPlace(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{editingPlace === -1 ? 'Upravit "zobrazit vše"' : 'Upravit místo'}</DialogTitle>
+            <DialogTitle>{editingPlace === -1 ? 'Upravit "zobrazit vše"' : "Upravit místo"}</DialogTitle>
           </DialogHeader>
           {editingPlace === -1 ? (
             <div className="space-y-4">
@@ -177,23 +175,25 @@ export const MistaBlock = ({ block, onUpdate }: MistaBlockProps) => {
                 />
               </div>
             </div>
-          ) : editingPlace !== null && (
-            <div className="space-y-4">
-              <div>
-                <label className="text-sm font-medium">Název</label>
-                <Input
-                  value={places[editingPlace]?.name || ''}
-                  onChange={(e) => updatePlace(editingPlace, 'name', e.target.value)}
-                />
+          ) : (
+            editingPlace !== null && (
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium">Název</label>
+                  <Input
+                    value={places[editingPlace]?.name || ""}
+                    onChange={(e) => updatePlace(editingPlace, "name", e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium">URL tlačítka</label>
+                  <Input
+                    value={places[editingPlace]?.buttonUrl || ""}
+                    onChange={(e) => updatePlace(editingPlace, "buttonUrl", e.target.value)}
+                  />
+                </div>
               </div>
-              <div>
-                <label className="text-sm font-medium">URL tlačítka</label>
-                <Input
-                  value={places[editingPlace]?.buttonUrl || ''}
-                  onChange={(e) => updatePlace(editingPlace, 'buttonUrl', e.target.value)}
-                />
-              </div>
-            </div>
+            )
           )}
         </DialogContent>
       </Dialog>
