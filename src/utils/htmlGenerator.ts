@@ -334,7 +334,9 @@ function generateProductListHTML(block: NewsletterBlock): string {
   const COLS = 3;
   const MAX = 6;
   const TABLE_WIDTH = 600;
-  const GUTTER = 6; // left/right padding per cell => 12px gap between cells
+  const GUTTER = 6;
+  const COL_PCT = 100 / COLS;
+  const COL_INNER = Math.floor((TABLE_WIDTH - COLS * GUTTER * 2) / COLS);
 
   const items = products.slice(0, MAX);
   const row1 = items.slice(0, COLS);
@@ -343,24 +345,19 @@ function generateProductListHTML(block: NewsletterBlock): string {
   const tagBg = (c: string) => (c === "red" ? "#FF4C4C" : c === "green" ? "#00C322" : "#161616");
 
   const renderCell = (p: any, i: number, n: number) => {
-    const colPct = 100 / n;
-
-    // Total horizontal gaps between columns = (n-1) * 12
-    const totalGaps = (n - 1) * (GUTTER * 2);
-    const innerW = Math.floor((TABLE_WIDTH - totalGaps) / n);
-
     const padL = i === 0 ? "0" : `${GUTTER}px`;
     const padR = i === n - 1 ? "0" : `${GUTTER}px`;
 
     return `
-<td valign="top" width="${colPct}%" style="width:${colPct}%;padding:0 ${padR} 0 ${padL};">
+<td valign="top" class="stack" width="${COL_PCT}%"
+    style="width:${COL_PCT}%;padding:0 ${padR} 0 ${padL};">
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="table-layout:fixed;">
     <tr>
       <td>
         ${
           p.image
-            ? `<img src="${escapeAttr(p.image)}" width="${innerW}" alt="${escapeAttr(p.name || "")}"
-                 style="display:block;width:100%;max-width:${innerW}px;height:auto;aspect-ratio:3/4;object-fit:cover;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;" />`
+            ? `<img src="${escapeAttr(p.image)}" width="${COL_INNER}"
+                 style="display:block;width:100%;max-width:${COL_INNER}px;aspect-ratio:3/4;object-fit:cover;">`
             : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
         }
       </td>
@@ -379,19 +376,19 @@ function generateProductListHTML(block: NewsletterBlock): string {
             .join("")}
         </div>
 
-        <h3 style="margin:0 0 4px 0;font-size:16px;font-weight:700;">${p.name || ""}</h3>
+        <h3 style="margin:0 0 4px 0;font-size:16px;font-weight:700;">${p.name}</h3>
 
         <table width="100%" cellspacing="0" cellpadding="0">
           <tr>
-            <td style="font-size:10px;"><strong>Alk. →</strong> ${p.alcohol ?? ""}%</td>
-            <td align="right" style="font-size:10px;width:72px;white-space:nowrap;">${p.volume ?? ""}</td>
+            <td style="font-size:10px;"><strong>Alk. →</strong> ${p.alcohol}%</td>
+            <td align="right" style="font-size:10px;width:72px;white-space:nowrap;">${p.volume}</td>
           </tr>
         </table>
 
         <table width="100%" cellspacing="0" cellpadding="0">
           <tr>
             <td style="font-weight:700;">
-              ${p.salePrice ? `<span style="color:#FF4C4C">${p.salePrice}</span>` : (p.price ?? "")}
+              ${p.salePrice ? `<span style="color:#FF4C4C">${p.salePrice}</span>` : p.price}
             </td>
             <td align="right">
               <a href="${escapeAttr(p.url || "#")}"
@@ -407,96 +404,22 @@ function generateProductListHTML(block: NewsletterBlock): string {
 </td>`;
   };
 
-  // Desktop: row1 stretches to n columns; row2 is forced to 3 columns (and padded if missing)
-  const renderRow = (row: any[], forceCols?: number) => {
-    if (!row.length) return "";
-    const n = forceCols ?? row.length;
-    const colPct = 100 / n;
-    const missing = forceCols ? Math.max(0, n - row.length) : 0;
-
+  const renderRow = (row: any[]) => {
+    const missing = COLS - row.length;
     return `
-<table role="presentation" width="${TABLE_WIDTH}" class="wrap"
-       style="width:100%;max-width:${TABLE_WIDTH}px;table-layout:fixed;">
+<table role="presentation" width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;table-layout:fixed;">
   <tr>
-    ${row.map((p, i) => renderCell(p, i, n)).join("")}
-    ${
-      missing
-        ? Array.from({ length: missing })
-            .map(() => `<td width="${colPct}%" style="width:${colPct}%;font-size:0;line-height:0;">&nbsp;</td>`)
-            .join("")
-        : ""
-    }
+    ${row.map((p, i) => renderCell(p, i, row.length)).join("")}
+    ${Array.from({ length: missing })
+      .map(() => `<td width="${COL_PCT}%" style="width:${COL_PCT}%;font-size:0;">&nbsp;</td>`)
+      .join("")}
   </tr>
 </table>`;
   };
 
-  // Mobile: 1-column cards (so images always appear)
-  const mobileBlocks = items
-    .map(
-      (p: any, idx: number) => `
-      ${idx ? `<div style="height:12px;line-height:12px;font-size:0;">&nbsp;</div>` : ""}
-      <table role="presentation" width="600" class="wrap" style="width:100%;max-width:600px;table-layout:fixed;">
-        <tr>
-          <td style="padding:0;">
-            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="table-layout:fixed;">
-              <tr>
-                <td>
-                  ${
-                    p.image
-                      ? `<img src="${escapeAttr(p.image)}" width="600" alt="${escapeAttr(p.name || "")}"
-                             style="display:block;width:100%;max-width:600px;height:auto;aspect-ratio:3/4;object-fit:cover;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;" />`
-                      : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
-                  }
-                </td>
-              </tr>
-              <tr>
-                <td style="font-family:'JetBrains Mono',monospace;padding-top:8px;">
-                  <div style="margin-bottom:8px;">
-                    ${(p.tags || [])
-                      .map(
-                        (t: any) =>
-                          `<span style="display:inline-block;background:${tagBg(
-                            t.color,
-                          )};color:#fff;font-size:10px;padding:2px 8px;margin-right:4px;margin-bottom:4px;">${t.text}</span>`,
-                      )
-                      .join("")}
-                  </div>
-
-                  <h3 style="margin:0 0 4px 0;font-size:16px;font-weight:700;">${p.name || ""}</h3>
-
-                  <table width="100%" cellspacing="0" cellpadding="0">
-                    <tr>
-                      <td style="font-size:10px;"><strong>Alk. →</strong> ${p.alcohol ?? ""}%</td>
-                      <td align="right" style="font-size:10px;width:72px;white-space:nowrap;">${p.volume ?? ""}</td>
-                    </tr>
-                  </table>
-
-                  <table width="100%" cellspacing="0" cellpadding="0">
-                    <tr>
-                      <td style="font-weight:700;">
-                        ${p.salePrice ? `<span style="color:#FF4C4C">${p.salePrice}</span>` : (p.price ?? "")}
-                      </td>
-                      <td align="right">
-                        <a href="${escapeAttr(p.url || "#")}"
-                           style="display:inline-block;width:36px;height:36px;background:#00C322;border-radius:50%;line-height:36px;text-align:center;">
-                          ${PLUS_ICON_SVG("#000")}
-                        </a>
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
-    `,
-    )
-    .join("");
-
   return `
 <tr>
-  <td align="center" style="padding:24px;">
+  <td align="center" style="padding:24px 32px;">
     <table role="presentation" width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;">
       <tr>
         <td style="padding-bottom:16px;">
@@ -506,7 +429,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
               <td align="right">
                 ${
                   showViewAll
-                    ? `<a href="${escapeAttr(viewAllUrl)}" style="font-size:14px;text-decoration:underline;">${viewAllText}</a>`
+                    ? `<a href="${viewAllUrl}" style="font-size:14px;text-decoration:underline;">${viewAllText}</a>`
                     : ""
                 }
               </td>
@@ -515,12 +438,8 @@ function generateProductListHTML(block: NewsletterBlock): string {
         </td>
       </tr>
 
-      <!-- Desktop -->
-      <tr class="hide-on-mobile"><td>${renderRow(row1)}</td></tr>
-      ${row2.length ? `<tr class="hide-on-mobile"><td style="padding-top:12px;">${renderRow(row2, 3)}</td></tr>` : ""}
-
-      <!-- Mobile -->
-      <tr class="show-on-mobile"><td>${mobileBlocks}</td></tr>
+      <tr><td>${renderRow(row1)}</td></tr>
+      ${row2.length ? `<tr class="hide-on-mobile"><td style="padding-top:12px;">${renderRow(row2)}</td></tr>` : ""}
     </table>
   </td>
 </tr>`;
@@ -766,7 +685,7 @@ function generateMistaHTML(block: NewsletterBlock): string {
 
   return `<!-- Místa -->
 <tr>
-  <td align="center" style="padding:16px;margin-bottom:32px;">
+  <td align="center" style="padding:16px 32px;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td style="padding:0px;">
@@ -1114,7 +1033,7 @@ function generatePromoBoxHTML(block: NewsletterBlock): string {
   if (all.length === 1) {
     return `<!-- Promo boxy -->
 <tr>
-  <td align="center" style="padding:16px;margin-bottom:32px;">
+  <td align="center" style="padding:16px 32px;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td>
@@ -1333,7 +1252,7 @@ function generateArticleTextHTML(block: NewsletterBlock): string {
 
   return `<!-- Článek -->
   <tr>
-    <td align="center" style="padding:24px;margin-bottom:32px;padding-top:2rem !important;">
+    <td align="center" style="padding:24px;padding-bottom:32px !important;padding-top:2rem !important;">
       <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
         <tr>
           <td style="padding:0 0;font-family:'JetBrains Mono',monospace;">
@@ -1410,7 +1329,7 @@ function generateBenefitsHTML(block: NewsletterBlock): string {
   return `<!-- Benefity -->
 <tr>
   <!-- IMPORTANT: no horizontal padding here so 3x200 never compresses -->
-  <td align="center" style="padding:32px 16px 16px 16px;">
+  <td align="center" style="padding:32px 16px 0px 16px;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0"
            width="600" class="wrap" style="max-width:600px;width:100%;table-layout:fixed;">
       ${renderRow(row1, 0)}
