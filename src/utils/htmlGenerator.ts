@@ -405,38 +405,16 @@ function generateProductListHTML(block: NewsletterBlock): string {
   };
 
   const renderRow = (row: any[]) => {
-    const n = row.length;
-    const colPct = 100 / n;
-    const gapTotal = (n - 1) * 12;
-    const inner = Math.floor((TABLE_WIDTH - gapTotal) / n);
-
+    const missing = COLS - row.length;
     return `
-    <table role="presentation" width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;table-layout:fixed;">
-      <tr>
-        ${row
-          .map((p, i) => {
-            const padL = i === 0 ? 0 : 6;
-            const padR = i === n - 1 ? 0 : 6;
-            return `
-    <td valign="top" width="${colPct}%" style="width:${colPct}%;padding:0 ${padR}px 0 ${padL}px;">
-      <table width="100%" cellspacing="0" cellpadding="0">
-        <tr>
-          <td>
-            ${
-              p.image
-                ? `<img src="${escapeAttr(p.image)}"
-                     style="display:block;width:100%;max-width:${inner}px;aspect-ratio:3/4;object-fit:cover;">`
-                : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
-            }
-          </td>
-        </tr>
-        <!-- rest of your card stays identical -->
-      </table>
-    </td>`;
-          })
-          .join("")}
-      </tr>
-    </table>`;
+<table role="presentation" width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;table-layout:fixed;">
+  <tr>
+    ${row.map((p, i) => renderCell(p, i, row.length)).join("")}
+    ${Array.from({ length: missing })
+      .map(() => `<td width="${COL_PCT}%" style="width:${COL_PCT}%;font-size:0;">&nbsp;</td>`)
+      .join("")}
+  </tr>
+</table>`;
   };
 
   return `
@@ -460,8 +438,9 @@ function generateProductListHTML(block: NewsletterBlock): string {
         </td>
       </tr>
 
-    <tr><td>${renderRow(row1)}</td></tr>
-    <tr class="hide-on-mobile"><td style="padding-top:12px;">${renderRow(row2)}</td></tr>    </table>
+      <tr><td>${renderRow(row1)}</td></tr>
+      ${row2.length ? `<tr class="hide-on-mobile"><td style="padding-top:12px;">${renderRow(row2)}</td></tr>` : ""}
+    </table>
   </td>
 </tr>`;
 }
@@ -674,39 +653,26 @@ function generateMistaHTML(block: NewsletterBlock): string {
   };
 
   // Left aligned row, no spacer centering; fills missing cells on the right
-  const renderRowLeft = (row: any[]) => {
-    const n = row.length;
-    const colPct = 100 / n;
-    const gapTotal = (n - 1) * 12;
-    const inner = Math.floor((600 - gapTotal) / n);
+  const renderRowLeft = (rowItems: any[]) => {
+    const n = rowItems.length;
+    const missing = COLS - n;
+    const emptyTD = `<td width="${colPct}%" style="width:${colPct}%;font-size:0;line-height:0;">&nbsp;</td>`;
 
     return `
-  <table role="presentation" width="600" class="wrap" style="width:100%;max-width:600px;table-layout:fixed;">
-    <tr>
-      ${row
-        .map((p, i) => {
-          const padL = i === 0 ? 0 : 6;
-          const padR = i === n - 1 ? 0 : 6;
-          return `
-  <td valign="top" width="${colPct}%" style="width:${colPct}%;padding:0 ${padR}px 0 ${padL}px;">
-    <table width="100%" cellspacing="0" cellpadding="0">
-      <tr>
-        <td>
-          ${
-            p.image
-              ? `<img src="${escapeAttr(p.image)}"
-                   style="display:block;width:100%;max-width:${inner}px;aspect-ratio:3/4;object-fit:cover;">`
-              : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
-          }
-        </td>
-      </tr>
-      <!-- your text + button remains unchanged -->
-    </table>
-  </td>`;
-        })
-        .join("")}
-    </tr>
-  </table>`;
+<table role="presentation" border="0" cellspacing="0" cellpadding="0"
+       width="600" class="wrap" style="width:100%;max-width:600px;table-layout:fixed;">
+  <tr>
+    ${rowItems.map((p, i) => renderPlaceCell(p, i === 0, i === n - 1)).join("")}
+    ${
+      missing > 0
+        ? Array.from({ length: missing })
+            .map(() => emptyTD)
+            .join("")
+        : ""
+    }
+  </tr>
+</table>
+`;
   };
 
   const viewAllHTML = showViewAll
@@ -1496,10 +1462,10 @@ function generateTextTwoColumnsHTML(block: NewsletterBlock): string {
   <td align="center" style="padding:24px;margin-bottom:32px;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
       <tr>
-        <td valign="top" width="100" style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:900;color:#212121;">
+        <td valign="top" width="100" style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:900 !important;color:#212121;">
           ${leftColumn}
         </td>
-        <td valign="top" style="padding-left:32px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;line-height:150%;color:#212121;">
+        <td valign="top" style="padding-left:32px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500 !important;line-height:150%;color:#212121;">
           ${rightColumn}
         </td>
       </tr>
