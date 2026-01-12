@@ -364,11 +364,11 @@ function generateProductListHTML(block: NewsletterBlock): string {
             : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
         }
       </td>
-      <sDweWER w
+    </tr>
 
     <tr>
       <td style="font-family:'JetBrains Mono',monospace;padding-top:0px;">
-        <div style="margin-bottom:8px;">
+        <div style="margin-bottom:8px; margin-top:-5px;">
           ${(p.tags || [])
             .map(
               (t: any) =>
