@@ -512,7 +512,15 @@ function generateProductListHTML(block: NewsletterBlock): string {
       </tr>
 
       <tr><td align="left">${renderRowLeft(row1)}</td></tr>
-      ${row2.length ? `<tr><td align="left" style="padding-top:12px;">${renderRowLeft(row2)}</td></tr>` : ""}
+        ${
+          row2.length
+            ? `<tr class="hide-on-mobile">
+                 <td align="left" style="padding-top:12px;">
+                   ${renderRowLeft(row2)}
+                 </td>
+               </tr>`
+            : ""
+        }    
     </table>
   </td>
 </tr>`;
@@ -629,7 +637,14 @@ function generateMistaHTML(block: NewsletterBlock): string {
           <div style="height:16px;line-height:16px;font-size:0;">&nbsp;</div>
 
           ${renderRowLeft(row1)}
-          ${row2.length ? `<div style="height:12px;line-height:12px;font-size:0;">&nbsp;</div>${renderRowLeft(row2)}` : ""}
+          ${
+            row2.length
+              ? `<div class="hide-on-mobile">
+                   <div style="height:12px;line-height:12px;font-size:0;">&nbsp;</div>
+                   ${renderRowLeft(row2)}
+                 </div>`
+              : ""
+          }
         </td>
       </tr>
     </table>
@@ -1474,6 +1489,13 @@ function getNewsletterCSS(): string {
     
     /* Responsive - Mobile */
     @media only screen and (max-width: 620px) {
+          /* Hide things only on mobile */
+      .hide-on-mobile {
+        display: none !important;
+        max-height: 0 !important;
+        overflow: hidden !important;
+        mso-hide: all !important; /* Outlook */
+      }
       body, table, td {
         width: 100% !important;
         min-width: 100% !important;
