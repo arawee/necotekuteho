@@ -1,5 +1,12 @@
 import { NewsletterBlock } from "@/types/newsletter";
 
+const escapeAttr = (v: any) =>
+  String(v ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+
 // SVG Icons for email HTML
 const ARROW_ICON_SVG = (color: string = "#00C322") => `
 <svg width="8" height="8" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;">
@@ -411,7 +418,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
         ${
           p.image
             ? // IMPORTANT: numeric width attr prevents “row 2 image missing” in some clients
-              `<img src="${p.image}" width="${colInnerWidth}" alt="${p.name}"
+              `<img src="${escapeAttr(p.image)}" width="${colInnerWidth}" alt="${escapeAttr(p.name)}"
                     style="display:block;width:100%;max-width:${colInnerWidth}px;height:auto;aspect-ratio:3/4;object-fit:cover;" />`
             : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
         }
@@ -439,7 +446,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
           <tr>
             <td style="font-family:'JetBrains Mono',monospace;">${priceHTML}</td>
             <td align="right">
-              <a href="${p.url || "#"}"
+              <a href="${escapeAttr(p.url || "#")}"
                  style="display:inline-block;width:36px;height:36px;background-color:#00C322;border-radius:50%;text-align:center;line-height:36px;text-decoration:none;">
                 ${PLUS_ICON_SVG("#000000")}
               </a>
@@ -544,7 +551,7 @@ function generateMistaHTML(block: NewsletterBlock): string {
       <td>
         ${
           place.image
-            ? `<img src="${place.image}" width="${colWidth - GUTTER * 2}" alt="${place.name}"
+            ? `<img src="${escapeAttr(place.image)}" width="${colWidth - GUTTER * 2}" alt="${escapeAttr(place.name)}"
                     style="display:block;width:100%;max-width:${colWidth - GUTTER * 2}px;height:auto;aspect-ratio:3/4;object-fit:cover;margin-bottom:12px;" />`
             : `<div style="width:100%;padding-top:133%;background:#E5E5E5;margin-bottom:12px;"></div>`
         }
@@ -556,7 +563,7 @@ function generateMistaHTML(block: NewsletterBlock): string {
         <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
           <tr>
             <td style="padding-right:12px;width:60px;">
-              <a href="${place.buttonUrl || "#"}"
+              <a href="${escapeAttr(place.buttonUrl || "#")}"
                  style="display:inline-block;width:36px;height:36px;border:1px solid #00C322;border-radius:50%;text-align:center;line-height:36px;text-decoration:none;">
                 ${ARROW_ICON_SVG("#00C322")}
               </a>
