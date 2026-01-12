@@ -1071,53 +1071,59 @@ function generateArticleTextHTML(block: NewsletterBlock): string {
 
   const metadataHTML = hasAnyMeta
     ? `
-    <tr>
-      <td style="padding-top:32px;">
-        <table role="presentation" border="0" cellspacing="0" cellpadding="0" style="display:inline-block;">
-          <tr>
-            <td style="padding:16px;background-color:#F4F4F4;font-family:'JetBrains Mono',monospace;font-size:14px;">
-              ${hasDate ? `<div style="margin-bottom:4px;"><span style="font-weight:500;">Datum →</span> <span style="color:#666;">${date}</span></div>` : ""}
-              ${hasAuthor ? `<div style="margin-bottom:4px;"><span style="font-weight:500;">Autor →</span> <span style="color:#666;">${author}</span></div>` : ""}
-              ${
-                hasTags
-                  ? `<div style="margin-bottom:4px;"><span style="font-weight:500;">Tag →</span> <span style="color:#666;text-decoration:underline;">${tags
-                      .filter((t: any) => t.text && t.text.trim() !== "")
-                      .map(
-                        (t: any) =>
-                          `<a href="${t.url || "#"}" style="color:#666;text-decoration:underline;">${t.text}</a>`,
-                      )
-                      .join(", ")}</span></div>`
-                  : ""
-              }
-              ${hasShares ? `<div><span style="font-weight:500;">Sdílet →</span> <span style="color:#666;text-decoration:underline;">${validShareLinks.map((s: any) => `<a href="${s.url}" style="color:#666;text-decoration:underline;">${s.text}</a>`).join(", ")}</span></div>` : ""}
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
+  <tr>
+    <td style="padding:32px 24px 0 24px;">
+      <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+        <tr>
+          <td align="left" style="background-color:#F4F4F4;padding:16px;font-family:'JetBrains Mono',monospace;font-size:14px;color:#212121;">
+            ${hasDate ? `<div style="margin-bottom:4px;"><span style="font-weight:500;">Datum →</span> <span style="color:#666;">${date}</span></div>` : ""}
+            ${hasAuthor ? `<div style="margin-bottom:4px;"><span style="font-weight:500;">Autor →</span> <span style="color:#666;">${author}</span></div>` : ""}
+            ${
+              hasTags
+                ? `<div style="margin-bottom:4px;"><span style="font-weight:500;">Tag →</span> <span style="color:#666;">${tags
+                    .filter((t: any) => t.text && t.text.trim() !== "")
+                    .map(
+                      (t: any) =>
+                        `<a href="${t.url || "#"}" style="color:#666;text-decoration:underline;">${t.text}</a>`,
+                    )
+                    .join(", ")}</span></div>`
+                : ""
+            }
+            ${
+              hasShares
+                ? `<div><span style="font-weight:500;">Sdílet →</span> <span style="color:#666;">${validShareLinks
+                    .map((s: any) => `<a href="${s.url}" style="color:#666;text-decoration:underline;">${s.text}</a>`)
+                    .join(", ")}</span></div>`
+                : ""
+            }
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
   `
     : "";
 
   return `<!-- Článek -->
-<tr>
-  <td align="center" style="padding:24px;margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
-      <tr>
-        <td style="font-family:'JetBrains Mono',monospace;">
-          <h1 style="margin:0 0 24px 0;font-size:32px;font-weight:700;line-height:1.2;color:#212121;">
-            ${content.title || "OPA: Jemná evoluce moderních ale"}
-          </h1>
-        </td>
-      </tr>
-      <tr>
-        <td style="font-family:'JetBrains Mono',monospace;font-size:14px;line-height:120%;color:#212121;">
-          ${content.text || "OPA, tedy Oat Pale Ale, představuje moderní variaci na klasické světlé styly, která si díky své hladké textury a vysoké přístupnosti získává stále větší pozornost mezi pivovary i konzumenty."}
-        </td>
-      </tr>
-      ${metadataHTML}
-    </table>
-  </td>
-</tr>`;
+  <tr>
+    <td align="center" style="padding:24px 0;margin-bottom:32px;">
+      <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
+        <tr>
+          <td style="padding:0 24px;font-family:'JetBrains Mono',monospace;">
+            <h1 style="margin:0 0 24px 0;font-size:32px;font-weight:700;line-height:1.2;color:#212121;">
+              ${content.title || "OPA: Jemná evoluce moderních ale"}
+            </h1>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:0 24px;font-family:'JetBrains Mono',monospace;font-size:14px;line-height:120%;color:#212121;">
+            ${content.text || "OPA, tedy Oat Pale Ale, představuje moderní variaci na klasické světlé styly, která si díky své hladké textury a vysoké přístupnosti získává stále větší pozornost mezi pivovary i konzumenty."}
+          </td>
+        </tr>
+        ${metadataHTML}
+      </table>
+    </td>
+  </tr>`;
 }
 
 function generateBenefitsHTML(block: NewsletterBlock): string {
