@@ -372,30 +372,27 @@ function generateProductListHTML(block: NewsletterBlock): string {
     }
   };
 
-  // ✅ 3 columns, up to 6 products (2 rows)
   const COLS = 3;
   const MAX = 6;
-  const colPct = 100 / COLS; // 33.3333...
-
   const tableWidth = 600;
-  const GUTTER = 6; // matches td padding left/right
+  const GUTTER = 6;
+  const colPct = 100 / COLS;
 
-  // Width of the *content box* inside the <td>
-  // Total cell width becomes: colInnerWidth + (GUTTER*2)
-  // 3 * (colInnerWidth + 12) = 600  => colInnerWidth = 188
-  const colInnerWidth = Math.floor((tableWidth - COLS * (GUTTER * 2)) / COLS); // 188
-  const cellTotalWidth = colInnerWidth + GUTTER * 2; // 200
+  // 3 * (colInnerWidth + 12) = 600 => 188
+  const colInnerWidth = Math.floor((tableWidth - COLS * (GUTTER * 2)) / COLS);
 
   const items = products.slice(0, MAX);
 
   const renderProductCell = (p: any, isFirst: boolean, isLast: boolean) => {
-    const padLeft = isFirst ? "0" : "6px";
-    const padRight = isLast ? "0" : "6px";
+    const padLeft = isFirst ? "0" : `${GUTTER}px`;
+    const padRight = isLast ? "0" : `${GUTTER}px`;
 
     const tagsHTML = (p.tags || [])
       .map(
         (tag: any) => `
-          <span style="display:inline-block;background-color:${getTagBgColor(tag.color)};color:#FFFFFF;font-size:10px;padding:2px 8px;margin-right:4px;margin-bottom:4px;">
+          <span style="display:inline-block;background-color:${getTagBgColor(
+            tag.color,
+          )};color:#FFFFFF;font-size:10px;padding:2px 8px;margin-right:4px;margin-bottom:4px;">
             ${tag.text}
           </span>
         `,
@@ -407,80 +404,76 @@ function generateProductListHTML(block: NewsletterBlock): string {
       : `<span style="color:#212121;font-weight:700;">${p.price}</span>`;
 
     return `
-    <td valign="top"
-        class="stack"
-        width="${colPct}%"
-        style="width:${colPct}%;padding:0 ${padRight} 0 ${padLeft};">
-      <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
+<td valign="top" class="stack" width="${colPct}%" style="width:${colPct}%;padding:0 ${padRight} 0 ${padLeft};">
+  <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
+    <tr>
+      <td style="background-color:#F5F5F5;">
+        ${
+          p.image
+            ? // IMPORTANT: numeric width attr prevents “row 2 image missing” in some clients
+              `<img src="${p.image}" width="${colInnerWidth}" alt="${p.name}"
+                    style="display:block;width:100%;max-width:${colInnerWidth}px;height:auto;aspect-ratio:3/4;object-fit:cover;" />`
+            : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
+        }
+      </td>
+    </tr>
+
+    <tr>
+      <td style="padding-top:0;font-family:'JetBrains Mono',monospace;">
+        <div style="margin-top:-4px;margin-bottom:8px;">${tagsHTML}</div>
+
+        <h3 style="margin:0 0 4px 0;font-size:16px;font-weight:700;color:#212121;line-height:150%;">${p.name}</h3>
+
+        <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;margin-bottom:8px;">
           <tr>
-            <td style="background-color:#F5F5F5;">
-              ${
-                p.image
-                  ? `<img src="${p.image}" width="188" alt="${p.name}" style="display:block;width:100%;max-width:188px;height:auto;aspect-ratio:3/4;object-fit:cover;"/>`
-                  : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
-              }
+            <td style="font-size:10px;color:#000000;font-family:'JetBrains Mono',monospace;">
+              <strong>Alk. →</strong> ${p.alcohol}% obj.
+            </td>
+            <td align="right" style="font-size:10px;color:#000000;font-family:'JetBrains Mono',monospace;white-space:nowrap;width:68px;">
+              ${p.volume}
             </td>
           </tr>
+        </table>
 
+        <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
           <tr>
-            <td style="padding-top:0;font-family:'JetBrains Mono',monospace;">
-              <div style="margin-top:-4px;margin-bottom:8px;">${tagsHTML}</div>
-
-              <h3 style="margin:0 0 4px 0;font-size:16px;font-weight:700;color:#212121;line-height:150%;">${p.name}</h3>
-
-              <!-- ✅ Use a table instead of float for consistent spacing -->
-              <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;margin-bottom:8px;">
-                <tr>
-                  <td style="font-size:10px;color:#000000;font-family:'JetBrains Mono',monospace;">
-                    <strong>Alk. →</strong> ${p.alcohol}% obj.
-                  </td>
-                  <td align="right"
-                      style="font-size:10px;color:#000000;font-family:'JetBrains Mono',monospace;white-space:nowrap;width:58px;">
-                    ${p.volume}
-                  </td>
-                </tr>
-              </table>
-
-              <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
-                <tr>
-                  <td style="font-family:'JetBrains Mono',monospace;">${priceHTML}</td>
-                  <td align="right">
-                    <a href="${p.url || "#"}" style="display:inline-block;width:36px;height:36px;background-color:#00C322;border-radius:50%;text-align:center;line-height:36px;text-decoration:none;">
-                      ${PLUS_ICON_SVG("#000000")}
-                    </a>
-                  </td>
-                </tr>
-              </table>
+            <td style="font-family:'JetBrains Mono',monospace;">${priceHTML}</td>
+            <td align="right">
+              <a href="${p.url || "#"}"
+                 style="display:inline-block;width:36px;height:36px;background-color:#00C322;border-radius:50%;text-align:center;line-height:36px;text-decoration:none;">
+                ${PLUS_ICON_SVG("#000000")}
+              </a>
             </td>
           </tr>
         </table>
       </td>
-    `;
+    </tr>
+  </table>
+</td>
+`;
   };
 
-  // ✅ Center last row with real spacer widths (keeps same card widths)
-  const renderRow = (rowItems: any[]) => {
+  // Left aligned row (fills missing columns with empty cells on RIGHT)
+  const renderRowLeft = (rowItems: any[]) => {
     const n = rowItems.length;
     const missing = COLS - n;
-
     const emptyTD = `<td width="${colPct}%" style="width:${colPct}%;font-size:0;line-height:0;">&nbsp;</td>`;
 
     return `
-      <table role="presentation"
-             border="0" cellspacing="0" cellpadding="0"
-             width="100%" style="width:100%;max-width:600px;table-layout:fixed;">
-        <tr>
-          ${rowItems.map((p, i) => renderProductCell(p, i === 0, i === n - 1)).join("")}
-          ${
-            missing > 0
-              ? Array.from({ length: missing })
-                  .map(() => emptyTD)
-                  .join("")
-              : ""
-          }
-        </tr>
-      </table>
-    `;
+<table role="presentation" border="0" cellspacing="0" cellpadding="0"
+       width="600" class="wrap" style="width:100%;max-width:600px;table-layout:fixed;">
+  <tr>
+    ${rowItems.map((p, i) => renderProductCell(p, i === 0, i === n - 1)).join("")}
+    ${
+      missing > 0
+        ? Array.from({ length: missing })
+            .map(() => emptyTD)
+            .join("")
+        : ""
+    }
+  </tr>
+</table>
+`;
   };
 
   const row1 = items.slice(0, COLS);
@@ -488,17 +481,16 @@ function generateProductListHTML(block: NewsletterBlock): string {
 
   const viewAllHTML = showViewAll
     ? `
-      <a href="${viewAllUrl}" style="color:#000000;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;white-space:nowrap;">
-        <span style="text-decoration:none;">→ </span><span style="text-decoration:underline;">${viewAllText}</span>
-      </a>
-    `
+<a href="${viewAllUrl}" style="color:#000000;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;white-space:nowrap;">
+  <span style="text-decoration:none;">→ </span><span style="text-decoration:underline;">${viewAllText}</span>
+</a>
+`
     : "";
 
   return `<!-- List produktů -->
 <tr>
   <td align="center" style="padding:24px;margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0"
-           width="600" class="wrap" style="max-width:600px;width:100%;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td style="padding-bottom:1rem;">
           <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -512,25 +504,8 @@ function generateProductListHTML(block: NewsletterBlock): string {
         </td>
       </tr>
 
-      <!-- Row 1 -->
-      <tr>
-        <td align="center">
-          ${renderRow(row1)}
-        </td>
-      </tr>
-
-      <!-- Row 2 -->
-      ${
-        row2.length > 0
-          ? `
-      <tr>
-        <td align="center" style="padding-top:12px;">
-          ${renderRow(row2)}
-        </td>
-      </tr>
-      `
-          : ""
-      }
+      <tr><td align="left">${renderRowLeft(row1)}</td></tr>
+      ${row2.length ? `<tr><td align="left" style="padding-top:12px;">${renderRowLeft(row2)}</td></tr>` : ""}
     </table>
   </td>
 </tr>`;
@@ -548,93 +523,91 @@ function generateMistaHTML(block: NewsletterBlock): string {
   const viewAllText = (content as any).viewAllText || "zobrazit vše";
   const viewAllUrl = (content as any).viewAllUrl || "#";
 
-  // ✅ max 6, 3 columns per row
   const COLS = 3;
   const MAX = 6;
   const tableWidth = 600;
-  const colWidth = Math.floor(tableWidth / COLS); // 200px
+  const colWidth = Math.floor(tableWidth / COLS); // 200
+  const GUTTER = 6;
 
   const items = places.slice(0, MAX);
   const row1 = items.slice(0, COLS);
   const row2 = items.slice(COLS, COLS * 2);
 
   const renderPlaceCell = (place: any, isFirst: boolean, isLast: boolean) => {
-    const padLeft = isFirst ? "0" : "6px";
-    const padRight = isLast ? "0" : "6px";
+    const padLeft = isFirst ? "0" : `${GUTTER}px`;
+    const padRight = isLast ? "0" : `${GUTTER}px`;
 
     return `
-    <td valign="top" class="stack" width="${colWidth}" style="width:${colWidth}px; ...
-      <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
-        <tr>
-          <td>
-            ${
-              place.image
-                ? `<img src="${place.image}" width="100%" alt="${place.name}" style="display:block;width:100%;aspect-ratio:3/4;object-fit:cover;margin-bottom:12px;"/>`
-                : `<div style="width:100%;padding-top:133%;background:#E5E5E5;margin-bottom:12px;"></div>`
-            }
-          </td>
-        </tr>
+<td valign="top" class="stack" width="${colWidth}" style="width:${colWidth}px;padding:0 ${padRight} 0 ${padLeft};">
+  <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
+    <tr>
+      <td>
+        ${
+          place.image
+            ? `<img src="${place.image}" width="${colWidth - GUTTER * 2}" alt="${place.name}"
+                    style="display:block;width:100%;max-width:${colWidth - GUTTER * 2}px;height:auto;aspect-ratio:3/4;object-fit:cover;margin-bottom:12px;" />`
+            : `<div style="width:100%;padding-top:133%;background:#E5E5E5;margin-bottom:12px;"></div>`
+        }
+      </td>
+    </tr>
 
-        <tr>
-          <td style="font-family:'JetBrains Mono',monospace;">
-            <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
-              <tr>
-                <td style="padding-right:12px;width:60px;">
-                  <a href="${place.buttonUrl || "#"}" style="display:inline-block;width:36px;height:36px;border:1px solid #00C322;border-radius:50%;text-align:center;line-height:36px;text-decoration:none;">
-                    ${ARROW_ICON_SVG("#00C322")}
-                  </a>
-                </td>
-                <td align="right" style="width:100%;text-align:right;">
-                  <h3 style="margin:0;font-size:16px;font-weight:700;color:#212121;text-align:right;">${place.name}</h3>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
-    </td>
-  `;
+    <tr>
+      <td style="font-family:'JetBrains Mono',monospace;">
+        <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+          <tr>
+            <td style="padding-right:12px;width:60px;">
+              <a href="${place.buttonUrl || "#"}"
+                 style="display:inline-block;width:36px;height:36px;border:1px solid #00C322;border-radius:50%;text-align:center;line-height:36px;text-decoration:none;">
+                ${ARROW_ICON_SVG("#00C322")}
+              </a>
+            </td>
+            <td align="right" style="width:100%;text-align:right;">
+              <h3 style="margin:0;font-size:16px;font-weight:700;color:#212121;text-align:right;">${place.name}</h3>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</td>
+`;
   };
 
-  // ✅ left aligned rows (no centering spacers)
-  // fills missing columns with empty cells on the RIGHT
+  // Left aligned row, no spacer centering; fills missing cells on the right
   const renderRowLeft = (rowItems: any[]) => {
     const n = rowItems.length;
     const missing = COLS - n;
     const emptyTD = `<td width="${colWidth}" style="width:${colWidth}px;font-size:0;line-height:0;">&nbsp;</td>`;
 
     return `
-      <table role="presentation"
-             border="0" cellspacing="0" cellpadding="0"
-             width="600" class="wrap"
-             style="width:100%;max-width:600px;table-layout:fixed;">
-        <tr>
-          ${rowItems.map((p, i) => renderPlaceCell(p, i === 0, i === n - 1)).join("")}
-          ${
-            missing > 0
-              ? Array.from({ length: missing })
-                  .map(() => emptyTD)
-                  .join("")
-              : ""
-          }
-        </tr>
-      </table>
-    `;
+<table role="presentation" border="0" cellspacing="0" cellpadding="0"
+       width="600" class="wrap" style="width:100%;max-width:600px;table-layout:fixed;">
+  <tr>
+    ${rowItems.map((p, i) => renderPlaceCell(p, i === 0, i === n - 1)).join("")}
+    ${
+      missing > 0
+        ? Array.from({ length: missing })
+            .map(() => emptyTD)
+            .join("")
+        : ""
+    }
+  </tr>
+</table>
+`;
   };
 
   const viewAllHTML = showViewAll
     ? `
-      <a href="${viewAllUrl}" style="color:#000000;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;white-space:nowrap;">
-        <span style="text-decoration:none;">→ </span><span style="text-decoration:underline;">${viewAllText}</span>
-      </a>
-    `
+<a href="${viewAllUrl}" style="color:#000000;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;white-space:nowrap;">
+  <span style="text-decoration:none;">→ </span><span style="text-decoration:underline;">${viewAllText}</span>
+</a>
+`
     : "";
 
   return `<!-- Místa -->
 <tr>
   <td align="center" style="padding:0;margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0"
-           width="600" class="wrap" style="max-width:600px;width:100%;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td style="padding:24px;">
           <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
@@ -648,15 +621,8 @@ function generateMistaHTML(block: NewsletterBlock): string {
 
           <div style="height:16px;line-height:16px;font-size:0;">&nbsp;</div>
 
-          <!-- Row 1 -->
           ${renderRowLeft(row1)}
-
-          <!-- Row 2 (LEFT aligned) -->
-          ${
-            row2.length > 0
-              ? `<div style="height:12px;line-height:12px;font-size:0;">&nbsp;</div>${renderRowLeft(row2)}`
-              : ""
-          }
+          ${row2.length ? `<div style="height:12px;line-height:12px;font-size:0;">&nbsp;</div>${renderRowLeft(row2)}` : ""}
         </td>
       </tr>
     </table>
