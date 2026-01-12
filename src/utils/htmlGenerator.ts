@@ -194,92 +194,7 @@ function generateZichovecHeaderWithMenuHTML(block: NewsletterBlock): string {
     </table>
   </td>
 </tr>`;
-}
-      <tr>
-        <td align="center" style="background-color:#00C322;">
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap"
-                 style="max-width:600px;width:100%;background-color:#00C322;">
-            <tr>
-              <td style="padding:32px;">
-                <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
-                  <tr>
-                    <!-- Contact column -->
-                    <td valign="top" width="25%" class="stack"
-                        style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#212121;">
-                      <p style="margin:0 0 1rem 0;font-weight:bold;text-decoration:underline;">${phoneNumber}</p>
-                      <p style="margin:0 0 24px 0;">
-                        <a href="mailto:${email}" style="color:#212121;font-weight:bold;text-decoration:underline;">Email</a>
-                      </p>
-                      <div style="display:flex;flex-direction:column;gap:4px;">
-                        ${socials
-                          .map(
-                            (s: any) =>
-                              `<a href="${s.url}" style="color:#212121;font-weight:bold;text-decoration:underline;display:block;margin-bottom:4px;">${s.text}</a>`,
-                          )
-                          .join("")}
-                      </div>
-                    </td>
 
-                    ${columnHTML}
-                  </tr>
-                </table>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-
-      <!-- Payment icons (WHITE) -->
-      <tr>
-        <td style="background-color:#FFFFFF;padding:16px 0;">
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
-            <tr>
-              <td align="center" style="font-size:0;">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="VISA" height="24" style="height:24px;margin:0 4px;"/>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/MasterCard_Logo.svg" alt="Mastercard" height="24" style="height:24px;margin:0 4px;"/>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" height="24" style="height:24px;margin:0 4px;"/>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg" alt="GPay" height="24" style="height:24px;margin:0 4px;"/>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b0/Apple_Pay_logo.svg" alt="Apple Pay" height="24" style="height:24px;margin:0 4px;"/>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-
-      <!-- Copyright (WHITE) -->
-      <tr>
-        <td style="background-color:#FFFFFF;padding:16px 32px;">
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
-            <tr>
-              <td style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#212121;">
-                <div>${(content.copyright || "Copyright © 2025 Pivovar ZICHOVEC.").replace(
-                  /\s*Všechna práva vyhrazena\.?/gi,
-                  "",
-                )}</div>
-                <div>Všechna práva vyhrazena.</div>
-              </td>
-              <td align="right" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#212121;">
-                <table role="presentation" border="0" cellspacing="0" cellpadding="0">
-                  <tr>
-                    <td style="padding-right:16px;">
-                      <div>Vývoj</div>
-                      <a href="https://www.fv-studio.cz/" style="color:#A073FF;text-decoration:underline;">FY STUDIO + Shoptet</a>
-                    </td>
-                    <td>
-                      <div>Design</div>
-                      <a href="https://www.vanek.studio" style="color:#A073FF;text-decoration:underline;">Vaněk.Studio</a>
-                    </td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-
-    </table>
-  </td>
-</tr>`;
 
 function generateProductListHTML(block: NewsletterBlock): string {
   const { content } = block;
@@ -1736,7 +1651,7 @@ function generateBenefitsHTML(block: NewsletterBlock): string {
 
   const renderCell = (b: any, globalIndex: number) => {
     return `
-      <td valign="top" width="200" style="width:200px;text-align:center;font-family:'JetBrains Mono',monospace;padding:0 6px;margin:0;padding-bottom:2rem;>
+      <td valign="top" width="200" style="width:200px;text-align:center;font-family:'JetBrains Mono',monospace;padding:0 6px;margin:0;padding-bottom:2rem;">
         <div style="padding:0 12px;">
           <div style="margin-bottom:16px;">
             <img src="${getBenefitIcon(b.icon, globalIndex)}" width="48" height="48" alt=""
