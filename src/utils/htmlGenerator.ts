@@ -657,7 +657,7 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
           ${mobileRows
             .map(
               (r, idx) =>
-                `${idx ? `<div style="height:${GAP}px;line-height:${GAP}px;font-size:0;">&nbsp;</div>` : ""}${renderRowFill(r, r.length === 1 ? 1 : 2)}`,
+                `${idx ? `<div style="height:${GAP}px;line-height:${GAP}px;font-size:0;">&nbsp;</div>` : ""}${renderRowFill(r, 2)}`,
             )
             .join("")}
         </td>
@@ -809,7 +809,7 @@ function generateMistaHTML(block: NewsletterBlock): string {
 
   return `<!-- Místa -->
 <tr>
-  <td align="center" style="padding:32px 24px;">
+  <td align="center" style="padding:32px 16px;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td style="padding:0px;">
@@ -1186,7 +1186,7 @@ function generatePromoBoxHTML(block: NewsletterBlock): string {
   if (all.length === 1) {
     return `<!-- Promo boxy -->
 <tr>
-  <td align="center" style="padding:32px 24px;">
+  <td align="center" style="padding:32px 16px;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td>
