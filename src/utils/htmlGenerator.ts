@@ -1649,7 +1649,7 @@ function generateBenefitsHTML(block: NewsletterBlock): string {
 
   const renderCell = (b: any, globalIndex: number) => {
     return `
-      <td valign="top" width="200" style="width:100%;text-align:center;font-family:'JetBrains Mono',monospace;padding:0 6px;margin:0;padding-bottom:2rem;">
+      <td valign="top" width="200" style="width:100%;text-align:center;font-family:'JetBrains Mono',monospace;padding:0;margin:0;padding-bottom:2rem;">
         <div style="padding:0 12px;">
           <div style="margin-bottom:16px;">
             <img src="${getBenefitIcon(b.icon, globalIndex)}" width="48" height="48" alt=""
