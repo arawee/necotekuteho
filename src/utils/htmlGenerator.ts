@@ -1071,36 +1071,37 @@ function generateArticleTextHTML(block: NewsletterBlock): string {
 
   const metadataHTML = hasAnyMeta
     ? `
-  <tr>
-    <td style="padding:32px 24px 0 24px;">
-      <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
-        <tr>
-          <td align="left" style="background-color:#F4F4F4;padding:16px;font-family:'JetBrains Mono',monospace;font-size:14px;color:#212121;">
-            ${hasDate ? `<div style="margin-bottom:4px;"><span style="font-weight:500;">Datum →</span> <span style="color:#666;">${date}</span></div>` : ""}
-            ${hasAuthor ? `<div style="margin-bottom:4px;"><span style="font-weight:500;">Autor →</span> <span style="color:#666;">${author}</span></div>` : ""}
-            ${
-              hasTags
-                ? `<div style="margin-bottom:4px;"><span style="font-weight:500;">Tag →</span> <span style="color:#666;">${tags
-                    .filter((t: any) => t.text && t.text.trim() !== "")
-                    .map(
-                      (t: any) =>
-                        `<a href="${t.url || "#"}" style="color:#666;text-decoration:underline;">${t.text}</a>`,
-                    )
-                    .join(", ")}</span></div>`
-                : ""
-            }
-            ${
-              hasShares
-                ? `<div><span style="font-weight:500;">Sdílet →</span> <span style="color:#666;">${validShareLinks
-                    .map((s: any) => `<a href="${s.url}" style="color:#666;text-decoration:underline;">${s.text}</a>`)
-                    .join(", ")}</span></div>`
-                : ""
-            }
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
+    <tr>
+      <td style="padding-top:32px;">
+        <!-- shrink-to-content wrapper -->
+        <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="left" style="display:inline;">
+          <tr>
+            <td style="background-color:#F4F4F4;padding:16px;font-family:'JetBrains Mono',monospace;font-size:14px;">
+              ${hasDate ? `<div style="margin-bottom:4px;"><span style="font-weight:500;">Datum →</span> <span style="color:#666;">${date}</span></div>` : ""}
+              ${hasAuthor ? `<div style="margin-bottom:4px;"><span style="font-weight:500;">Autor →</span> <span style="color:#666;">${author}</span></div>` : ""}
+              ${
+                hasTags
+                  ? `<div style="margin-bottom:4px;"><span style="font-weight:500;">Tag →</span> <span style="color:#666;text-decoration:underline;">${tags
+                      .filter((t: any) => t.text && t.text.trim() !== "")
+                      .map(
+                        (t: any) =>
+                          `<a href="${t.url || "#"}" style="color:#666;text-decoration:underline;">${t.text}</a>`,
+                      )
+                      .join(", ")}</span></div>`
+                  : ""
+              }
+              ${
+                hasShares
+                  ? `<div><span style="font-weight:500;">Sdílet →</span> <span style="color:#666;text-decoration:underline;">${validShareLinks
+                      .map((s: any) => `<a href="${s.url}" style="color:#666;text-decoration:underline;">${s.text}</a>`)
+                      .join(", ")}</span></div>`
+                  : ""
+              }
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
   `
     : "";
 
