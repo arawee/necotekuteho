@@ -194,7 +194,7 @@ function generateZichovecHeaderWithMenuHTML(block: NewsletterBlock): string {
     </table>
   </td>
 </tr>`;
-
+}
 
 function generateProductListHTML(block: NewsletterBlock): string {
   const { content } = block;
@@ -1509,9 +1509,7 @@ function generateZichovecFooterHTML(block: NewsletterBlock): string {
     { text: "LinkedIn", url: "#" },
   ];
 
-  const phoneNumber = (content.footerText || "602 555 555")
-    .replace(/^\+420\s*/, "")
-    .replace(/^tel\.\s*/i, "");
+  const phoneNumber = (content.footerText || "602 555 555").replace(/^\+420\s*/, "").replace(/^tel\.\s*/i, "");
 
   const columnHTML = columns
     .map(
