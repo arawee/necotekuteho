@@ -1,17 +1,5 @@
 import { NewsletterBlock } from "@/types/newsletter";
 
-const coverImageBox = (src: string, w: number, h: number, alt: string) => {
-  if (!src) {
-    return `<div style="width:${w}px;height:${h}px;background:#E5E5E5;"></div>`;
-  }
-
-  return `
-<div style="width:${w}px;height:${h}px;overflow:hidden;background:#F5F5F5;">
-  <img src="${src}" width="${w}" height="${h}" alt="${alt}"
-       style="display:block;width:${w}px;height:${h}px;object-fit:cover;" />
-</div>`;
-};
-
 // SVG Icons for email HTML
 const ARROW_ICON_SVG = (color: string = "#00C322") => `
 <svg width="8" height="8" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;">
@@ -420,7 +408,13 @@ function generateProductListHTML(block: NewsletterBlock): string {
   <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
     <tr>
       <td style="background-color:#F5F5F5;">
-       ${coverImageBox(p.image, colInnerWidth, Math.round((colInnerWidth * 4) / 3), p.name)}
+        ${
+          p.image
+            ? // IMPORTANT: numeric width attr prevents “row 2 image missing” in some clients
+              `<img src="${p.image}" width="${colInnerWidth}" alt="${p.name}"
+                    style="display:block;width:100%;max-width:${colInnerWidth}px;height:auto;aspect-ratio:3/4;object-fit:cover;" />`
+            : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
+        }
       </td>
     </tr>
 
@@ -548,8 +542,12 @@ function generateMistaHTML(block: NewsletterBlock): string {
   <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
     <tr>
       <td>
-        ${coverImageBox(place.image, colWidth - GUTTER * 2, Math.round(((colWidth - GUTTER * 2) * 4) / 3), place.name)}
-        <div style="height:12px;line-height:12px;font-size:0;">&nbsp;</div>
+        ${
+          place.image
+            ? `<img src="${place.image}" width="${colWidth - GUTTER * 2}" alt="${place.name}"
+                    style="display:block;width:100%;max-width:${colWidth - GUTTER * 2}px;height:auto;aspect-ratio:3/4;object-fit:cover;margin-bottom:12px;" />`
+            : `<div style="width:100%;padding-top:133%;background:#E5E5E5;margin-bottom:12px;"></div>`
+        }
       </td>
     </tr>
 
@@ -1469,34 +1467,40 @@ function getNewsletterCSS(): string {
     
     /* Responsive - Mobile */
     @media only screen and (max-width: 620px) {
-      /* Only control the main wrapper tables — DO NOT force all tables/td to 100% */
+      body, table, td {
+        width: 100% !important;
+        min-width: 100% !important;
+      }
       table.wrap {
         width: 100% !important;
         max-width: 100% !important;
       }
-    
-      /* stacking */
       td.stack {
         display: block !important;
         width: 100% !important;
         box-sizing: border-box !important;
         padding: 0 0 16px 0 !important;
       }
-    
-      /* images stay responsive */
+      td.stack:last-child {
+        padding-bottom: 16px !important;
+      }
+      /* Make images responsive */
       img {
         max-width: 100% !important;
-        height: auto !important;
       }
-    
       #top-container {
         padding-top: calc(28.8889% + 4rem) !important;
       }
       #top-logo {
         padding-bottom: 2rem !important;
       }
-    
-      /* keep your “24px sections” from collapsing weirdly */
+      /* Stack footer columns */
+      .footer-col {
+        display: block !important;
+        width: 100% !important;
+        padding-bottom: 24px !important;
+      }
+      /* Ensure proper padding on mobile */
       td[style*="padding:24px"] {
         padding: 16px !important;
       }
