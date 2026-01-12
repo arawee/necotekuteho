@@ -1533,9 +1533,9 @@ function generateZichovecFooterHTML(block: NewsletterBlock): string {
   return `<!-- Patička ZICHOVEC -->
 <tr>
   <!-- OUTER wrapper stays white -->
-  <td align="center" style="background-color:#FFFFFF;">
+  <td align="center" style="background-color:#00C322;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0"
-           width="600" class="wrap" style="max-width:600px;width:100%;background-color:#FFFFFF;">
+           width="600" class="wrap" style="max-width:600px;width:100%;background-color:#00C322;">
 
       <!-- GREEN top part (contact + nav) -->
       <tr>
@@ -1571,7 +1571,11 @@ function generateZichovecFooterHTML(block: NewsletterBlock): string {
           </table>
         </td>
       </tr>
-
+    </table>
+  </td>
+  <td align="center" style="background-color:#FFFFFF;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0"
+           width="600" class="wrap" style="max-width:600px;width:100%;background-color:#FFFFFF;">
       <!-- Payment icons (WHITE) -->
       <tr>
         <td style="background-color:#FFFFFF;padding:16px 0;">
