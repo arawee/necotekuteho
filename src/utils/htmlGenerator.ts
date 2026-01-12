@@ -451,7 +451,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
               </tr>
               <tr>
                 <td style="font-family:'JetBrains Mono',monospace;padding-top:0px;">
-                  <div style="margin-bottom:8px;">
+                  <div style="margin-bottom:8px; margin-top: -5px;">
                     ${(p.tags || [])
                       .map(
                         (t: any) =>
@@ -565,7 +565,7 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
           ${
             c.image
               ? `<img src="${escapeAttr(c.image)}" width="${innerW}" alt=""
-                     style="display:block;width:100%;max-width:${innerW}px;height:auto;aspect-ratio:3/4;object-fit:cover;" />`
+                     style="display:block;width:100%;max-width:192px;height:auto;aspect-ratio:3/4;object-fit:cover;margin-bottom: -2px;" />`
               : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
           }
         </td>
