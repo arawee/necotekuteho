@@ -335,8 +335,6 @@ function generateProductListHTML(block: NewsletterBlock): string {
   const MAX = 6;
   const TABLE_WIDTH = 600;
   const GUTTER = 6;
-  const COL_PCT = 100 / COLS;
-  const COL_INNER = Math.floor((TABLE_WIDTH - COLS * GUTTER * 2) / COLS);
 
   const items = products.slice(0, MAX);
   const row1 = items.slice(0, COLS);
@@ -345,19 +343,24 @@ function generateProductListHTML(block: NewsletterBlock): string {
   const tagBg = (c: string) => (c === "red" ? "#FF4C4C" : c === "green" ? "#00C322" : "#161616");
 
   const renderCell = (p: any, i: number, n: number) => {
+    const colPct = 100 / n;
+
+    // gaps between cols = (n-1) * 12
+    const totalGaps = (n - 1) * (GUTTER * 2);
+    const innerW = Math.floor((TABLE_WIDTH - totalGaps) / n);
+
     const padL = i === 0 ? "0" : `${GUTTER}px`;
     const padR = i === n - 1 ? "0" : `${GUTTER}px`;
 
     return `
-<td valign="top" class="stack" width="${COL_PCT}%"
-    style="width:${COL_PCT}%;padding:0 ${padR} 0 ${padL};">
+<td valign="top" width="${colPct}%" style="width:${colPct}%;padding:0 ${padR} 0 ${padL};">
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="table-layout:fixed;">
     <tr>
       <td>
         ${
           p.image
-            ? `<img src="${escapeAttr(p.image)}" width="${COL_INNER}"
-                 style="display:block;width:100%;max-width:${COL_INNER}px;aspect-ratio:3/4;object-fit:cover;">`
+            ? `<img src="${escapeAttr(p.image)}" width="${innerW}" alt="${escapeAttr(p.name || "")}"
+                 style="display:block;width:100%;max-width:${innerW}px;height:auto;aspect-ratio:3/4;object-fit:cover;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;" />`
             : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
         }
       </td>
@@ -376,19 +379,19 @@ function generateProductListHTML(block: NewsletterBlock): string {
             .join("")}
         </div>
 
-        <h3 style="margin:0 0 4px 0;font-size:16px;font-weight:700;">${p.name}</h3>
+        <h3 style="margin:0 0 4px 0;font-size:16px;font-weight:700;">${p.name || ""}</h3>
 
         <table width="100%" cellspacing="0" cellpadding="0">
           <tr>
-            <td style="font-size:10px;"><strong>Alk. →</strong> ${p.alcohol}%</td>
-            <td align="right" style="font-size:10px;width:72px;white-space:nowrap;">${p.volume}</td>
+            <td style="font-size:10px;"><strong>Alk. →</strong> ${p.alcohol || ""}%</td>
+            <td align="right" style="font-size:10px;width:72px;white-space:nowrap;">${p.volume || ""}</td>
           </tr>
         </table>
 
         <table width="100%" cellspacing="0" cellpadding="0">
           <tr>
             <td style="font-weight:700;">
-              ${p.salePrice ? `<span style="color:#FF4C4C">${p.salePrice}</span>` : p.price}
+              ${p.salePrice ? `<span style="color:#FF4C4C">${p.salePrice}</span>` : p.price || ""}
             </td>
             <td align="right">
               <a href="${escapeAttr(p.url || "#")}"
@@ -404,18 +407,92 @@ function generateProductListHTML(block: NewsletterBlock): string {
 </td>`;
   };
 
-  const renderRow = (row: any[]) => {
-    const missing = COLS - row.length;
+  const renderRow = (row: any[], forceCols?: number) => {
+    if (!row.length) return "";
+    const n = forceCols ?? row.length;
+
+    const missing = forceCols ? Math.max(0, n - row.length) : 0;
+    const colPct = 100 / n;
+
     return `
 <table role="presentation" width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;table-layout:fixed;">
   <tr>
-    ${row.map((p, i) => renderCell(p, i, row.length)).join("")}
-    ${Array.from({ length: missing })
-      .map(() => `<td width="${COL_PCT}%" style="width:${COL_PCT}%;font-size:0;">&nbsp;</td>`)
-      .join("")}
+    ${row.map((p, i) => renderCell(p, i, n)).join("")}
+    ${
+      missing
+        ? Array.from({ length: missing })
+            .map(() => `<td width="${colPct}%" style="width:${colPct}%;font-size:0;line-height:0;">&nbsp;</td>`)
+            .join("")
+        : ""
+    }
   </tr>
 </table>`;
   };
+
+  // Mobile: 1 column list (prevents “missing images” caused by td.stack)
+  const mobileBlocks = items
+    .map(
+      (p: any, idx: number) => `
+      ${idx ? `<div style="height:12px;line-height:12px;font-size:0;">&nbsp;</div>` : ""}
+      <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap"
+             style="width:100%;max-width:600px;table-layout:fixed;">
+        <tr>
+          <td style="padding:0;">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="table-layout:fixed;">
+              <tr>
+                <td>
+                  ${
+                    p.image
+                      ? `<img src="${escapeAttr(p.image)}" width="600" alt="${escapeAttr(p.name || "")}"
+                             style="display:block;width:100%;max-width:600px;height:auto;aspect-ratio:3/4;object-fit:cover;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;" />`
+                      : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
+                  }
+                </td>
+              </tr>
+              <tr>
+                <td style="font-family:'JetBrains Mono',monospace;padding-top:8px;">
+                  <div style="margin-bottom:8px;">
+                    ${(p.tags || [])
+                      .map(
+                        (t: any) =>
+                          `<span style="display:inline-block;background:${tagBg(
+                            t.color,
+                          )};color:#fff;font-size:10px;padding:2px 8px;margin-right:4px;margin-bottom:4px;">${t.text}</span>`,
+                      )
+                      .join("")}
+                  </div>
+
+                  <h3 style="margin:0 0 4px 0;font-size:16px;font-weight:700;">${p.name || ""}</h3>
+
+                  <table width="100%" cellspacing="0" cellpadding="0">
+                    <tr>
+                      <td style="font-size:10px;"><strong>Alk. →</strong> ${p.alcohol || ""}%</td>
+                      <td align="right" style="font-size:10px;width:72px;white-space:nowrap;">${p.volume || ""}</td>
+                    </tr>
+                  </table>
+
+                  <table width="100%" cellspacing="0" cellpadding="0">
+                    <tr>
+                      <td style="font-weight:700;">
+                        ${p.salePrice ? `<span style="color:#FF4C4C">${p.salePrice}</span>` : p.price || ""}
+                      </td>
+                      <td align="right">
+                        <a href="${escapeAttr(p.url || "#")}"
+                           style="display:inline-block;width:36px;height:36px;background:#00C322;border-radius:50%;line-height:36px;text-align:center;">
+                          ${PLUS_ICON_SVG("#000")}
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    `,
+    )
+    .join("");
 
   return `
 <tr>
@@ -429,7 +506,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
               <td align="right">
                 ${
                   showViewAll
-                    ? `<a href="${viewAllUrl}" style="font-size:14px;text-decoration:underline;">${viewAllText}</a>`
+                    ? `<a href="${escapeAttr(viewAllUrl)}" style="font-size:14px;text-decoration:underline;">${viewAllText}</a>`
                     : ""
                 }
               </td>
@@ -438,8 +515,12 @@ function generateProductListHTML(block: NewsletterBlock): string {
         </td>
       </tr>
 
-      <tr><td>${renderRow(row1)}</td></tr>
-      ${row2.length ? `<tr class="hide-on-mobile"><td style="padding-top:12px;">${renderRow(row2)}</td></tr>` : ""}
+      <!-- Desktop -->
+      <tr class="hide-on-mobile"><td>${renderRow(row1 /* stretch */)}</td></tr>
+      ${row2.length ? `<tr class="hide-on-mobile"><td style="padding-top:12px;">${renderRow(row2, 3)}</td></tr>` : ""}
+
+      <!-- Mobile -->
+      <tr class="show-on-mobile"><td>${mobileBlocks}</td></tr>
     </table>
   </td>
 </tr>`;
@@ -601,30 +682,31 @@ function generateMistaHTML(block: NewsletterBlock): string {
 
   const COLS = 3;
   const MAX = 6;
-  const tableWidth = 600;
+  const TABLE_WIDTH = 600;
   const GUTTER = 6;
-  const colPct = 100 / COLS;
-
-  // Same math as Products: 3 * (colInnerWidth + 12) = 600
-  const colInnerWidth = Math.floor((tableWidth - COLS * (GUTTER * 2)) / COLS); // 188
 
   const items = places.slice(0, MAX);
   const row1 = items.slice(0, COLS);
   const row2 = items.slice(COLS, COLS * 2);
 
-  const renderPlaceCell = (place: any, isFirst: boolean, isLast: boolean) => {
-    const padLeft = isFirst ? "0" : `${GUTTER}px`;
-    const padRight = isLast ? "0" : `${GUTTER}px`;
+  const renderPlaceCell = (place: any, i: number, n: number) => {
+    const colPct = 100 / n;
+
+    const totalGaps = (n - 1) * (GUTTER * 2);
+    const innerW = Math.floor((TABLE_WIDTH - totalGaps) / n);
+
+    const padL = i === 0 ? "0" : `${GUTTER}px`;
+    const padR = i === n - 1 ? "0" : `${GUTTER}px`;
 
     return `
-<td valign="top" class="stack" width="${colPct}%" style="width:${colPct}%;padding:0 ${padRight} 0 ${padLeft};">
+<td valign="top" width="${colPct}%" style="width:${colPct}%;padding:0 ${padR} 0 ${padL};">
   <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
     <tr>
       <td>
         ${
           place.image
-            ? `<img src="${escapeAttr(place.image)}" width="${colInnerWidth}" alt="${escapeAttr(place.name)}"
-                    style="display:block;width:100%;max-width:${colInnerWidth}px;height:auto;aspect-ratio:3/4;object-fit:cover;margin-bottom:12px;" />`
+            ? `<img src="${escapeAttr(place.image)}" width="${innerW}" alt="${escapeAttr(place.name || "")}"
+                    style="display:block;width:100%;max-width:${innerW}px;height:auto;aspect-ratio:3/4;object-fit:cover;margin-bottom:12px;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;" />`
             : `<div style="width:100%;padding-top:133%;background:#E5E5E5;margin-bottom:12px;"></div>`
         }
       </td>
@@ -641,47 +723,89 @@ function generateMistaHTML(block: NewsletterBlock): string {
               </a>
             </td>
             <td align="right" style="width:100%;text-align:right;">
-              <h3 style="margin:0;font-size:16px;font-weight:700;color:#212121;text-align:right;">${place.name}</h3>
+              <h3 style="margin:0;font-size:16px;font-weight:700;color:#212121;text-align:right;">${place.name || ""}</h3>
             </td>
           </tr>
         </table>
       </td>
     </tr>
   </table>
-</td>
-`;
+</td>`;
   };
 
-  // Left aligned row, no spacer centering; fills missing cells on the right
-  const renderRowLeft = (rowItems: any[]) => {
-    const n = rowItems.length;
-    const missing = COLS - n;
-    const emptyTD = `<td width="${colPct}%" style="width:${colPct}%;font-size:0;line-height:0;">&nbsp;</td>`;
+  const renderRow = (row: any[], forceCols?: number) => {
+    if (!row.length) return "";
+    const n = forceCols ?? row.length;
+
+    const missing = forceCols ? Math.max(0, n - row.length) : 0;
+    const colPct = 100 / n;
 
     return `
 <table role="presentation" border="0" cellspacing="0" cellpadding="0"
-       width="600" class="wrap" style="width:100%;max-width:600px;table-layout:fixed;">
+       width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;table-layout:fixed;">
   <tr>
-    ${rowItems.map((p, i) => renderPlaceCell(p, i === 0, i === n - 1)).join("")}
+    ${row.map((p, i) => renderPlaceCell(p, i, n)).join("")}
     ${
-      missing > 0
+      missing
         ? Array.from({ length: missing })
-            .map(() => emptyTD)
+            .map(() => `<td width="${colPct}%" style="width:${colPct}%;font-size:0;line-height:0;">&nbsp;</td>`)
             .join("")
         : ""
     }
   </tr>
-</table>
-`;
+</table>`;
   };
 
   const viewAllHTML = showViewAll
     ? `
-<a href="${viewAllUrl}" style="color:#000000;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;white-space:nowrap;">
+<a href="${escapeAttr(viewAllUrl)}" style="color:#000000;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;white-space:nowrap;">
   <span style="text-decoration:none;">→ </span><span style="text-decoration:underline;">${viewAllText}</span>
-</a>
-`
+</a>`
     : "";
+
+  const mobileBlocks = items
+    .map(
+      (place: any, idx: number) => `
+      ${idx ? `<div style="height:12px;line-height:12px;font-size:0;">&nbsp;</div>` : ""}
+      <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap"
+             style="width:100%;max-width:600px;table-layout:fixed;">
+        <tr>
+          <td style="padding:0;">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="table-layout:fixed;">
+              <tr>
+                <td>
+                  ${
+                    place.image
+                      ? `<img src="${escapeAttr(place.image)}" width="600" alt="${escapeAttr(place.name || "")}"
+                             style="display:block;width:100%;max-width:600px;height:auto;aspect-ratio:3/4;object-fit:cover;margin-bottom:12px;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;" />`
+                      : `<div style="width:100%;padding-top:133%;background:#E5E5E5;margin-bottom:12px;"></div>`
+                  }
+                </td>
+              </tr>
+              <tr>
+                <td style="font-family:'JetBrains Mono',monospace;">
+                  <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+                    <tr>
+                      <td style="padding-right:12px;width:60px;">
+                        <a href="${escapeAttr(place.buttonUrl || "#")}"
+                           style="display:inline-block;width:36px;height:36px;border:1px solid #00C322;border-radius:50%;text-align:center;line-height:36px;text-decoration:none;">
+                          ${ARROW_ICON_SVG("#00C322")}
+                        </a>
+                      </td>
+                      <td align="right" style="width:100%;text-align:right;">
+                        <h3 style="margin:0;font-size:16px;font-weight:700;color:#212121;text-align:right;">${place.name || ""}</h3>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    `,
+    )
+    .join("");
 
   return `<!-- Místa -->
 <tr>
@@ -700,15 +824,22 @@ function generateMistaHTML(block: NewsletterBlock): string {
 
           <div style="height:16px;line-height:16px;font-size:0;">&nbsp;</div>
 
-          ${renderRowLeft(row1)}
-          ${
-            row2.length
-              ? `<div class="hide-on-mobile">
-                   <div style="height:12px;line-height:12px;font-size:0;">&nbsp;</div>
-                   ${renderRowLeft(row2)}
-                 </div>`
-              : ""
-          }
+          <!-- Desktop -->
+          <div class="hide-on-mobile">
+            ${renderRow(row1 /* stretch */)}
+            ${
+              row2.length
+                ? `<div style="height:12px;line-height:12px;font-size:0;">&nbsp;</div>
+                   ${renderRow(row2, 3)}`
+                : ""
+            }
+          </div>
+
+          <!-- Mobile -->
+          <div class="show-on-mobile">
+            ${mobileBlocks}
+          </div>
+
         </td>
       </tr>
     </table>
