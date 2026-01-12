@@ -372,11 +372,18 @@ function generateProductListHTML(block: NewsletterBlock): string {
     }
   };
 
-  // ✅ 4 columns, up to 8 products (2 rows)
-  const COLS = 4;
-  const MAX = 8;
+  // ✅ 3 columns, up to 6 products (2 rows)
+  const COLS = 3;
+  const MAX = 6;
+
   const tableWidth = 600;
-  const colWidth = Math.floor(tableWidth / COLS); // 150
+  const GUTTER = 6; // matches td padding left/right
+
+  // Width of the *content box* inside the <td>
+  // Total cell width becomes: colInnerWidth + (GUTTER*2)
+  // 3 * (colInnerWidth + 12) = 600  => colInnerWidth = 188
+  const colInnerWidth = Math.floor((tableWidth - COLS * (GUTTER * 2)) / COLS); // 188
+  const cellTotalWidth = colInnerWidth + GUTTER * 2; // 200
 
   const items = products.slice(0, MAX);
 
@@ -396,7 +403,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
       : `<span style="color:#212121;font-weight:700;">${p.price}</span>`;
 
     return `
-      <td valign="top" width="${colWidth}" style="width:${colWidth}px;padding:0 6px 0 6px;">
+      <td valign="top" width="${colInnerWidth}" style="width:${colInnerWidth}px;padding:0 ${GUTTER}px 0 ${GUTTER}px;">
         <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
           <tr>
             <td style="background-color:#F5F5F5;">
@@ -446,7 +453,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
   // ✅ Center last row with real spacer widths (keeps same card widths)
   const renderRow = (rowItems: any[]) => {
     const n = rowItems.length;
-    const used = n * colWidth;
+    const used = n * cellTotalWidth;
     const remaining = tableWidth - used;
 
     const leftSpacer = Math.floor(remaining / 2);
