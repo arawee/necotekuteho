@@ -576,7 +576,7 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
           ${mobileRows
             .map(
               (r, idx) =>
-                `${idx ? `<div style="height:${GAP}px;line-height:${GAP}px;font-size:0;">&nbsp;</div>` : ""}${renderRowFill(r, 2)}`,
+                `${idx ? `<div style="height:${GAP}px;line-height:${GAP}px;font-size:0;">&nbsp;</div>` : ""}${renderRowFill(r, r.length === 1 ? 1 : 2)}`,
             )
             .join("")}
         </td>
