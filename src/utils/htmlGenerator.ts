@@ -1104,32 +1104,32 @@ function generateGalleryTrioHTML(block: NewsletterBlock): string {
   return `
 <tr>
   <td align="center" style="padding:32px 0;">
-    <table role="presentation" width="600" style="width:600px;table-layout:fixed;">
+    <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="width:600px;table-layout:fixed;border-collapse:collapse;border-spacing:0;">
       <tr>
-        <td>
+        <td style="padding:0;margin:0;line-height:0;font-size:0;">
           ${
             photos[0]?.url
-              ? `<img src="${photos[0].url}" width="600" style="display:block;width:100%;aspect-ratio:1/1;object-fit:cover;">`
-              : `<div style="width:100%;padding-top:100%;background:#E5E5E5;"></div>`
+              ? `<img src="${photos[0].url}" width="600" height="600" alt="" style="display:block;width:600px;height:600px;object-fit:cover;border:0;outline:0;">`
+              : `<div style="width:600px;height:600px;background:#E5E5E5;"></div>`
           }
         </td>
       </tr>
       <tr>
-        <td>
-          <table role="presentation" width="600" style="width:600px;table-layout:fixed;">
+        <td style="padding:0;margin:0;line-height:0;font-size:0;">
+          <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="width:600px;table-layout:fixed;border-collapse:collapse;border-spacing:0;">
             <tr>
-              <td width="300">
+              <td width="300" valign="top" style="padding:0;margin:0;line-height:0;font-size:0;">
                 ${
                   photos[1]?.url
-                    ? `<img src="${photos[1].url}" width="300" style="display:block;width:100%;aspect-ratio:3/4;object-fit:cover;">`
-                    : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
+                    ? `<img src="${photos[1].url}" width="300" height="400" alt="" style="display:block;width:300px;height:400px;object-fit:cover;border:0;outline:0;">`
+                    : `<div style="width:300px;height:400px;background:#E5E5E5;"></div>`
                 }
               </td>
-              <td width="300">
+              <td width="300" valign="top" style="padding:0;margin:0;line-height:0;font-size:0;">
                 ${
                   photos[2]?.url
-                    ? `<img src="${photos[2].url}" width="300" style="display:block;width:100%;aspect-ratio:3/4;object-fit:cover;">`
-                    : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
+                    ? `<img src="${photos[2].url}" width="300" height="400" alt="" style="display:block;width:300px;height:400px;object-fit:cover;border:0;outline:0;">`
+                    : `<div style="width:300px;height:400px;background:#E5E5E5;"></div>`
                 }
               </td>
             </tr>
@@ -1147,20 +1147,20 @@ function generateGalleryDuoHTML(block: NewsletterBlock): string {
   return `
 <tr>
   <td align="center" style="padding:32px 0;">
-    <table role="presentation" width="600" style="width:600px;table-layout:fixed;">
+    <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="width:600px;table-layout:fixed;border-collapse:collapse;border-spacing:0;">
       <tr>
-        <td width="300">
+        <td width="300" valign="top" style="padding:0;margin:0;line-height:0;font-size:0;">
           ${
             photos[0]?.url
-              ? `<img src="${photos[0].url}" width="300" style="display:block;width:100%;aspect-ratio:3/4;object-fit:cover;">`
-              : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
+              ? `<img src="${photos[0].url}" width="300" height="400" alt="" style="display:block;width:300px;height:400px;object-fit:cover;border:0;outline:0;">`
+              : `<div style="width:300px;height:400px;background:#E5E5E5;"></div>`
           }
         </td>
-        <td width="300">
+        <td width="300" valign="top" style="padding:0;margin:0;line-height:0;font-size:0;">
           ${
             photos[1]?.url
-              ? `<img src="${photos[1].url}" width="300" style="display:block;width:100%;aspect-ratio:3/4;object-fit:cover;">`
-              : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
+              ? `<img src="${photos[1].url}" width="300" height="400" alt="" style="display:block;width:300px;height:400px;object-fit:cover;border:0;outline:0;">`
+              : `<div style="width:300px;height:400px;background:#E5E5E5;"></div>`
           }
         </td>
       </tr>
