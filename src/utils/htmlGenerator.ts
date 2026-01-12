@@ -791,7 +791,7 @@ function generateMistaHTML(block: NewsletterBlock): string {
 
   return `<!-- Místa -->
 <tr>
-  <td align="center" style="padding:32px 16px;">
+  <td align="center" style="padding:32px 24px;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td style="padding:0px;">
@@ -1226,7 +1226,7 @@ function generatePromoBoxHTML(block: NewsletterBlock): string {
   if (all.length === 1) {
     return `<!-- Promo boxy -->
 <tr>
-  <td align="center" style="padding:32px 16px;">
+  <td align="center" style="padding:32px 24px;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td>
@@ -1259,7 +1259,7 @@ function generatePromoBoxHTML(block: NewsletterBlock): string {
 
   return `<!-- Promo boxy -->
 <tr>
-  <td align="center" style="padding:24px;margin-bottom:32px;">
+  <td align="center" style="padding:32px 24px;margin-bottom:32px;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td>
@@ -1774,7 +1774,7 @@ function generatePoziceHTML(block: NewsletterBlock): string {
 
   return `<!-- Pozice -->
 <tr>
-  <td align="center" style="padding:24px;margin-bottom:32px;">
+  <td align="center" style="padding:32px 24px;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td style="padding-bottom:1rem;">
@@ -1809,7 +1809,7 @@ function generateProductTextHTML(block: NewsletterBlock): string {
 
   return `<!-- Produkt + text -->
 <tr>
-  <td align="center" style="padding:24px;margin-bottom:32px;">
+  <td align="center" style="padding:32px 24px;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="400" class="wrap" style="max-width:400px;">
       <tr>
         <td>
@@ -1840,7 +1840,7 @@ function generateTextTwoColumnsHTML(block: NewsletterBlock): string {
 
   return `<!-- Text dva sloupce -->
 <tr>
-  <td align="center" style="padding:24px;margin-bottom:32px;">
+  <td align="center" style="padding:32px 24px;margin-bottom:32px;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
       <tr>
         <td valign="top"
