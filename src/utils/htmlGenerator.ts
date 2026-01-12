@@ -506,19 +506,19 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
     if (!rowItems.length) return "";
 
     return `
-<table role="presentation" border="0" cellspacing="0" cellpadding="0"
-       width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;table-layout:fixed;">
-  <tr>
-    ${rowItems.map((c, i) => renderCategoryCell(c, n, i)).join("")}
-    ${
-      forceThreeCols && rowItems.length < 3
-        ? Array.from({ length: 3 - rowItems.length })
-            .map(() => `<td width="${100 / 3}%" style="width:${100 / 3}%;font-size:0;line-height:0;">&nbsp;</td>`)
-            .join("")
-        : ""
-    }
-  </tr>
-</table>`;
+  <table role="presentation" border="0" cellspacing="0" cellpadding="0"
+         width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;table-layout:fixed;">
+    <tr>
+      ${rowItems.map((loc, i) => renderLocCell(loc, i, n)).join("")}
+      ${
+        forceThreeCols && rowItems.length < 3
+          ? Array.from({ length: 3 - rowItems.length })
+              .map(() => `<td width="${100 / 3}%" style="width:${100 / 3}%;font-size:0;line-height:0;">&nbsp;</td>`)
+              .join("")
+          : ""
+      }
+    </tr>
+  </table>`;
   };
 
   // Desktop: rows of 3
@@ -1324,140 +1324,6 @@ function generateBenefitsHTML(block: NewsletterBlock): string {
            width="600" class="wrap" style="max-width:600px;width:100%;table-layout:fixed;">
       ${renderRow(row1, 0)}
       ${renderRow(row2, 3)}
-    </table>
-  </td>
-</tr>`;
-}
-
-function generateCategoriesHTML(block: NewsletterBlock): string {
-  const { content } = block;
-
-  const categories = (content as any).categories || [
-    { image: "", tag: "→ IPA, APA a NEIPA", url: "#" },
-    { image: "", tag: "→ Sour a Ovocné", url: "#" },
-    { image: "", tag: "→ Ležáky a klasika", url: "#" },
-  ];
-
-  const showViewAll = (content as any).showViewAll !== false;
-  const viewAllText = (content as any).viewAllText || "zobrazit vše";
-  const viewAllUrl = (content as any).viewAllUrl || "#";
-
-  const MAX = 6;
-  const TABLE_WIDTH = 600;
-  const GAP = 12; // exact gap between cards
-  const GUTTER = GAP / 2; // 6px on each side
-
-  const items = categories.slice(0, MAX);
-
-  const renderCategoryCell = (c: any, nInRow: number, idx: number) => {
-    const colPct = 100 / nInRow;
-
-    // total gaps per row = (n-1) * 12
-    const totalGaps = (nInRow - 1) * GAP;
-    const innerW = Math.floor((TABLE_WIDTH - totalGaps) / nInRow);
-
-    const padLeft = idx === 0 ? 0 : GUTTER;
-    const padRight = idx === nInRow - 1 ? 0 : GUTTER;
-
-    return `
-<td valign="top" width="${colPct}%" style="width:${colPct}%;padding:0 ${padRight}px 0 ${padLeft}px;">
-  <a href="${escapeAttr(c.url || "#")}" style="text-decoration:none;display:block;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
-      <tr>
-        <td style="background:#E5E5E5;">
-          ${
-            c.image
-              ? `<img src="${escapeAttr(c.image)}" width="${innerW}" alt=""
-                     style="display:block;width:100%;max-width:${innerW}px;height:auto;aspect-ratio:3/4;object-fit:cover;" />`
-              : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
-          }
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <span style="display:inline-block;background-color:#212121;color:#FFFFFF;font-family:'JetBrains Mono',monospace;font-size:12px;padding:4px 8px;">
-            ${c.tag}
-          </span>
-        </td>
-      </tr>
-    </table>
-  </a>
-</td>`;
-  };
-
-  const renderRowFill = (rowItems: any[]) => {
-    const n = rowItems.length;
-    if (!n) return "";
-    return `
-<table role="presentation" border="0" cellspacing="0" cellpadding="0"
-       width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;table-layout:fixed;">
-  <tr>
-    ${rowItems.map((c, i) => renderCategoryCell(c, n, i)).join("")}
-  </tr>
-</table>`;
-  };
-
-  // Desktop: rows of 3
-  const row1 = items.slice(0, 3);
-  const row2 = items.slice(3, 6);
-
-  // Mobile: 2 columns
-  const mobileRows: any[][] = [];
-  for (let i = 0; i < items.length; i += 2) mobileRows.push(items.slice(i, i + 2));
-
-  const viewAllHTML = showViewAll
-    ? `
-<a href="${escapeAttr(viewAllUrl)}" style="color:#000000;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;white-space:nowrap;">
-  <span style="text-decoration:none;">→ </span><span style="text-decoration:underline;">${viewAllText}</span>
-</a>`
-    : "";
-
-  return `<!-- Kategorie -->
-<tr>
-  <td align="center" style="padding:24px;margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0"
-           width="600" class="wrap" style="max-width:600px;width:100%;">
-      <tr>
-        <td style="padding-bottom:1rem;">
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
-            <tr>
-              <td style="font-family:'JetBrains Mono',monospace;">
-                <h2 style="margin:0;font-size:20px;font-weight:700;color:#212121;">${content.title || "Vyber si to pravé pro tebe"}</h2>
-              </td>
-              <td align="right">${viewAllHTML}</td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-
-      <!-- Desktop (3 cols) -->
-      <tr class="hide-on-mobile">
-        <td align="left">
-          ${renderRowFill(row1)}
-        </td>
-      </tr>
-      ${
-        row2.length
-          ? `<tr class="hide-on-mobile">
-               <td align="left" style="padding-top:${GAP}px;">
-                 ${renderRowFill(row2)}
-               </td>
-             </tr>`
-          : ""
-      }
-
-      <!-- Mobile (2 cols) -->
-      <tr class="show-on-mobile">
-        <td align="left">
-          ${mobileRows
-            .map(
-              (r, idx) =>
-                `${idx ? `<div style="height:${GAP}px;line-height:${GAP}px;font-size:0;">&nbsp;</div>` : ""}${renderRowFill(r)}`,
-            )
-            .join("")}
-        </td>
-      </tr>
-
     </table>
   </td>
 </tr>`;
