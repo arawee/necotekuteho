@@ -1574,7 +1574,7 @@ function generateZichovecFooterHTML(block: NewsletterBlock): string {
 
       <!-- Payment icons (WHITE) -->
       <tr>
-        <td style="background-color:#FFFFFF;padding:16px 0;">
+        <td style="background-color:#FFFFFF;padding:32px 0 16px 0;">
           <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
             <tr>
               <td align="center" style="font-size:0;">
@@ -1999,10 +1999,6 @@ function getNewsletterCSS(): string {
         display: block !important;
         width: 100% !important;
         padding-bottom: 24px !important;
-      }
-      /* Ensure proper padding on mobile */
-      td[style*="padding:24px"] {
-        padding: 16px !important;
       }
     }
   `;
