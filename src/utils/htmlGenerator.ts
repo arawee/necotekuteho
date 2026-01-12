@@ -541,8 +541,11 @@ function generateMistaHTML(block: NewsletterBlock): string {
   const COLS = 3;
   const MAX = 6;
   const tableWidth = 600;
-  const colWidth = Math.floor(tableWidth / COLS); // 200
   const GUTTER = 6;
+  const colPct = 100 / COLS;
+
+  // Same math as Products: 3 * (colInnerWidth + 12) = 600
+  const colInnerWidth = Math.floor((tableWidth - COLS * (GUTTER * 2)) / COLS); // 188
 
   const items = places.slice(0, MAX);
   const row1 = items.slice(0, COLS);
@@ -553,14 +556,14 @@ function generateMistaHTML(block: NewsletterBlock): string {
     const padRight = isLast ? "0" : `${GUTTER}px`;
 
     return `
-<td valign="top" class="stack" width="${colWidth}" style="width:${colWidth}px;padding:0 ${padRight} 0 ${padLeft};">
+<td valign="top" class="stack" width="${colPct}%" style="width:${colPct}%;padding:0 ${padRight} 0 ${padLeft};">
   <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
     <tr>
       <td>
         ${
           place.image
-            ? `<img src="${escapeAttr(place.image)}" width="${colWidth - GUTTER * 2}" alt="${escapeAttr(place.name)}"
-                    style="display:block;width:100%;max-width:${colWidth - GUTTER * 2}px;height:auto;aspect-ratio:3/4;object-fit:cover;margin-bottom:12px;" />`
+            ? `<img src="${escapeAttr(place.image)}" width="${colInnerWidth}" alt="${escapeAttr(place.name)}"
+                    style="display:block;width:100%;max-width:${colInnerWidth}px;height:auto;aspect-ratio:3/4;object-fit:cover;margin-bottom:12px;" />`
             : `<div style="width:100%;padding-top:133%;background:#E5E5E5;margin-bottom:12px;"></div>`
         }
       </td>
@@ -592,7 +595,7 @@ function generateMistaHTML(block: NewsletterBlock): string {
   const renderRowLeft = (rowItems: any[]) => {
     const n = rowItems.length;
     const missing = COLS - n;
-    const emptyTD = `<td width="${colWidth}" style="width:${colWidth}px;font-size:0;line-height:0;">&nbsp;</td>`;
+    const emptyTD = `<td width="${colPct}%" style="width:${colPct}%;font-size:0;line-height:0;">&nbsp;</td>`;
 
     return `
 <table role="presentation" border="0" cellspacing="0" cellpadding="0"
