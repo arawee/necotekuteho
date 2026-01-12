@@ -194,7 +194,7 @@ function generateZichovecHeaderWithMenuHTML(block: NewsletterBlock): string {
     </table>
   </td>
 </tr>
-<div style="height: 2rem; width: 100%; background-color:#ffffff00;"></>`;
+<div style="height: 2rem; width: 100%; background-color:#ffffff00;"></div>`;
 }
 
 function generateZichovecFooterHTML(block: NewsletterBlock): string {
