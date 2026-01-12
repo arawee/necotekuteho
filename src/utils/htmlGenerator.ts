@@ -769,7 +769,24 @@ function generateMistaHTML(block: NewsletterBlock): string {
               </a>
             </td>
             <td align="right" style="width:100%;text-align:right;">
-              <h3 style="margin:0;font-size:16px;font-weight:700;color:#212121;text-align:right;">${place.name || ""}</h3>
+              <h3
+                style="
+                  margin:0;
+                  font-size:16px;
+                  font-weight:700;
+                  color:#212121;
+                  text-align:right;
+              
+                  display:block;
+                  width:100%;
+                  min-width:140px;        /* ← stops the 1ch collapse */
+                  white-space:nowrap;
+                  word-break:normal;
+                  overflow:visible;
+                "
+              >
+                ${place.name || ""}
+              </h3>            
             </td>
           </tr>
         </table>
@@ -867,7 +884,24 @@ function generateMistaHTML(block: NewsletterBlock): string {
                         </a>
                       </td>
                       <td align="right" style="width:100%;text-align:right;">
-                        <h3 style="margin:0;font-size:16px;font-weight:700;color:#212121;text-align:right;">${place.name || ""}</h3>
+                        <h3
+                          style="
+                            margin:0;
+                            font-size:16px;
+                            font-weight:700;
+                            color:#212121;
+                            text-align:right;
+                        
+                            display:block;
+                            width:100%;
+                            min-width:140px;        /* ← stops the 1ch collapse */
+                            white-space:nowrap;
+                            word-break:normal;
+                            overflow:visible;
+                          "
+                        >
+                          ${place.name || ""}
+                        </h3>
                       </td>
                     </tr>
                   </table>
