@@ -434,7 +434,8 @@ function generateProductListHTML(block: NewsletterBlock): string {
                   <td style="font-size:10px;color:#000000;font-family:'JetBrains Mono',monospace;">
                     <strong>Alk. →</strong> ${p.alcohol}% obj.
                   </td>
-                  <td align="right" style="font-size:10px;color:#000000;font-family:'JetBrains Mono',monospace;">
+                  <td align="right"
+                      style="font-size:10px;color:#000000;font-family:'JetBrains Mono',monospace;white-space:nowrap;width:58px;">
                     ${p.volume}
                   </td>
                 </tr>
@@ -1160,18 +1161,14 @@ function generateBenefitsHTML(block: NewsletterBlock): string {
   const renderCell = (b: any, globalIndex: number) => {
     return `
       <td valign="top" width="200" style="width:200px;text-align:center;font-family:'JetBrains Mono',monospace;padding:0;margin:0;">
-        <!-- inner wrapper provides gutters WITHOUT affecting outer width -->
-        <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;margin-bottom:8px;">
-          <tr>
-            <td style="font-size:10px;color:#000000;font-family:'JetBrains Mono',monospace;">
-              <strong>Alk. →</strong> ${p.alcohol}% obj.
-            </td>
-            <td align="right"
-                style="font-size:10px;color:#000000;font-family:'JetBrains Mono',monospace;white-space:nowrap;width:58px;">
-              ${p.volume}
-            </td>
-          </tr>
-        </table>
+        <div style="padding:0 12px;">
+          <div style="margin-bottom:16px;">
+            <img src="${getBenefitIcon(b.icon, globalIndex)}" width="48" height="48" alt=""
+                 style="display:inline-block;width:48px;height:48px;object-fit:contain;" />
+          </div>
+          <h4 style="margin:0 0 12px 0;font-size:16px;font-weight:700;color:#000000;line-height:120%;">${b.title}</h4>
+          <p style="margin:0 auto;max-width:35ch;font-size:12px;font-weight:400;color:#000000;line-height:120%;">${b.description}</p>
+        </div>
       </td>
     `;
   };
