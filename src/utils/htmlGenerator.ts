@@ -496,7 +496,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
 
   return `
 <tr>
-  <td align="center" style="padding:24px 32px;">
+  <td align="center" style="padding:32px 24px;">
     <table role="presentation" width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;">
       <tr>
         <td style="padding-bottom:16px;">
@@ -619,7 +619,7 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
 
   return `<!-- Kategorie -->
 <tr>
-  <td align="center" style="padding:24px 32px;">
+  <td align="center" style="padding:32px 24px;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0"
            width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
@@ -809,7 +809,7 @@ function generateMistaHTML(block: NewsletterBlock): string {
 
   return `<!-- Místa -->
 <tr>
-  <td align="center" style="padding:16px 32px;">
+  <td align="center" style="padding:32px 16px;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td style="padding:0px;">
@@ -979,7 +979,7 @@ function generateLocationsHTML(block: NewsletterBlock): string {
 
   return `
 <tr>
-  <td align="center" style="padding:24px 32px;">
+  <td align="center" style="padding:32px 24px;">
     <table role="presentation" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td>
@@ -1164,7 +1164,7 @@ function generatePromoBoxHTML(block: NewsletterBlock): string {
   if (all.length === 1) {
     return `<!-- Promo boxy -->
 <tr>
-  <td align="center" style="padding:16px 32px;">
+  <td align="center" style="padding:32px 16px;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td>
@@ -1383,7 +1383,7 @@ function generateArticleTextHTML(block: NewsletterBlock): string {
 
   return `<!-- Článek -->
   <tr>
-    <td align="center" style="padding:24px 32px;">
+    <td align="center" style="padding:32px 24px;">
       <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
         <tr>
           <td style="padding:0 0;font-family:'JetBrains Mono',monospace;">
