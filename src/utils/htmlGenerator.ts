@@ -367,7 +367,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
       <sDweWER w
 
     <tr>
-      <td style="font-family:'JetBrains Mono',monospace;">
+      <td style="font-family:'JetBrains Mono',monospace;padding-top:0px;">
         <div style="margin-bottom:8px;">
           ${(p.tags || [])
             .map(
@@ -450,7 +450,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
                 </td>
               </tr>
               <tr>
-                <td style="font-family:'JetBrains Mono',monospace;padding-top:8px;">
+                <td style="font-family:'JetBrains Mono',monospace;padding-top:0px;">
                   <div style="margin-bottom:8px;">
                     ${(p.tags || [])
                       .map(
