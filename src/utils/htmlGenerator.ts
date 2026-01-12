@@ -317,15 +317,7 @@ function generateZichovecFooterHTML(block: NewsletterBlock): string {
 
 function generateProductListHTML(block: NewsletterBlock): string {
   const { content } = block;
-  
-  const getProductImageUrl = (p: any): string =>
-    (typeof p?.image === "string" && p.image.trim()) ||
-    (typeof p?.imageUrl === "string" && p.imageUrl.trim()) ||
-    (typeof p?.photo === "string" && p.photo.trim()) ||
-    (typeof p?.photoUrl === "string" && p.photoUrl.trim()) ||
-    (typeof p?.image?.url === "string" && p.image.url.trim()) ||
-    "";
-  
+
   const products = Array.isArray((content as any).products)
     ? (content as any).products
     : [
@@ -394,14 +386,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
   const renderProductCell = (p: any, isFirst: boolean, isLast: boolean) => {
     const padLeft = isFirst ? "0" : `${GUTTER}px`;
     const padRight = isLast ? "0" : `${GUTTER}px`;
-const imgUrl = getProductImageUrl(p);
 
-// width of the actual content box inside the padded <td>
-const imgW = isFirst || isLast ? colInnerWidth + GUTTER : colInnerWidth; 
-// ^ keep it simple: image follows "available cell content width"
-// If you want perfect math: use numeric width equal to the inner table width in your client.
-
-const imgH = Math.round((imgW * 4) / 3); // 3:4 ratio
     const tagsHTML = (p.tags || [])
       .map(
         (tag: any) => `
@@ -422,21 +407,23 @@ const imgH = Math.round((imgW * 4) / 3); // 3:4 ratio
 <td valign="top" class="stack" width="${colPct}%" style="width:${colPct}%;padding:0 ${padRight} 0 ${padLeft};">
   <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
     <tr>
-      <td style="background-color:#F5F5F5;">
-        ${
-          imgUrl
-            ? `
-              <img src="${imgUrl}"
-                   width="${colInnerWidth}"
-                   height="${Math.round((colInnerWidth * 4) / 3)}"
-                   alt="${p.name}"
-                   style="display:block;width:100%;height:${Math.round((colInnerWidth * 4) / 3)}px;object-fit:cover;background:#E5E5E5;" />
-            `
-            : `<div style="width:100%;height:${Math.round((colInnerWidth * 4) / 3)}px;background:#E5E5E5;"></div>`
-        }
-      </td>
-    </tr>
+      <tr>
+        <td style="background-color:#F5F5F5;">
+          ${(() => {
+            const imgUrl = getProductImageUrl(p);
+            const imgW = colInnerWidth; // 188
+            const imgH = Math.round((imgW * 4) / 3); // 251 (3:4)
 
+            return imgUrl
+              ? `<img src="${imgUrl}"
+                        width="${imgW}"
+                        height="${imgH}"
+                        alt="${p.name}"
+                        style="display:block;width:100%;height:${imgH}px;object-fit:cover;background:#E5E5E5;" />`
+              : `<div style="width:100%;height:${imgH}px;background:#E5E5E5;"></div>`;
+          })()}
+        </td>
+      </tr>
     <tr>
       <td style="padding-top:0;font-family:'JetBrains Mono',monospace;">
         <div style="margin-top:-4px;margin-bottom:8px;">${tagsHTML}</div>
@@ -537,15 +524,7 @@ function generateMistaHTML(block: NewsletterBlock): string {
     { image: "", name: "Kolbenova 9", buttonText: "→", buttonUrl: "#" },
     { image: "", name: "Pizza Rosa", buttonText: "→", buttonUrl: "#" },
   ];
-  
-  const getPlaceImageUrl = (place: any): string =>
-    (typeof place?.image === "string" && place.image.trim()) ||
-    (typeof place?.imageUrl === "string" && place.imageUrl.trim()) ||
-    (typeof place?.photo === "string" && place.photo.trim()) ||
-    (typeof place?.photoUrl === "string" && place.photoUrl.trim()) ||
-    (typeof place?.image?.url === "string" && place.image.url.trim()) ||
-    "";
-  
+
   const showViewAll = (content as any).showViewAll !== false;
   const viewAllText = (content as any).viewAllText || "zobrazit vše";
   const viewAllUrl = (content as any).viewAllUrl || "#";
@@ -570,21 +549,10 @@ function generateMistaHTML(block: NewsletterBlock): string {
     <tr>
       <td>
         ${
-          const imgUrl = getPlaceImageUrl(place);
-          const imgW = colWidth - (isFirst ? 0 : GUTTER) - (isLast ? 0 : GUTTER);
-          const imgH = Math.round((imgW * 4) / 3);
-          
-          ${
-            imgUrl
-              ? `
-                <img src="${imgUrl}"
-                     width="${imgW}"
-                     height="${imgH}"
-                     alt="${place.name}"
-                     style="display:block;width:100%;height:${imgH}px;object-fit:cover;background:#E5E5E5;margin-bottom:12px;" />
-              `
-              : `<div style="width:100%;height:${imgH}px;background:#E5E5E5;margin-bottom:12px;"></div>`
-          }
+          place.image
+            ? `<img src="${place.image}" width="${colWidth - GUTTER * 2}" alt="${place.name}"
+                    style="display:block;width:100%;max-width:${colWidth - GUTTER * 2}px;height:auto;aspect-ratio:3/4;object-fit:cover;margin-bottom:12px;" />`
+            : `<div style="width:100%;padding-top:133%;background:#E5E5E5;margin-bottom:12px;"></div>`
         }
       </td>
     </tr>
