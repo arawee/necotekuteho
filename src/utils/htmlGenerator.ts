@@ -416,7 +416,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
             <td style="background-color:#F5F5F5;">
               ${
                 p.image
-                  ? `<img src="${p.image}" width="100%" alt="${p.name}" style="display:block;width:100%;aspect-ratio:3/4;object-fit:cover;"/>`
+                  ? `<img src="${p.image}" width="188" alt="${p.name}" style="display:block;width:100%;max-width:188px;height:auto;aspect-ratio:3/4;object-fit:cover;"/>`
                   : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
               }
             </td>
@@ -563,7 +563,7 @@ function generateMistaHTML(block: NewsletterBlock): string {
     const padRight = isLast ? "0" : "6px";
 
     return `
-    <td valign="top" width="${colWidth}" style="width:${colWidth}px;padding:0 ${padRight} 0 ${padLeft};">
+    <td valign="top" class="stack" width="${colWidth}" style="width:${colWidth}px; ...
       <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
         <tr>
           <td>
@@ -604,20 +604,22 @@ function generateMistaHTML(block: NewsletterBlock): string {
     const emptyTD = `<td width="${colWidth}" style="width:${colWidth}px;font-size:0;line-height:0;">&nbsp;</td>`;
 
     return `
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0"
-           width="600" style="width:600px;max-width:600px;table-layout:fixed;">
-      <tr>
-        ${rowItems.map((p, i) => renderPlaceCell(p, i === 0, i === n - 1)).join("")}
-        ${
-          missing > 0
-            ? Array.from({ length: missing })
-                .map(() => emptyTD)
-                .join("")
-            : ""
-        }
-      </tr>
-    </table>
-  `;
+      <table role="presentation"
+             border="0" cellspacing="0" cellpadding="0"
+             width="600" class="wrap"
+             style="width:100%;max-width:600px;table-layout:fixed;">
+        <tr>
+          ${rowItems.map((p, i) => renderPlaceCell(p, i === 0, i === n - 1)).join("")}
+          ${
+            missing > 0
+              ? Array.from({ length: missing })
+                  .map(() => emptyTD)
+                  .join("")
+              : ""
+          }
+        </tr>
+      </table>
+    `;
   };
 
   const viewAllHTML = showViewAll
