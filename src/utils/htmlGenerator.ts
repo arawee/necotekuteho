@@ -457,7 +457,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
                         (t: any) =>
                           `<span style="display:inline-block;background:${tagBg(
                             t.color,
-                          )};color:#fff;font-size:10px;padding:2px 8px;margin-right:4px;margin-bottom:4px;">${t.text}</span>`,
+                          )};color:#fff;font-size:10px;padding:2px 8px;margin-right:4px;margin-bottom:4px;margin-top:-4px !important;">${t.text}</span>`,
                       )
                       .join("")}
                   </div>
