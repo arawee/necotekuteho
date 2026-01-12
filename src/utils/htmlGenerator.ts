@@ -506,19 +506,19 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
     if (!rowItems.length) return "";
 
     return `
-  <table role="presentation" border="0" cellspacing="0" cellpadding="0"
-         width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;table-layout:fixed;">
-    <tr>
-      ${rowItems.map((loc, i) => renderLocCell(loc, i, n)).join("")}
-      ${
-        forceThreeCols && rowItems.length < 3
-          ? Array.from({ length: 3 - rowItems.length })
-              .map(() => `<td width="${100 / 3}%" style="width:${100 / 3}%;font-size:0;line-height:0;">&nbsp;</td>`)
-              .join("")
-          : ""
-      }
-    </tr>
-  </table>`;
+<table role="presentation" border="0" cellspacing="0" cellpadding="0"
+       width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;table-layout:fixed;">
+  <tr>
+    ${rowItems.map((c, i) => renderCategoryCell(c, n, i)).join("")}
+    ${
+      forceThreeCols && rowItems.length < 3
+        ? Array.from({ length: 3 - rowItems.length })
+            .map(() => `<td width="${100 / 3}%" style="width:${100 / 3}%;font-size:0;line-height:0;">&nbsp;</td>`)
+            .join("")
+        : ""
+    }
+  </tr>
+</table>`;
   };
 
   // Desktop: rows of 3
