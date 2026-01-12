@@ -858,35 +858,30 @@ function generateLocationsHTML(block: NewsletterBlock): string {
               <td align="right">${viewAllHTML}</td>
             </tr>
           </table>
-        </td>
-      </tr>
 
-      <!-- Desktop (3 cols). Row2 is LEFT-aligned, same sizing as row1 -->
-      <tr class="hide-on-mobile">
-        <td align="left" style="padding-top:${GAP}px;">
-          ${renderRowFill(row1)}
-        </td>
-      </tr>
-      ${
-        row2.length
-          ? `<tr class="hide-on-mobile">
-               <td align="left" style="padding-top:${GAP}px;">
-                 ${renderRowFill(row2, true)}
-               </td>
-             </tr>`
-          : ""
-      }
+          <div style="height:${GAP}px;line-height:${GAP}px;font-size:0;">&nbsp;</div>
 
-      <!-- Mobile (1 col) -->
-      <tr class="show-on-mobile">
-        <td align="left" style="padding-top:${GAP}px;">
-          ${mobileBlocks}
+          <!-- Desktop -->
+          <div class="hide-on-mobile">
+            ${renderRowFill(row1)}
+            ${
+              row2.length
+                ? `<div style="height:${GAP}px;line-height:${GAP}px;font-size:0;">&nbsp;</div>
+                   ${renderRowFill(row2, true)}`
+                : ""
+            }
+          </div>
+
+          <!-- Mobile -->
+          <div class="show-on-mobile">
+            ${mobileBlocks}
+          </div>
+
         </td>
       </tr>
     </table>
   </td>
 </tr>`;
-}
 
 function generateBlogPostsHTML(block: NewsletterBlock): string {
   const { content } = block;
