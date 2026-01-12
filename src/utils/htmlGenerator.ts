@@ -1497,8 +1497,6 @@ function getNewsletterCSS(): string {
         mso-hide: all !important; /* Outlook */
       }
       body, table, td {
-        width: 100% !important;
-        min-width: 100% !important;
       }
       table.wrap {
         width: 100% !important;
