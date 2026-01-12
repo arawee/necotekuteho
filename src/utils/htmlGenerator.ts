@@ -1110,14 +1110,14 @@ function generateArticleTextHTML(block: NewsletterBlock): string {
     <td align="center" style="padding:24px 0;margin-bottom:32px;">
       <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
         <tr>
-          <td style="padding:0 24px;font-family:'JetBrains Mono',monospace;">
+          <td style="padding:0 0;font-family:'JetBrains Mono',monospace;">
             <h1 style="margin:0 0 24px 0;font-size:32px;font-weight:700;line-height:1.2;color:#212121;">
               ${content.title || "OPA: Jemná evoluce moderních ale"}
             </h1>
           </td>
         </tr>
         <tr>
-          <td style="padding:0 24px;font-family:'JetBrains Mono',monospace;font-size:14px;line-height:120%;color:#212121;">
+          <td style="padding:0 0;font-family:'JetBrains Mono',monospace;font-size:14px;line-height:120%;color:#212121;">
             ${content.text || "OPA, tedy Oat Pale Ale, představuje moderní variaci na klasické světlé styly, která si díky své hladké textury a vysoké přístupnosti získává stále větší pozornost mezi pivovary i konzumenty."}
           </td>
         </tr>
