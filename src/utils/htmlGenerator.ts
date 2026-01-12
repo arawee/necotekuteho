@@ -129,7 +129,7 @@ function generateZichovecHeaderHTML(block: NewsletterBlock): string {
   // Logo width ratio: 1257 / 1440 => 0.872916... (87.2917% of header width)
   return `<!-- Záhlaví ZICHOVEC -->
 <tr>
-  <td align="center" style="background-color:#00C322;padding:0;margin-bottom:2rem !important;">
+  <td align="center" style="background-color:#00C322;padding:0;border-bottom:2rem solid white;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;margin:0 auto;">
       <tr>
         <td style="padding:0;margin:0;">
@@ -144,8 +144,6 @@ function generateZichovecHeaderHTML(block: NewsletterBlock): string {
           </div>
         </td>
       </tr>
-        <div style="height: 2rem; width: 100%; background-color:#ffffff00;"></div>
-
     </table>
   </td>
 </tr>`;
@@ -171,7 +169,7 @@ function generateZichovecHeaderWithMenuHTML(block: NewsletterBlock): string {
 
   return `<!-- Záhlaví ZICHOVEC s menu (menu uvnitř hlavičky) -->
 <tr>
-  <td align="center" style="background-color:#00C322;padding:0;margin-bottom:2rem !important">
+  <td align="center" style="background-color:#00C322;padding:0;border-bottom:2rem solid white;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;margin:0 auto;">
       <tr>
         <td style="padding:0;margin:0;">
@@ -196,7 +194,6 @@ function generateZichovecHeaderWithMenuHTML(block: NewsletterBlock): string {
     </table>
   </td>
 </tr>
-<div style="height: 2rem; width: 100%; background-color:#ffffff00;"></div>`;
 }
 
 function generateZichovecFooterHTML(block: NewsletterBlock): string {
