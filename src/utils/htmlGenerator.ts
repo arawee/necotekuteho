@@ -388,7 +388,10 @@ function generateProductListHTML(block: NewsletterBlock): string {
 
   const items = products.slice(0, MAX);
 
-  const renderProductCell = (p: any) => {
+  const renderProductCell = (p: any, isFirst: boolean, isLast: boolean) => {
+    const padLeft = isFirst ? "0" : "6px";
+    const padRight = isLast ? "0" : "6px";
+
     const tagsHTML = (p.tags || [])
       .map(
         (tag: any) => `
@@ -404,8 +407,11 @@ function generateProductListHTML(block: NewsletterBlock): string {
       : `<span style="color:#212121;font-weight:700;">${p.price}</span>`;
 
     return `
-      <td valign="top" width="${colPct}%" style="width:${colPct}%;padding:0 6px 0 6px;">
-        <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
+    <td valign="top"
+        class="stack"
+        width="${colPct}%"
+        style="width:${colPct}%;padding:0 ${padRight} 0 ${padLeft};">
+      <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
           <tr>
             <td style="background-color:#F5F5F5;">
               ${
@@ -456,24 +462,21 @@ function generateProductListHTML(block: NewsletterBlock): string {
     const n = rowItems.length;
     const missing = COLS - n;
 
-    const leftCols = missing > 0 ? missing / 2 : 0;
-    const rightCols = missing > 0 ? missing - leftCols : 0;
-
-    const leftPct = leftCols * colPct;
-    const rightPct = rightCols * colPct;
-
-    const leftTD =
-      leftPct > 0 ? `<td width="${leftPct}%" style="width:${leftPct}%;font-size:0;line-height:0;">&nbsp;</td>` : "";
-    const rightTD =
-      rightPct > 0 ? `<td width="${rightPct}%" style="width:${rightPct}%;font-size:0;line-height:0;">&nbsp;</td>` : "";
+    const emptyTD = `<td width="${colPct}%" style="width:${colPct}%;font-size:0;line-height:0;">&nbsp;</td>`;
 
     return `
-      <table role="presentation" border="0" cellspacing="0" cellpadding="0"
+      <table role="presentation"
+             border="0" cellspacing="0" cellpadding="0"
              width="100%" style="width:100%;max-width:600px;table-layout:fixed;">
         <tr>
-          ${leftTD}
-          ${rowItems.map(renderProductCell).join("")}
-          ${rightTD}
+          ${rowItems.map((p, i) => renderProductCell(p, i === 0, i === n - 1)).join("")}
+          ${
+            missing > 0
+              ? Array.from({ length: missing })
+                  .map(() => emptyTD)
+                  .join("")
+              : ""
+          }
         </tr>
       </table>
     `;
