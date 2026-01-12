@@ -195,8 +195,6 @@ function generateZichovecHeaderWithMenuHTML(block: NewsletterBlock): string {
   </td>
 </tr>`;
 }
-
-v/contact) -->
       <tr>
         <td align="center" style="background-color:#00C322;">
           <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap"
@@ -1551,7 +1549,170 @@ function generateArticleTextHTML(block: NewsletterBlock): string {
     </td>
   </tr>`;
 }
+function generateZichovecFooterHTML(block: NewsletterBlock): string {
+  const { content } = block;
 
+  const email = (content as any).email || "e-shop@pivovarzichovec.cz";
+  const columns = (content as any).columns || [
+    {
+      title: "Užitečné",
+      links: [
+        { text: "Doprava", url: "#" },
+        { text: "Platba", url: "#" },
+        { text: "Reklamace", url: "#" },
+        { text: "Ochrana osobních údajů", url: "#" },
+        { text: "Cookies", url: "#" },
+      ],
+    },
+    {
+      title: "ZICHOVEC",
+      links: [
+        { text: "O nás", url: "#" },
+        { text: "Chci na čepu", url: "#" },
+        { text: "Eventy", url: "#" },
+        { text: "Merch", url: "#" },
+        { text: "Blog", url: "#" },
+        { text: "Kontakt", url: "#" },
+      ],
+    },
+    {
+      title: "E-shop",
+      links: [
+        { text: "E-shop", url: "#" },
+        { text: "Limitky a Novinky", url: "#" },
+        { text: "Dárky a Balíčky", url: "#" },
+        { text: "Zachraň pivo", url: "#" },
+      ],
+    },
+  ];
+
+  const socials = (content as any).socials || [
+    { text: "Facebook", url: "#" },
+    { text: "Instagram", url: "#" },
+    { text: "Youtube", url: "#" },
+    { text: "X", url: "#" },
+    { text: "LinkedIn", url: "#" },
+  ];
+
+  const phoneNumber = (content.footerText || "602 555 555")
+    .replace(/^\+420\s*/, "")
+    .replace(/^tel\.\s*/i, "");
+
+  const columnHTML = columns
+    .map(
+      (col: any) => `
+        <td valign="top" width="25%" class="stack"
+            style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#212121;">
+          <h4 style="margin:0 0 1rem 0;font-size:16px;font-weight:700;color:#212121;">${col.title}</h4>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            ${col.links
+              .map(
+                (link: any) =>
+                  `<a href="${escapeAttr(link.url)}" style="color:#212121;text-decoration:none;display:block;margin-bottom:4px;">${link.text}</a>`,
+              )
+              .join("")}
+          </div>
+        </td>
+      `,
+    )
+    .join("");
+
+  return `<!-- Patička ZICHOVEC -->
+<tr>
+  <!-- OUTER wrapper stays white -->
+  <td align="center" style="background-color:#FFFFFF;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0"
+           width="600" class="wrap" style="max-width:600px;width:100%;background-color:#FFFFFF;">
+
+      <!-- GREEN top part (contact + nav) -->
+      <tr>
+        <td align="center" style="background-color:#00C322;">
+          <table role="presentation" border="0" cellspacing="0" cellpadding="0"
+                 width="600" class="wrap" style="max-width:600px;width:100%;background-color:#00C322;">
+            <tr>
+              <td style="padding:32px;">
+                <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
+                  <tr>
+                    <!-- Contact column -->
+                    <td valign="top" width="25%" class="stack"
+                        style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#212121;">
+                      <p style="margin:0 0 1rem 0;font-weight:700;text-decoration:underline;">${phoneNumber}</p>
+                      <p style="margin:0 0 24px 0;">
+                        <a href="mailto:${escapeAttr(email)}" style="color:#212121;font-weight:700;text-decoration:underline;">Email</a>
+                      </p>
+                      <div style="display:flex;flex-direction:column;gap:4px;">
+                        ${socials
+                          .map(
+                            (s: any) =>
+                              `<a href="${escapeAttr(s.url)}" style="color:#212121;font-weight:700;text-decoration:underline;display:block;margin-bottom:4px;">${s.text}</a>`,
+                          )
+                          .join("")}
+                      </div>
+                    </td>
+
+                    ${columnHTML}
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <!-- Payment icons (WHITE) -->
+      <tr>
+        <td style="background-color:#FFFFFF;padding:16px 0;">
+          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
+            <tr>
+              <td align="center" style="font-size:0;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="VISA" height="24" style="height:24px;margin:0 4px;"/>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/MasterCard_Logo.svg" alt="Mastercard" height="24" style="height:24px;margin:0 4px;"/>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" height="24" style="height:24px;margin:0 4px;"/>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg" alt="GPay" height="24" style="height:24px;margin:0 4px;"/>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b0/Apple_Pay_logo.svg" alt="Apple Pay" height="24" style="height:24px;margin:0 4px;"/>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <!-- Copyright (WHITE) -->
+      <tr>
+        <td style="background-color:#FFFFFF;padding:16px 32px;">
+          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
+            <tr>
+              <td style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#212121;">
+                <div>${String(content.copyright || "Copyright © 2025 Pivovar ZICHOVEC.").replace(
+                  /\s*Všechna práva vyhrazena\.?/gi,
+                  "",
+                )}</div>
+                <div>Všechna práva vyhrazena.</div>
+              </td>
+
+              <td align="right" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#212121;">
+                <table role="presentation" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td style="padding-right:16px;">
+                      <div>Vývoj</div>
+                      <a href="https://www.fv-studio.cz/" style="color:#A073FF;text-decoration:underline;">FY STUDIO + Shoptet</a>
+                    </td>
+                    <td>
+                      <div>Design</div>
+                      <a href="https://www.vanek.studio" style="color:#A073FF;text-decoration:underline;">Vaněk.Studio</a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+    </table>
+  </td>
+</tr>`;
+}
 function generateBenefitsHTML(block: NewsletterBlock): string {
   const benefits = Array.isArray((block.content as any).benefits)
     ? (block.content as any).benefits
