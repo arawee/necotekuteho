@@ -1846,7 +1846,8 @@ function generateTextTwoColumnsHTML(block: NewsletterBlock): string {
         <td valign="top"
             width="25%"
             style="
-              width:25%;
+              width:25% !important;
+              padding-left:24px;
               font-family:'JetBrains Mono',monospace;
               font-size:12px;
               font-weight:700;
