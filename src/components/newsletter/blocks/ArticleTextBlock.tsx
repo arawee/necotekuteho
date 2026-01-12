@@ -126,7 +126,8 @@ export const ArticleTextBlock = ({ block, onUpdate }: ArticleTextBlockProps) => 
         {(() => {
           const hasDate = date && date.trim() !== '';
           const hasAuthor = author && author.trim() !== '';
-          const hasTags = tags.length > 0 && tags.some(t => t.text && t.text.trim() !== '');
+          const validTags = tags.filter(t => t.text && t.text.trim() !== '' && t.url && t.url.trim() !== '' && t.url !== '#');
+          const hasTags = validTags.length > 0;
           const validShareLinks = shareLinks.filter(s => s.url && s.url.trim() !== '' && s.url !== '#');
           const hasShares = validShareLinks.length > 0;
           
@@ -166,7 +167,7 @@ export const ArticleTextBlock = ({ block, onUpdate }: ArticleTextBlockProps) => 
                 <div className="flex gap-2">
                   <span className="font-medium">Tag →</span>
                   <span className="text-muted-foreground underline">
-                    {tags.filter(t => t.text && t.text.trim() !== '').map(t => t.text).join(', ')}
+                    {validTags.map(t => t.text).join(', ')}
                   </span>
                 </div>
               )}
