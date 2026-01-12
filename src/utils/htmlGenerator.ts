@@ -558,69 +558,66 @@ function generateMistaHTML(block: NewsletterBlock): string {
   const row1 = items.slice(0, COLS);
   const row2 = items.slice(COLS, COLS * 2);
 
-  const renderPlaceCell = (place: any) => {
-    return `
-      <td valign="top" width="${colWidth}" style="width:${colWidth}px;padding:0 6px 0 6px;">
-        <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
-          <tr>
-            <td>
-              ${
-                place.image
-                  ? `<img src="${place.image}" width="100%" alt="${place.name}" style="display:block;width:100%;aspect-ratio:3/4;object-fit:cover;margin-bottom:12px;"/>`
-                  : `<div style="width:100%;padding-top:133%;background:#E5E5E5;margin-bottom:12px;"></div>`
-              }
-            </td>
-          </tr>
-
-          <tr>
-            <td style="font-family:'JetBrains Mono',monospace;">
-              <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
-                <tr>
-                  <td style="padding-right:12px;width:60px;">
-                    <a href="${place.buttonUrl || "#"}" style="display:inline-block;width:36px;height:36px;border:1px solid #00C322;border-radius:50%;text-align:center;line-height:36px;text-decoration:none;">
-                      ${ARROW_ICON_SVG("#00C322")}
-                    </a>
-                  </td>
-                  <td align="right" style="width:100%;text-align:right;">
-                    <h3 style="margin:0;font-size:16px;font-weight:700;color:#212121;text-align:right;">${place.name}</h3>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>
-      </td>
-    `;
-  };
-
-  // ✅ Center last row with spacer tds (keeps same card widths)
-  const renderRow = (rowItems: any[]) => {
-    const n = rowItems.length;
-    const used = n * colWidth;
-    const remaining = tableWidth - used;
-
-    const leftSpacer = Math.floor(remaining / 2);
-    const rightSpacer = remaining - leftSpacer;
-
-    const leftTD =
-      leftSpacer > 0
-        ? `<td width="${leftSpacer}" style="width:${leftSpacer}px;font-size:0;line-height:0;">&nbsp;</td>`
-        : "";
-    const rightTD =
-      rightSpacer > 0
-        ? `<td width="${rightSpacer}" style="width:${rightSpacer}px;font-size:0;line-height:0;">&nbsp;</td>`
-        : "";
+  const renderPlaceCell = (place: any, isFirst: boolean, isLast: boolean) => {
+    const padLeft = isFirst ? "0" : "6px";
+    const padRight = isLast ? "0" : "6px";
 
     return `
-      <table role="presentation" border="0" cellspacing="0" cellpadding="0"
-             width="600" style="width:600px;max-width:600px;table-layout:fixed;">
+    <td valign="top" width="${colWidth}" style="width:${colWidth}px;padding:0 ${padRight} 0 ${padLeft};">
+      <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
         <tr>
-          ${leftTD}
-          ${rowItems.map(renderPlaceCell).join("")}
-          ${rightTD}
+          <td>
+            ${
+              place.image
+                ? `<img src="${place.image}" width="100%" alt="${place.name}" style="display:block;width:100%;aspect-ratio:3/4;object-fit:cover;margin-bottom:12px;"/>`
+                : `<div style="width:100%;padding-top:133%;background:#E5E5E5;margin-bottom:12px;"></div>`
+            }
+          </td>
+        </tr>
+
+        <tr>
+          <td style="font-family:'JetBrains Mono',monospace;">
+            <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+              <tr>
+                <td style="padding-right:12px;width:60px;">
+                  <a href="${place.buttonUrl || "#"}" style="display:inline-block;width:36px;height:36px;border:1px solid #00C322;border-radius:50%;text-align:center;line-height:36px;text-decoration:none;">
+                    ${ARROW_ICON_SVG("#00C322")}
+                  </a>
+                </td>
+                <td align="right" style="width:100%;text-align:right;">
+                  <h3 style="margin:0;font-size:16px;font-weight:700;color:#212121;text-align:right;">${place.name}</h3>
+                </td>
+              </tr>
+            </table>
+          </td>
         </tr>
       </table>
-    `;
+    </td>
+  `;
+  };
+
+  // ✅ left aligned rows (no centering spacers)
+  // fills missing columns with empty cells on the RIGHT
+  const renderRowLeft = (rowItems: any[]) => {
+    const n = rowItems.length;
+    const missing = COLS - n;
+    const emptyTD = `<td width="${colWidth}" style="width:${colWidth}px;font-size:0;line-height:0;">&nbsp;</td>`;
+
+    return `
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0"
+           width="600" style="width:600px;max-width:600px;table-layout:fixed;">
+      <tr>
+        ${rowItems.map((p, i) => renderPlaceCell(p, i === 0, i === n - 1)).join("")}
+        ${
+          missing > 0
+            ? Array.from({ length: missing })
+                .map(() => emptyTD)
+                .join("")
+            : ""
+        }
+      </tr>
+    </table>
+  `;
   };
 
   const viewAllHTML = showViewAll
@@ -633,12 +630,12 @@ function generateMistaHTML(block: NewsletterBlock): string {
 
   return `<!-- Místa -->
 <tr>
-  <td align="center" style="padding:24px;margin-bottom:32px;">
+  <td align="center" style="padding:0;margin-bottom:32px;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0"
            width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
-        <td style="padding-bottom:1rem;">
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
+        <td style="padding:24px;">
+          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
             <tr>
               <td style="font-family:'JetBrains Mono',monospace;">
                 <h2 style="margin:0;font-size:20px;font-weight:700;color:#212121;">${content.title || "Kde nás ochutnáte?"}</h2>
@@ -646,28 +643,20 @@ function generateMistaHTML(block: NewsletterBlock): string {
               <td align="right">${viewAllHTML}</td>
             </tr>
           </table>
-        </td>
-      </tr>
 
-      <!-- Row 1 -->
-      <tr>
-        <td align="center">
-          ${renderRow(row1)}
-        </td>
-      </tr>
+          <div style="height:16px;line-height:16px;font-size:0;">&nbsp;</div>
 
-      <!-- Row 2 -->
-      ${
-        row2.length > 0
-          ? `
-      <tr>
-        <td align="center" style="padding-top:12px;">
-          ${renderRow(row2)}
+          <!-- Row 1 -->
+          ${renderRowLeft(row1)}
+
+          <!-- Row 2 (LEFT aligned) -->
+          ${
+            row2.length > 0
+              ? `<div style="height:12px;line-height:12px;font-size:0;">&nbsp;</div>${renderRowLeft(row2)}`
+              : ""
+          }
         </td>
       </tr>
-      `
-          : ""
-      }
     </table>
   </td>
 </tr>`;
