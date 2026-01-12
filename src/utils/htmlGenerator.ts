@@ -501,8 +501,8 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
 </td>`;
   };
 
-  const renderRowFill = (rowItems: any[], forceThreeCols = false) => {
-    const n = forceThreeCols ? 3 : rowItems.length;
+  const renderRowFill = (rowItems: any[], forceCols: number | null = null) => {
+    const n = forceCols ?? rowItems.length;
     if (!rowItems.length) return "";
 
     return `
@@ -576,7 +576,7 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
           ${mobileRows
             .map(
               (r, idx) =>
-                `${idx ? `<div style="height:${GAP}px;line-height:${GAP}px;font-size:0;">&nbsp;</div>` : ""}${renderRowFill(r)}`,
+                `${idx ? `<div style="height:${GAP}px;line-height:${GAP}px;font-size:0;">&nbsp;</div>` : ""}${renderRowFill(r, 2)}`,
             )
             .join("")}
         </td>
