@@ -391,7 +391,16 @@ function generateProductListHTML(block: NewsletterBlock): string {
         <table width="100%" cellspacing="0" cellpadding="0">
           <tr>
             <td style="font-weight:700;">
-              ${p.salePrice ? `<span style="color:#FF4C4C">${p.salePrice}</span>` : p.price || ""}
+              ${
+                p.salePrice
+                  ? `
+                    <span style="color:#FF4C4C;">${p.salePrice}</span>
+                    <span style="display:inline-block;margin-left:8px;color:#000000;font-size:12px;font-weight:500;text-decoration:line-through;white-space:nowrap;">
+                      ${p.price || ""}
+                    </span>
+                  `
+                  : `${p.price || ""}`
+              }
             </td>
             <td align="right">
               <a href="${escapeAttr(p.url || "#")}"
@@ -474,7 +483,16 @@ function generateProductListHTML(block: NewsletterBlock): string {
                   <table width="100%" cellspacing="0" cellpadding="0">
                     <tr>
                       <td style="font-weight:700;">
-                        ${p.salePrice ? `<span style="color:#FF4C4C">${p.salePrice}</span>` : p.price || ""}
+                        ${
+                          p.salePrice
+                            ? `
+                              <span style="color:#FF4C4C;">${p.salePrice}</span>
+                              <span style="display:inline-block;margin-left:8px;color:#000000;font-size:12px;font-weight:500;text-decoration:line-through;white-space:nowrap;">
+                                ${p.price || ""}
+                              </span>
+                            `
+                            : `${p.price || ""}`
+                        }
                       </td>
                       <td align="right">
                         <a href="${escapeAttr(p.url || "#")}"
