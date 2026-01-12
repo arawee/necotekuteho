@@ -242,7 +242,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
 
     <tr>
       <td style="font-family:'JetBrains Mono',monospace;padding-top:0px;">
-        <div style="margin-bottom:8px; margin-top:-5px;">
+        <div style="margin-bottom:8px; margin-top:-5.5px;">
           ${(p.tags || [])
             .map(
               (t: any) =>
@@ -334,7 +334,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
               </tr>
               <tr>
                 <td style="font-family:'JetBrains Mono',monospace;padding-top:0px;">
-                  <div style="margin-bottom:8px;">
+                  <div style="margin-bottom:8px;margin-top:-5.5px;">
                     ${(p.tags || [])
                       .map(
                         (t: any) =>
