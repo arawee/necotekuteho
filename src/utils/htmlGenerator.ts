@@ -451,7 +451,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
               </tr>
               <tr>
                 <td style="font-family:'JetBrains Mono',monospace;padding-top:0px;">
-                  <div style="margin-bottom:8px; margin-top: -5px;">
+                  <div style="margin-bottom:8px;">
                     ${(p.tags || [])
                       .map(
                         (t: any) =>
@@ -565,7 +565,7 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
           ${
             c.image
               ? `<img src="${escapeAttr(c.image)}" width="${innerW}" alt=""
-                     style="display:block;width:100%;max-width:192px;height:auto;aspect-ratio:3/4;object-fit:cover;margin-bottom: -2px;" />`
+                     style="display:block;width:100%;max-width:${innerW}px;height:auto;aspect-ratio:3/4;object-fit:cover;" />`
               : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
           }
         </td>
@@ -583,8 +583,13 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
   };
 
   const renderRowFill = (rowItems: any[], forceCols: number | null = null) => {
-    const n = forceCols ?? rowItems.length;
     if (!rowItems.length) return "";
+
+    const n = forceCols ?? rowItems.length; // desired number of columns
+
+    // if we force 2 cols (mobile) and only have 1 item -> add 1 empty cell
+    const missing = n - rowItems.length;
+    const colPct = 100 / n;
 
     return `
 <table role="presentation" border="0" cellspacing="0" cellpadding="0"
@@ -592,9 +597,9 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
   <tr>
     ${rowItems.map((c, i) => renderCategoryCell(c, n, i)).join("")}
     ${
-      forceCols === 3 && rowItems.length < 3
-        ? Array.from({ length: 3 - rowItems.length })
-            .map(() => `<td width="${100 / 3}%" style="width:${100 / 3}%;font-size:0;line-height:0;">&nbsp;</td>`)
+      missing > 0
+        ? Array.from({ length: missing })
+            .map(() => `<td width="${colPct}%" style="width:${colPct}%;font-size:0;line-height:0;">&nbsp;</td>`)
             .join("")
         : ""
     }
@@ -602,11 +607,7 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
 </table>`;
   };
 
-  // Desktop: rows of 3
-  const row1 = items.slice(0, 3);
-  const row2 = items.slice(3, 6);
-
-  // Mobile: 2 columns
+  // Mobile: 2 columns (fixed) — last single item won't stretch
   const mobileRows: any[][] = [];
   for (let i = 0; i < items.length; i += 2) mobileRows.push(items.slice(i, i + 2));
 
