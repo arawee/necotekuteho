@@ -1683,7 +1683,7 @@ function generateBenefitsHTML(block: NewsletterBlock): string {
   return `<!-- Benefity -->
 <tr>
   <!-- IMPORTANT: no horizontal padding here so 3x200 never compresses -->
-  <td align="center" style="padding:32px 16px 0px 16px;">
+  <td align="center" style="padding:32px 10px 0px 10px;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0"
            width="600" class="wrap" style="max-width:600px;width:100%;table-layout:fixed;">
       ${renderRow(row1, 0)}
