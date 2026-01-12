@@ -1097,36 +1097,39 @@ function generatePromoBoxHTML(block: NewsletterBlock): string {
 function generateGalleryTrioHTML(block: NewsletterBlock): string {
   const photos = block.content.photos || [];
 
+  const ratioBox = (url?: string, ratioPct: number, maxW?: number) => `
+    <div style="width:100%;height:0;padding-top:${ratioPct}%;position:relative;overflow:hidden;background:#E5E5E5;">
+      ${
+        url
+          ? `<img src="${escapeAttr(url)}" alt=""
+                 style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:block;border:0;outline:0;"/>`
+          : ""
+      }
+    </div>
+  `;
+
   return `
 <tr>
   <td align="center" style="padding:32px 0;">
-    <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:600px;border-collapse:collapse;border-spacing:0;">
+    <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0"
+           class="wrap" style="width:100%;max-width:600px;border-collapse:collapse;border-spacing:0;table-layout:fixed;">
       <tr>
-        <td style="padding:0;margin:0;line-height:0;font-size:0;">
-          ${
-            photos[0]?.url
-              ? `<img src="${photos[0].url}" width="600" alt="" style="display:block;width:100%;height:auto;border:0;outline:0;">`
-              : `<div style="width:100%;padding-top:100%;background:#E5E5E5;"></div>`
-          }
+        <td style="padding:0;margin:0;">
+          <!-- top: 1:1 -->
+          ${ratioBox(photos[0]?.url, 100)}
         </td>
       </tr>
       <tr>
-        <td style="padding:0;margin:0;line-height:0;font-size:0;">
-          <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;border-spacing:0;">
+        <td style="padding:0;margin:0;">
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"
+                 style="width:100%;border-collapse:collapse;border-spacing:0;table-layout:fixed;">
             <tr>
-              <td width="50%" valign="top" style="padding:0;margin:0;line-height:0;font-size:0;">
-                ${
-                  photos[1]?.url
-                    ? `<img src="${photos[1].url}" width="300" alt="" style="display:block;width:100%;height:auto;border:0;outline:0;">`
-                    : `<div style="width:100%;padding-top:133.33%;background:#E5E5E5;"></div>`
-                }
+              <td width="50%" valign="top" style="padding:0;margin:0;">
+                <!-- 3:4 => 133.333% -->
+                ${ratioBox(photos[1]?.url, 133.333)}
               </td>
-              <td width="50%" valign="top" style="padding:0;margin:0;line-height:0;font-size:0;">
-                ${
-                  photos[2]?.url
-                    ? `<img src="${photos[2].url}" width="300" alt="" style="display:block;width:100%;height:auto;border:0;outline:0;">`
-                    : `<div style="width:100%;padding-top:133.33%;background:#E5E5E5;"></div>`
-                }
+              <td width="50%" valign="top" style="padding:0;margin:0;">
+                ${ratioBox(photos[2]?.url, 133.333)}
               </td>
             </tr>
           </table>
@@ -1140,24 +1143,28 @@ function generateGalleryTrioHTML(block: NewsletterBlock): string {
 function generateGalleryDuoHTML(block: NewsletterBlock): string {
   const photos = block.content.photos || [];
 
+  const ratioBox = (url?: string, ratioPct: number) => `
+    <div style="width:100%;height:0;padding-top:${ratioPct}%;position:relative;overflow:hidden;background:#E5E5E5;">
+      ${
+        url
+          ? `<img src="${escapeAttr(url)}" alt=""
+                 style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:block;border:0;outline:0;"/>`
+          : ""
+      }
+    </div>
+  `;
+
   return `
 <tr>
   <td align="center" style="padding:32px 0;">
-    <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:600px;border-collapse:collapse;border-spacing:0;">
+    <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0"
+           class="wrap" style="width:100%;max-width:600px;border-collapse:collapse;border-spacing:0;table-layout:fixed;">
       <tr>
-        <td width="50%" valign="top" style="padding:0;margin:0;line-height:0;font-size:0;">
-          ${
-            photos[0]?.url
-              ? `<img src="${photos[0].url}" width="300" alt="" style="display:block;width:100%;height:auto;border:0;outline:0;">`
-              : `<div style="width:100%;padding-top:133.33%;background:#E5E5E5;"></div>`
-          }
+        <td width="50%" valign="top" style="padding:0;margin:0;">
+          ${ratioBox(photos[0]?.url, 133.333)}
         </td>
-        <td width="50%" valign="top" style="padding:0;margin:0;line-height:0;font-size:0;">
-          ${
-            photos[1]?.url
-              ? `<img src="${photos[1].url}" width="300" alt="" style="display:block;width:100%;height:auto;border:0;outline:0;">`
-              : `<div style="width:100%;padding-top:133.33%;background:#E5E5E5;"></div>`
-          }
+        <td width="50%" valign="top" style="padding:0;margin:0;">
+          ${ratioBox(photos[1]?.url, 133.333)}
         </td>
       </tr>
     </table>
@@ -1168,17 +1175,26 @@ function generateGalleryDuoHTML(block: NewsletterBlock): string {
 function generateGallerySingleHTML(block: NewsletterBlock): string {
   const photo = block.content.photos?.[0];
 
+  const ratioBox = (url?: string, ratioPct: number) => `
+    <div style="width:100%;height:0;padding-top:${ratioPct}%;position:relative;overflow:hidden;background:#E5E5E5;">
+      ${
+        url
+          ? `<img src="${escapeAttr(url)}" alt=""
+                 style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:block;border:0;outline:0;"/>`
+          : ""
+      }
+    </div>
+  `;
+
   return `
 <tr>
   <td align="center" style="padding:32px 0;">
-    <table role="presentation" width="600" style="width:600px;table-layout:fixed;">
+    <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0"
+           class="wrap" style="width:100%;max-width:600px;table-layout:fixed;">
       <tr>
-        <td>
-          ${
-            photo?.url
-              ? `<img src="${photo.url}" width="600" style="display:block;width:100%;aspect-ratio:1/1;object-fit:cover;">`
-              : `<div style="width:100%;padding-top:100%;background:#E5E5E5;"></div>`
-          }
+        <td style="padding:0;margin:0;">
+          <!-- 1:1 -->
+          ${ratioBox(photo?.url, 100)}
         </td>
       </tr>
     </table>
