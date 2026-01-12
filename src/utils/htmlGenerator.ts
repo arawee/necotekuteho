@@ -383,6 +383,14 @@ function generateProductListHTML(block: NewsletterBlock): string {
 
   const items = products.slice(0, MAX);
 
+  const getProductImageUrl = (p: any): string =>
+    (typeof p?.image === "string" && p.image.trim()) ||
+    (typeof p?.imageUrl === "string" && p.imageUrl.trim()) ||
+    (typeof p?.photo === "string" && p.photo.trim()) ||
+    (typeof p?.photoUrl === "string" && p.photoUrl.trim()) ||
+    (typeof p?.image?.url === "string" && p.image.url.trim()) ||
+    "";
+
   const renderProductCell = (p: any, isFirst: boolean, isLast: boolean) => {
     const padLeft = isFirst ? "0" : `${GUTTER}px`;
     const padRight = isLast ? "0" : `${GUTTER}px`;
@@ -407,23 +415,17 @@ function generateProductListHTML(block: NewsletterBlock): string {
 <td valign="top" class="stack" width="${colPct}%" style="width:${colPct}%;padding:0 ${padRight} 0 ${padLeft};">
   <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
     <tr>
-      <tr>
-        <td style="background-color:#F5F5F5;">
-          ${(() => {
-            const imgUrl = getProductImageUrl(p);
-            const imgW = colInnerWidth; // 188
-            const imgH = Math.round((imgW * 4) / 3); // 251 (3:4)
+      <td style="background-color:#F5F5F5;">
+        ${
+          p.image
+            ? // IMPORTANT: numeric width attr prevents “row 2 image missing” in some clients
+              `<img src="${p.image}" width="${colInnerWidth}" alt="${p.name}"
+                    style="display:block;width:100%;max-width:${colInnerWidth}px;height:auto;aspect-ratio:3/4;object-fit:cover;" />`
+            : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
+        }
+      </td>
+    </tr>
 
-            return imgUrl
-              ? `<img src="${imgUrl}"
-                        width="${imgW}"
-                        height="${imgH}"
-                        alt="${p.name}"
-                        style="display:block;width:100%;height:${imgH}px;object-fit:cover;background:#E5E5E5;" />`
-              : `<div style="width:100%;height:${imgH}px;background:#E5E5E5;"></div>`;
-          })()}
-        </td>
-      </tr>
     <tr>
       <td style="padding-top:0;font-family:'JetBrains Mono',monospace;">
         <div style="margin-top:-4px;margin-bottom:8px;">${tagsHTML}</div>
