@@ -89,16 +89,15 @@ export const CategoriesBlock = ({ block, onUpdate }: CategoriesBlockProps) => {
           </div>
         </div>
 
-        {/* Categories grid - flex with gap 12px, max 4 per row */}
+        {/* Categories grid - 3 per row, max 6 total */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
-          {categories.slice(0, 8).map((category, index) => (
+          {categories.slice(0, 6).map((category, index) => (
             <div 
               key={index} 
               className="group relative" 
               style={{ 
-                flex: '1 1 0',
-                minWidth: categories.length > 4 ? 'calc(25% - 9px)' : undefined,
-                maxWidth: categories.length > 4 ? 'calc(25% - 9px)' : undefined
+                width: 'calc(33.333% - 8px)',
+                flexShrink: 0
               }}
             >
               {/* Remove button */}
@@ -134,7 +133,7 @@ export const CategoriesBlock = ({ block, onUpdate }: CategoriesBlockProps) => {
         </div>
 
         {/* Add button */}
-        {categories.length < 8 && (
+        {categories.length < 6 && (
           <div className="mt-4 flex justify-center">
             <button
               onClick={addCategory}
