@@ -168,7 +168,7 @@ export const ProductListBlock = ({ block, onUpdate }: ProductListBlockProps) => 
         </div>
 
         {/* Products flex */}
-        <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(100px, 1fr))" }}>
+        <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))" }}>
           {products.map((product: Product, index: number) => (
             <div key={index} className="group relative" style={{ flex: 1 }}>
               {/* Remove button */}
