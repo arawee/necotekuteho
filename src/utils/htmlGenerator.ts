@@ -146,6 +146,7 @@ function generateZichovecHeaderHTML(block: NewsletterBlock): string {
       </tr>
     </table>
   </td>
+  <div style="height: 2rem; width: 100%; background-color:#ffffff00;"></div>
 </tr>`;
 }
 
