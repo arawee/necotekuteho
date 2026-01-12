@@ -193,7 +193,7 @@ function generateZichovecHeaderWithMenuHTML(block: NewsletterBlock): string {
       </tr>
     </table>
   </td>
-</tr>
+</tr>`;
 }
 
 function generateZichovecFooterHTML(block: NewsletterBlock): string {
