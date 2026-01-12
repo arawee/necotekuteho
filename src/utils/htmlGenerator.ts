@@ -783,7 +783,7 @@ function generateLocationsHTML(block: NewsletterBlock): string {
   <table role="presentation" border="0" cellspacing="0" cellpadding="0"
          width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;table-layout:fixed;">
     <tr>
-      ${rowItems.map((c, i) => renderCategoryCell(c, n, i)).join("")}
+      ${rowItems.map((c, i) => renderLocCell(c, i, n)).join("")}
       ${
         forceThreeCols && rowItems.length < 3
           ? Array.from({ length: 3 - rowItems.length })
