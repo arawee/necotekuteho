@@ -882,6 +882,7 @@ function generateLocationsHTML(block: NewsletterBlock): string {
     </table>
   </td>
 </tr>`;
+}
 
 function generateBlogPostsHTML(block: NewsletterBlock): string {
   const { content } = block;
