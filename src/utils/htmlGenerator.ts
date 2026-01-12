@@ -322,23 +322,129 @@ function generateZichovecFooterHTML(block: NewsletterBlock): string {
 </tr>`;
 }
 
-function generateProductListHTML(block: NewsletterBlock): string { const { content } = block; 
-                                                                   const products = Array.isArray((content as any).products) ? (content as any).products : [ { name: "Magor 15", alcohol: "5,9", volume: "750 ml", price: "113 Kč", tags: [{ text: "Polotmavé bock", color: "dark" }], image: "", url: "#", }, { name: "Sour Passion Fruit", alcohol: "5,9", volume: "750 ml", price: "167 Kč", salePrice: "90 Kč", tags: [ { text: "Relax", color: "dark" }, { text: "Poslední šance", color: "red" }, ], image: "", url: "#", }, { name: "Milky", alcohol: "5,9", volume: "750 ml", price: "113 Kč", tags: [ { text: "Neipa", color: "dark" }, { text: "Novinka", color: "green" }, ], image: "", url: "#", }, ]; 
-                                                                   const showViewAll = (content as any).showViewAll !== false; const viewAllText = (content as any).viewAllText || "zobrazit vše"; const viewAllUrl = (content as any).viewAllUrl || "#"; const getTagBgColor = (color: string) => { switch (color) { case "red": return "#FF4C4C"; case "green": return "#00C322"; default: return "#161616"; } }; const COLS = 3; const MAX = 6; const tableWidth = 600; const GUTTER = 6; const colPct = 100 / COLS; 
-                                                                   const colInnerWidth = Math.floor((tableWidth - COLS * (GUTTER * 2)) / COLS); 
-                                                                   const items = products.slice(0, MAX); const renderProductCell = (p: any, isFirst: boolean, isLast: boolean) => { const padLeft = isFirst ? "0" : ${GUTTER}px; const padRight = isLast ? "0" : ${GUTTER}px; const tagsHTML = (p.tags || []) .map( (tag: any) => <span style="display:inline-block;background-color:${getTagBgColor( tag.color, )};color:#FFFFFF;font-size:10px;padding:2px 8px;margin-right:4px;margin-bottom:4px;"> ${tag.text} </span> , ) .join(""); const priceHTML = p.salePrice ? <span style="color:#FF4C4C;font-weight:700;">${p.salePrice}</span> <span style="font-size:10px;color:#666;text-decoration:line-through;">${p.price}</span> : <span style="color:#212121;font-weight:700;">${p.price}</span>; return <td valign="top" class="stack" width="${colPct}%" style="width:${colPct}%;padding:0 ${padRight} 0 ${padLeft};"> <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;"> <tr> <td style="background-color:#F5F5F5;"> ${ p.image ? 
-                                                                    <img src="${escapeAttr(p.image)}" width="${colInnerWidth}" alt="${escapeAttr(p.name)}" style="display:block;width:100%;max-width:${colInnerWidth}px;height:auto;aspect-ratio:3/4;object-fit:cover;" /> : <div style="width:100%;padding-top:133%;background:#E5E5E5;"></div> } </td> </tr> 
-                                                                     <tr> <td style="padding-top:0;font-family:'JetBrains Mono',monospace;"> 
-                                                                       <div style="margin-top:-4px;margin-bottom:8px;">${tagsHTML}</div> 
-                                                                       <h3 style="margin:0 0 4px 0;font-size:16px;font-weight:700;color:#212121;line-height:150%;">
-                                                                         ${p.name}
-                                                                       </h3> <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;margin-bottom:8px;"> 
-                                                                         <tr> 
-                                                                           <td style="font-size:10px;color:#000000;font-family:'JetBrains Mono',monospace;"> 
-                                                                             <strong>Alk. →</strong> ${p.alcohol}% obj. 
-                                                                           </td> 
-                                                                           <td align="right" style="font-size:10px;color:#000000;font-family:'JetBrains Mono',monospace;white-space:nowrap;width:68px;"> ${p.volume} </td> </tr> </table> <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;"> <tr> <td style="font-family:'JetBrains Mono',monospace;">${priceHTML}</td> <td align="right"> <a href="${escapeAttr(p.url || "#")}" style="display:inline-block;width:36px;height:36px;background-color:#00C322;border-radius:50%;text-align:center;line-height:36px;text-decoration:none;"> ${PLUS_ICON_SVG("#000000")} </a> </td> </tr> </table> </td> </tr> </table> </td> ; }; // Left aligned row (fills missing columns with empty cells on RIGHT) const renderRowLeft = (rowItems: any[]) => { const n = rowItems.length; const missing = COLS - n; const emptyTD = <td width="${colPct}%" style="width:${colPct}%;font-size:0;line-height:0;">&nbsp;</td>; return <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="width:100%;max-width:600px;table-layout:fixed;"> <tr> ${rowItems.map((p, i) => renderProductCell(p, i === 0, i === n - 1)).join("")} ${ missing > 0 ? Array.from({ length: missing }) .map(() => emptyTD) .join("") : "" } </tr> </table> ; }; const row1 = items.slice(0, COLS); const row2 = items.slice(COLS, COLS * 2); const viewAllHTML = showViewAll ? <a href="${viewAllUrl}" style="color:#000000;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;white-space:nowrap;"> <span style="text-decoration:none;">→ </span><span style="text-decoration:underline;">${viewAllText}</span> </a> : ""; return <!-- List produktů --> <tr> <td align="center" style="padding:24px;margin-bottom:32px;"> <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;"> <tr> <td style="padding-bottom:1rem;"> <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%"> <tr> <td style="font-family:'JetBrains Mono',monospace;"> <h2 style="margin:0;font-size:20px;font-weight:700;color:#212121;">${content.title || "Mohlo by vám chutnat"}</h2> </td> <td align="right">${viewAllHTML}</td> </tr> </table> </td> </tr> <tr><td align="left">${renderRowLeft(row1)}</td></tr> ${ row2.length ? <tr class="hide-on-mobile"> <td align="left" style="padding-top:12px;"> ${renderRowLeft(row2)} </td> </tr> : "" } </table> </td> </tr>; 
-                                                                      }
+function generateProductListHTML(block: NewsletterBlock): string {
+  const { content } = block;
+
+  const products = Array.isArray((content as any).products) ? (content as any).products : [];
+
+  const showViewAll = (content as any).showViewAll !== false;
+  const viewAllText = (content as any).viewAllText || "zobrazit vše";
+  const viewAllUrl = (content as any).viewAllUrl || "#";
+
+  const COLS = 3;
+  const MAX = 6;
+  const TABLE_WIDTH = 600;
+  const GUTTER = 6;
+  const COL_PCT = 100 / COLS;
+  const COL_INNER = Math.floor((TABLE_WIDTH - COLS * GUTTER * 2) / COLS);
+
+  const items = products.slice(0, MAX);
+  const row1 = items.slice(0, COLS);
+  const row2 = items.slice(COLS, COLS * 2);
+
+  const tagBg = (c: string) => (c === "red" ? "#FF4C4C" : c === "green" ? "#00C322" : "#161616");
+
+  const renderCell = (p: any, i: number, n: number) => {
+    const padL = i === 0 ? "0" : `${GUTTER}px`;
+    const padR = i === n - 1 ? "0" : `${GUTTER}px`;
+
+    return `
+<td valign="top" class="stack" width="${COL_PCT}%"
+    style="width:${COL_PCT}%;padding:0 ${padR} 0 ${padL};">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="table-layout:fixed;">
+    <tr>
+      <td>
+        ${
+          p.image
+            ? `<img src="${escapeAttr(p.image)}" width="${COL_INNER}"
+                 style="display:block;width:100%;max-width:${COL_INNER}px;aspect-ratio:3/4;object-fit:cover;">`
+            : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
+        }
+      </td>
+    </tr>
+
+    <tr>
+      <td style="font-family:'JetBrains Mono',monospace;padding-top:8px;">
+        <div style="margin-bottom:8px;">
+          ${(p.tags || [])
+            .map(
+              (t: any) =>
+                `<span style="display:inline-block;background:${tagBg(
+                  t.color,
+                )};color:#fff;font-size:10px;padding:2px 8px;margin-right:4px;margin-bottom:4px;">${t.text}</span>`,
+            )
+            .join("")}
+        </div>
+
+        <h3 style="margin:0 0 4px 0;font-size:16px;font-weight:700;">${p.name}</h3>
+
+        <table width="100%" cellspacing="0" cellpadding="0">
+          <tr>
+            <td style="font-size:10px;"><strong>Alk. →</strong> ${p.alcohol}%</td>
+            <td align="right" style="font-size:10px;width:72px;white-space:nowrap;">${p.volume}</td>
+          </tr>
+        </table>
+
+        <table width="100%" cellspacing="0" cellpadding="0">
+          <tr>
+            <td style="font-weight:700;">
+              ${p.salePrice ? `<span style="color:#FF4C4C">${p.salePrice}</span>` : p.price}
+            </td>
+            <td align="right">
+              <a href="${escapeAttr(p.url || "#")}"
+                 style="display:inline-block;width:36px;height:36px;background:#00C322;border-radius:50%;line-height:36px;text-align:center;">
+                ${PLUS_ICON_SVG("#000")}
+              </a>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</td>`;
+  };
+
+  const renderRow = (row: any[]) => {
+    const missing = COLS - row.length;
+    return `
+<table role="presentation" width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;table-layout:fixed;">
+  <tr>
+    ${row.map((p, i) => renderCell(p, i, row.length)).join("")}
+    ${Array.from({ length: missing })
+      .map(() => `<td width="${COL_PCT}%" style="width:${COL_PCT}%;font-size:0;">&nbsp;</td>`)
+      .join("")}
+  </tr>
+</table>`;
+  };
+
+  return `
+<tr>
+  <td align="center" style="padding:24px;">
+    <table role="presentation" width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;">
+      <tr>
+        <td style="padding-bottom:16px;">
+          <table width="100%">
+            <tr>
+              <td><h2 style="margin:0;font-size:20px;">${content.title || "Mohlo by vám chutnat"}</h2></td>
+              <td align="right">
+                ${
+                  showViewAll
+                    ? `<a href="${viewAllUrl}" style="font-size:14px;text-decoration:underline;">${viewAllText}</a>`
+                    : ""
+                }
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <tr><td>${renderRow(row1)}</td></tr>
+      ${row2.length ? `<tr class="hide-on-mobile"><td style="padding-top:12px;">${renderRow(row2)}</td></tr>` : ""}
+    </table>
+  </td>
+</tr>`;
+}
+
 function generateCategoriesHTML(block: NewsletterBlock): string {
   const { content } = block;
 
