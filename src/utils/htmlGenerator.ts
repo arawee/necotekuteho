@@ -1301,7 +1301,7 @@ function generateBenefitsHTML(block: NewsletterBlock): string {
   const renderRow = (row: any[], rowStartIndex: number) => {
     if (row.length === 0) return "";
 
-    const rowWidth = row.length * 200; // 1=>200, 2=>400, 3=>600
+    const rowWidth = row.length * 197; // 1=>200, 2=>400, 3=>600
     const cellsHTML = row.map((b, idx) => renderCell(b, rowStartIndex + idx)).join("");
 
     return `
