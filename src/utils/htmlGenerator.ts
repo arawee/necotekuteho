@@ -375,6 +375,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
   // ✅ 3 columns, up to 6 products (2 rows)
   const COLS = 3;
   const MAX = 6;
+  const colPct = 100 / COLS; // 33.3333...
 
   const tableWidth = 600;
   const GUTTER = 6; // matches td padding left/right
@@ -403,7 +404,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
       : `<span style="color:#212121;font-weight:700;">${p.price}</span>`;
 
     return `
-      <td valign="top" width="${colInnerWidth}" style="width:${colInnerWidth}px;padding:0 ${GUTTER}px 0 ${GUTTER}px;">
+      <td valign="top" width="${colPct}%" style="width:${colPct}%;padding:0 6px 0 6px;">
         <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
           <tr>
             <td style="background-color:#F5F5F5;">
@@ -453,24 +454,22 @@ function generateProductListHTML(block: NewsletterBlock): string {
   // ✅ Center last row with real spacer widths (keeps same card widths)
   const renderRow = (rowItems: any[]) => {
     const n = rowItems.length;
-    const used = n * cellTotalWidth;
-    const remaining = tableWidth - used;
+    const missing = COLS - n;
 
-    const leftSpacer = Math.floor(remaining / 2);
-    const rightSpacer = remaining - leftSpacer;
+    const leftCols = missing > 0 ? missing / 2 : 0;
+    const rightCols = missing > 0 ? missing - leftCols : 0;
+
+    const leftPct = leftCols * colPct;
+    const rightPct = rightCols * colPct;
 
     const leftTD =
-      leftSpacer > 0
-        ? `<td width="${leftSpacer}" style="width:${leftSpacer}px;font-size:0;line-height:0;">&nbsp;</td>`
-        : "";
+      leftPct > 0 ? `<td width="${leftPct}%" style="width:${leftPct}%;font-size:0;line-height:0;">&nbsp;</td>` : "";
     const rightTD =
-      rightSpacer > 0
-        ? `<td width="${rightSpacer}" style="width:${rightSpacer}px;font-size:0;line-height:0;">&nbsp;</td>`
-        : "";
+      rightPct > 0 ? `<td width="${rightPct}%" style="width:${rightPct}%;font-size:0;line-height:0;">&nbsp;</td>` : "";
 
     return `
       <table role="presentation" border="0" cellspacing="0" cellpadding="0"
-             width="600" style="width:600px;max-width:600px;table-layout:fixed;">
+             width="100%" style="width:100%;max-width:600px;table-layout:fixed;">
         <tr>
           ${leftTD}
           ${rowItems.map(renderProductCell).join("")}
