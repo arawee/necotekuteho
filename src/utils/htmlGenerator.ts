@@ -1442,51 +1442,90 @@ function generateBenefitsHTML(block: NewsletterBlock): string {
         },
       ];
 
+  const TABLE_WIDTH = 600;
+  const COLS = 3;
+  const GAP = 12; // total gap between cards
+  const GUTTER = GAP / 2; // 6px left + 6px right
+  const COL_PCT = 100 / COLS;
+
+  // 600 - (3 * 12) = 564 ; 564/3 = 188
+  const INNER_W = Math.floor((TABLE_WIDTH - COLS * (GUTTER * 2)) / COLS);
+
   const visible = benefits.slice(0, 6);
   const row1 = visible.slice(0, 3);
   const row2 = visible.slice(3, 6);
 
-  const renderCell = (b: any, globalIndex: number) => {
+  const renderCell = (b: any, idxInRow: number, globalIndex: number, nInRow: number) => {
+    const padL = idxInRow === 0 ? 0 : GUTTER;
+    const padR = idxInRow === nInRow - 1 ? 0 : GUTTER;
+
     return `
-      <td valign="top" width="200" style="width:200px;text-align:center;font-family:'JetBrains Mono',monospace;padding:0 6px;margin:0;padding-bottom:2rem;>
+<td valign="top"
+    class="benefit-cell stack"
+    width="${COL_PCT}%"
+    style="width:${COL_PCT}%;padding:0 ${padR}px 0 ${padL}px;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="table-layout:fixed;">
+    <tr>
+      <td align="center" style="font-family:'JetBrains Mono',monospace;padding:0;">
         <div style="padding:0 12px;">
           <div style="margin-bottom:16px;">
-            <img src="${getBenefitIcon(b.icon, globalIndex)}" width="48" height="48" alt=""
-                 style="display:inline-block;width:48px;height:48px;object-fit:contain;" />
+            <img src="${escapeAttr(getBenefitIcon(b.icon, globalIndex))}"
+                 width="48" height="48" alt=""
+                 style="display:inline-block;width:48px;height:48px;object-fit:contain;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;" />
           </div>
-          <h4 style="margin:0 0 12px 0;font-size:16px;font-weight:700;color:#000000;line-height:120%;">${b.title}</h4>
-          <p style="margin:0 auto;max-width:35ch;font-size:12px;font-weight:400;color:#000000;line-height:120%;">${b.description}</p>
+          <h4 style="margin:0 0 12px 0;font-size:16px;font-weight:700;color:#000000;line-height:120%;">
+            ${b.title || ""}
+          </h4>
+          <p style="margin:0 auto;max-width:35ch;font-size:12px;font-weight:400;color:#000000;line-height:120%;">
+            ${b.description || ""}
+          </p>
         </div>
       </td>
-    `;
+    </tr>
+  </table>
+</td>`;
   };
 
   const renderRow = (row: any[], rowStartIndex: number) => {
-    if (row.length === 0) return "";
+    if (!row.length) return "";
 
-    const rowWidth = row.length * 197; // 1=>200, 2=>400, 3=>600
-    const cellsHTML = row.map((b, idx) => renderCell(b, rowStartIndex + idx)).join("");
+    // Fill missing cells so a short row never stretches
+    const missing = Math.max(0, COLS - row.length);
+    const emptyTD = `<td width="${COL_PCT}%" style="width:${COL_PCT}%;font-size:0;line-height:0;">&nbsp;</td>`;
 
     return `
-      <tr>
-        <td align="center" style="padding:0;">
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0"
-                 width="${rowWidth}" style="width:${rowWidth}px;max-width:600px;table-layout:fixed;">
-            <tr>${cellsHTML}</tr>
-          </table>
-        </td>
-      </tr>
-    `;
+<table role="presentation"
+       width="${TABLE_WIDTH}" class="wrap"
+       cellspacing="0" cellpadding="0" border="0"
+       style="width:100%;max-width:${TABLE_WIDTH}px;table-layout:fixed;">
+  <tr>
+    ${row.map((b, i) => renderCell(b, i, rowStartIndex + i, row.length)).join("")}
+    ${
+      missing
+        ? Array.from({ length: missing })
+            .map(() => emptyTD)
+            .join("")
+        : ""
+    }
+  </tr>
+</table>`;
   };
 
   return `<!-- Benefity -->
 <tr>
-  <!-- IMPORTANT: no horizontal padding here so 3x200 never compresses -->
-  <td align="center" style="padding:32px 16px 0px 16px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0"
-           width="600" class="wrap" style="max-width:600px;width:100%;table-layout:fixed;">
-      ${renderRow(row1, 0)}
-      ${renderRow(row2, 3)}
+  <td align="center" style="padding:32px 16px 0 16px;">
+    <table role="presentation" width="600" class="wrap" cellspacing="0" cellpadding="0" border="0"
+           style="width:100%;max-width:600px;table-layout:fixed;">
+      <tr>
+        <td>
+          ${renderRow(row1, 0)}
+          ${
+            row2.length
+              ? `<div style="height:24px;line-height:24px;font-size:0;">&nbsp;</div>${renderRow(row2, 3)}`
+              : ""
+          }
+        </td>
+      </tr>
     </table>
   </td>
 </tr>`;
@@ -1739,6 +1778,12 @@ function getNewsletterCSS(): string {
       }
       #top-container {
         padding-top: calc(28.8889% + 4rem) !important;
+      }
+      td.benefit-cell.stack {
+        padding: 0 0 24px 0 !important;
+      }
+      td.benefit-cell.stack:last-child {
+        padding-bottom: 0 !important;
       }
       #top-logo {
         padding-bottom: 2rem !important;
