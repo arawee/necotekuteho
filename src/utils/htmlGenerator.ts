@@ -345,76 +345,87 @@ function generateProductListHTML(block: NewsletterBlock): string {
   const tagBg = (c: string) => (c === "red" ? "#FF4C4C" : c === "green" ? "#00C322" : "#161616");
 
   const renderCell = (p: any, i: number, n: number) => {
+    const colPct = 100 / n;
+    const totalGaps = (n - 1) * (GUTTER * 2); // 12px gaps between columns
+    const innerW = Math.floor((TABLE_WIDTH - totalGaps) / n);
+
     const padL = i === 0 ? "0" : `${GUTTER}px`;
     const padR = i === n - 1 ? "0" : `${GUTTER}px`;
 
     return `
-<td valign="top" class="stack" width="${COL_PCT}%"
-    style="width:${COL_PCT}%;padding:0 ${padR} 0 ${padL};">
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="table-layout:fixed;">
-    <tr>
-      <td>
-        ${
-          p.image
-            ? `<img src="${escapeAttr(p.image)}" width="${COL_INNER}"
-                 style="display:block;width:100%;max-width:${COL_INNER}px;aspect-ratio:3/4;object-fit:cover;">`
-            : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
-        }
-      </td>
-    </tr>
+    <td valign="top" class="stack" width="${colPct}%"
+        style="width:${colPct}%;padding:0 ${padR} 0 ${padL};">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="table-layout:fixed;">
+        <tr>
+          <td>
+            ${
+              p.image
+                ? `<img src="${escapeAttr(p.image)}" width="${innerW}" alt="${escapeAttr(p.name || "")}"
+                     style="display:block;width:100%;max-width:${innerW}px;height:auto;aspect-ratio:3/4;object-fit:cover;border:0;outline:none;text-decoration:none;" />`
+                : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
+            }
+          </td>
+        </tr>
 
-    <tr>
-      <td style="font-family:'JetBrains Mono',monospace;padding-top:8px;">
-        <div style="margin-bottom:8px;">
-          ${(p.tags || [])
-            .map(
-              (t: any) =>
-                `<span style="display:inline-block;background:${tagBg(
-                  t.color,
-                )};color:#fff;font-size:10px;padding:2px 8px;margin-right:4px;margin-bottom:4px;">${t.text}</span>`,
-            )
-            .join("")}
-        </div>
-
-        <h3 style="margin:0 0 4px 0;font-size:16px;font-weight:700;">${p.name}</h3>
-
-        <table width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <td style="font-size:10px;"><strong>Alk. →</strong> ${p.alcohol}%</td>
-            <td align="right" style="font-size:10px;width:72px;white-space:nowrap;">${p.volume}</td>
-          </tr>
-        </table>
-
-        <table width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <td style="font-weight:700;">
-              ${p.salePrice ? `<span style="color:#FF4C4C">${p.salePrice}</span>` : p.price}
-            </td>
-            <td align="right">
-              <a href="${escapeAttr(p.url || "#")}"
-                 style="display:inline-block;width:36px;height:36px;background:#00C322;border-radius:50%;line-height:36px;text-align:center;">
-                ${PLUS_ICON_SVG("#000")}
-              </a>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-</td>`;
+        <tr>
+          <td style="font-family:'JetBrains Mono',monospace;padding-top:8px;">
+            <div style="margin-bottom:8px;">
+              ${(p.tags || [])
+                .map(
+                  (t: any) =>
+                    `<span style="display:inline-block;background:${tagBg(
+                      t.color,
+                    )};color:#fff;font-size:10px;padding:2px 8px;margin-right:4px;margin-bottom:4px;">${t.text}</span>`,
+                )
+                .join("")}
+            </div>
+    
+            <h3 style="margin:0 0 4px 0;font-size:16px;font-weight:700;">${p.name}</h3>
+    
+            <table width="100%" cellspacing="0" cellpadding="0">
+              <tr>
+                <td style="font-size:10px;"><strong>Alk. →</strong> ${p.alcohol}%</td>
+                <td align="right" style="font-size:10px;width:72px;white-space:nowrap;">${p.volume}</td>
+              </tr>
+            </table>
+    
+            <table width="100%" cellspacing="0" cellpadding="0">
+              <tr>
+                <td style="font-weight:700;">
+                  ${p.salePrice ? `<span style="color:#FF4C4C">${p.salePrice}</span>` : p.price}
+                </td>
+                <td align="right">
+                  <a href="${escapeAttr(p.url || "#")}"
+                     style="display:inline-block;width:36px;height:36px;background:#00C322;border-radius:50%;line-height:36px;text-align:center;">
+                    ${PLUS_ICON_SVG("#000")}
+                  </a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>`;
   };
 
-  const renderRow = (row: any[]) => {
-    const missing = COLS - row.length;
+  const renderRow = (row: any[], forceCols?: number) => {
+    const n = forceCols ?? row.length;
+    const colPct = 100 / n;
+    const missing = forceCols ? Math.max(0, n - row.length) : 0;
+
     return `
-<table role="presentation" width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;table-layout:fixed;">
-  <tr>
-    ${row.map((p, i) => renderCell(p, i, row.length)).join("")}
-    ${Array.from({ length: missing })
-      .map(() => `<td width="${COL_PCT}%" style="width:${COL_PCT}%;font-size:0;">&nbsp;</td>`)
-      .join("")}
-  </tr>
-</table>`;
+  <table role="presentation" width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;table-layout:fixed;">
+    <tr>
+      ${row.map((p, i) => renderCell(p, i, n)).join("")}
+      ${
+        missing
+          ? Array.from({ length: missing })
+              .map(() => `<td width="${colPct}%" style="width:${colPct}%;font-size:0;line-height:0;">&nbsp;</td>`)
+              .join("")
+          : ""
+      }
+    </tr>
+  </table>`;
   };
 
   return `
@@ -439,7 +450,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
       </tr>
 
       <tr><td>${renderRow(row1)}</td></tr>
-      ${row2.length ? `<tr class="hide-on-mobile"><td style="padding-top:12px;">${renderRow(row2)}</td></tr>` : ""}
+      ${row2.length ? `<tr class="hide-on-mobile"><td style="padding-top:12px;">${renderRow(row2, 3)}</td></tr>` : ""}
     </table>
   </td>
 </tr>`;
@@ -617,39 +628,40 @@ function generateMistaHTML(block: NewsletterBlock): string {
     const padRight = isLast ? "0" : `${GUTTER}px`;
 
     return `
-<td valign="top" class="stack" width="${colPct}%" style="width:${colPct}%;padding:0 ${padRight} 0 ${padLeft};">
-  <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
-    <tr>
-      <td>
-        ${
-          place.image
-            ? `<img src="${escapeAttr(place.image)}" width="${colInnerWidth}" alt="${escapeAttr(place.name)}"
-                    style="display:block;width:100%;max-width:${colInnerWidth}px;height:auto;aspect-ratio:3/4;object-fit:cover;margin-bottom:12px;" />`
-            : `<div style="width:100%;padding-top:133%;background:#E5E5E5;margin-bottom:12px;"></div>`
-        }
-      </td>
-    </tr>
-
-    <tr>
-      <td style="font-family:'JetBrains Mono',monospace;">
-        <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+      <td valign="top" class="stack" width="${colPct}%"
+          style="width:${colPct}%;padding:0 ${padR}px 0 ${padL}px;">
+        <table width="100%" cellspacing="0" cellpadding="0" style="table-layout:fixed;">
           <tr>
-            <td style="padding-right:12px;width:60px;">
-              <a href="${escapeAttr(place.buttonUrl || "#")}"
-                 style="display:inline-block;width:36px;height:36px;border:1px solid #00C322;border-radius:50%;text-align:center;line-height:36px;text-decoration:none;">
-                ${ARROW_ICON_SVG("#00C322")}
-              </a>
+            <td>
+              ${
+                p.image
+                  ? `<img src="${escapeAttr(p.image)}" width="${inner}" alt="${escapeAttr(p.name || "")}"
+                       style="display:block;width:100%;max-width:${inner}px;height:auto;aspect-ratio:3/4;object-fit:cover;border:0;outline:none;text-decoration:none;margin-bottom:12px;" />`
+                  : `<div style="width:100%;padding-top:133%;background:#E5E5E5;margin-bottom:12px;"></div>`
+              }
             </td>
-            <td align="right" style="width:100%;text-align:right;">
-              <h3 style="margin:0;font-size:16px;font-weight:700;color:#212121;text-align:right;">${place.name}</h3>
+          </tr>
+
+          <tr>
+            <td style="font-family:'JetBrains Mono',monospace;">
+              <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+                <tr>
+                  <td style="padding-right:12px;width:60px;">
+                    <a href="${escapeAttr(place.buttonUrl || "#")}"
+                       style="display:inline-block;width:36px;height:36px;border:1px solid #00C322;border-radius:50%;text-align:center;line-height:36px;text-decoration:none;">
+                      ${ARROW_ICON_SVG("#00C322")}
+                    </a>
+                  </td>
+                  <td align="right" style="width:100%;text-align:right;">
+                    <h3 style="margin:0;font-size:16px;font-weight:700;color:#212121;text-align:right;">${place.name}</h3>
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
         </table>
       </td>
-    </tr>
-  </table>
-</td>
-`;
+    `;
   };
 
   // Left aligned row, no spacer centering; fills missing cells on the right
