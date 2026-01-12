@@ -1,17 +1,12 @@
-import { NewsletterBlock } from '@/types/newsletter';
-import { ImageUpload } from '@/components/ui/image-upload';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Trash2 } from 'lucide-react';
-import { CustomPlusIcon } from '@/components/icons/CustomIcons';
-import { useState } from 'react';
-import { Checkbox } from '@/components/ui/checkbox';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { NewsletterBlock } from "@/types/newsletter";
+import { ImageUpload } from "@/components/ui/image-upload";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Trash2 } from "lucide-react";
+import { CustomPlusIcon } from "@/components/icons/CustomIcons";
+import { useState } from "react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface Category {
   image: string;
@@ -21,22 +16,22 @@ interface Category {
 
 interface CategoriesBlockProps {
   block: NewsletterBlock;
-  onUpdate: (content: NewsletterBlock['content']) => void;
+  onUpdate: (content: NewsletterBlock["content"]) => void;
 }
 
 export const CategoriesBlock = ({ block, onUpdate }: CategoriesBlockProps) => {
   const [editingCategory, setEditingCategory] = useState<number | null>(null);
 
   const defaultCategories: Category[] = [
-    { image: '', tag: '→ IPA, APA a NEIPA', url: '#' },
-    { image: '', tag: '→ Sour a Ovocné', url: '#' },
-    { image: '', tag: '→ Ležáky a klasika', url: '#' }
+    { image: "", tag: "→ IPA, APA a NEIPA", url: "#" },
+    { image: "", tag: "→ Sour a Ovocné", url: "#" },
+    { image: "", tag: "→ Ležáky a klasika", url: "#" },
   ];
 
   const categories: Category[] = (block.content as any).categories || defaultCategories;
   const showViewAll = (block.content as any).showViewAll !== false;
-  const viewAllText = (block.content as any).viewAllText || 'zobrazit vše';
-  const viewAllUrl = (block.content as any).viewAllUrl || '#';
+  const viewAllText = (block.content as any).viewAllText || "zobrazit vše";
+  const viewAllUrl = (block.content as any).viewAllUrl || "#";
 
   const updateCategory = (index: number, field: keyof Category, value: string) => {
     const newCategories = [...categories];
@@ -45,7 +40,7 @@ export const CategoriesBlock = ({ block, onUpdate }: CategoriesBlockProps) => {
   };
 
   const addCategory = () => {
-    const newCategories = [...categories, { image: '', tag: '→ Nová kategorie', url: '#' }];
+    const newCategories = [...categories, { image: "", tag: "→ Nová kategorie", url: "#" }];
     onUpdate({ ...block.content, categories: newCategories } as any);
   };
 
@@ -58,15 +53,15 @@ export const CategoriesBlock = ({ block, onUpdate }: CategoriesBlockProps) => {
     <div className="bg-white border border-border p-6">
       <div className="max-w-2xl mx-auto">
         {/* Header - title 20px bold */}
-        <div className="flex justify-between items-center" style={{ marginBottom: '1rem' }}>
-          <h2 
+        <div className="flex justify-between items-center" style={{ marginBottom: "1rem" }}>
+          <h2
             className="font-bold"
             contentEditable
             suppressContentEditableWarning
-            onBlur={(e) => onUpdate({ ...block.content, title: e.currentTarget.textContent || '' })}
-            style={{ color: '#212121', fontSize: '20px' }}
+            onBlur={(e) => onUpdate({ ...block.content, title: e.currentTarget.textContent || "" })}
+            style={{ color: "#212121", fontSize: "20px" }}
           >
-            {block.content.title || 'Vyber si to pravé pro tebe'}
+            {block.content.title || "Vyber si to pravé pro tebe"}
           </h2>
           <div className="flex items-center gap-4">
             <label className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -77,59 +72,65 @@ export const CategoriesBlock = ({ block, onUpdate }: CategoriesBlockProps) => {
               Zobrazit vše
             </label>
             {showViewAll && (
-              <span 
+              <span
                 className="text-sm cursor-pointer"
-                style={{ color: '#000000', textUnderlineOffset: '2px' }}
+                style={{ color: "#000000", textUnderlineOffset: "2px" }}
                 onClick={() => setEditingCategory(-1)}
               >
-                <span style={{ textDecoration: 'none' }}>→ </span>
-                <span style={{ textDecoration: 'underline' }}>{viewAllText}</span>
+                <span style={{ textDecoration: "none" }}>→ </span>
+                <span style={{ textDecoration: "underline" }}>{viewAllText}</span>
               </span>
             )}
           </div>
         </div>
 
-        {/* Categories grid - 3 per row, max 6 total */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
-          {categories.slice(0, 6).map((category, index) => (
-            <div 
-              key={index} 
-              className="group relative" 
-              style={{ 
-                width: 'calc(33.333% - 8px)',
-                flexShrink: 0
-              }}
-            >
-              {/* Remove button */}
-              <button
-                onClick={() => removeCategory(index)}
-                className="absolute -top-2 -right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity p-1 bg-white shadow hover:bg-red-50"
-              >
-                <Trash2 className="w-3 h-3 text-red-500" />
-              </button>
+        {/* Categories grid - up to 3 per row, max 6 total */}
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "12px" }}>
+          {(() => {
+            const visible = categories.slice(0, 6);
+            const cols = Math.min(3, Math.max(1, visible.length)); // 1..3
+            const colWidth = `calc(${100 / cols}% - ${(12 * (cols - 1)) / cols}px)`; // fill row
 
-              {/* Category image - no margin bottom */}
-              <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
-                <ImageUpload
-                  currentImage={category.image}
-                  onImageUploaded={(url) => updateCategory(index, 'image', url)}
-                  aspectRatio="portrait"
-                  placeholder="Nahrát foto"
-                  className="w-full h-full"
-                  showBorder={false}
-                />
-              </div>
-
-              {/* Tag - directly attached to image (0px gap) */}
-              <div 
-                className="text-xs px-2 py-1 inline-block cursor-pointer"
-                style={{ backgroundColor: '#212121', color: '#FFFFFF' }}
-                onClick={() => setEditingCategory(index)}
+            return visible.map((category, index) => (
+              <div
+                key={index}
+                className="group relative"
+                style={{
+                  width: colWidth,
+                  flexShrink: 0,
+                }}
               >
-                {category.tag}
+                {/* Remove button */}
+                <button
+                  onClick={() => removeCategory(index)}
+                  className="absolute -top-2 -right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity p-1 bg-white shadow hover:bg-red-50"
+                >
+                  <Trash2 className="w-3 h-3 text-red-500" />
+                </button>
+
+                {/* Category image */}
+                <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
+                  <ImageUpload
+                    currentImage={category.image}
+                    onImageUploaded={(url) => updateCategory(index, "image", url)}
+                    aspectRatio="portrait"
+                    placeholder="Nahrát foto"
+                    className="w-full h-full"
+                    showBorder={false}
+                  />
+                </div>
+
+                {/* Tag */}
+                <div
+                  className="text-xs px-2 py-1 inline-block cursor-pointer"
+                  style={{ backgroundColor: "#212121", color: "#FFFFFF" }}
+                  onClick={() => setEditingCategory(index)}
+                >
+                  {category.tag}
+                </div>
               </div>
-            </div>
-          ))}
+            ));
+          })()}
         </div>
 
         {/* Add button */}
@@ -150,7 +151,7 @@ export const CategoriesBlock = ({ block, onUpdate }: CategoriesBlockProps) => {
       <Dialog open={editingCategory !== null} onOpenChange={(open) => !open && setEditingCategory(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{editingCategory === -1 ? 'Upravit "zobrazit vše"' : 'Upravit kategorii'}</DialogTitle>
+            <DialogTitle>{editingCategory === -1 ? 'Upravit "zobrazit vše"' : "Upravit kategorii"}</DialogTitle>
           </DialogHeader>
           {editingCategory === -1 ? (
             <div className="space-y-4">
@@ -169,23 +170,25 @@ export const CategoriesBlock = ({ block, onUpdate }: CategoriesBlockProps) => {
                 />
               </div>
             </div>
-          ) : editingCategory !== null && (
-            <div className="space-y-4">
-              <div>
-                <label className="text-sm font-medium">Štítek</label>
-                <Input
-                  value={categories[editingCategory]?.tag || ''}
-                  onChange={(e) => updateCategory(editingCategory, 'tag', e.target.value)}
-                />
+          ) : (
+            editingCategory !== null && (
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium">Štítek</label>
+                  <Input
+                    value={categories[editingCategory]?.tag || ""}
+                    onChange={(e) => updateCategory(editingCategory, "tag", e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium">URL</label>
+                  <Input
+                    value={categories[editingCategory]?.url || ""}
+                    onChange={(e) => updateCategory(editingCategory, "url", e.target.value)}
+                  />
+                </div>
               </div>
-              <div>
-                <label className="text-sm font-medium">URL</label>
-                <Input
-                  value={categories[editingCategory]?.url || ''}
-                  onChange={(e) => updateCategory(editingCategory, 'url', e.target.value)}
-                />
-              </div>
-            </div>
+            )
           )}
         </DialogContent>
       </Dialog>
