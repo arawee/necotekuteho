@@ -1808,10 +1808,32 @@ function generateTextTwoColumnsHTML(block: NewsletterBlock): string {
   <td align="center" style="padding:24px;margin-bottom:32px;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
       <tr>
-        <td valign="top" width="100" style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:900 !important;color:#212121;">
+        <td valign="top"
+            width="25%"
+            style="
+              width:25%;
+              font-family:'JetBrains Mono',monospace;
+              font-size:12px;
+              font-weight:700;
+              color:#212121;
+              vertical-align:top;
+              word-break:normal;
+            ">
           ${leftColumn}
         </td>
-        <td valign="top" style="padding-left:32px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500 !important;line-height:150%;color:#212121;">
+      
+        <td valign="top"
+            width="75%"
+            style="
+              width:75%;
+              padding-left:32px;
+              font-family:'JetBrains Mono',monospace;
+              font-size:12px;
+              font-weight:500;
+              line-height:150%;
+              color:#212121;
+              vertical-align:top;
+            ">
           ${rightColumn}
         </td>
       </tr>
