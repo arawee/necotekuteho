@@ -541,8 +541,8 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
 
   const MAX = 6;
   const TABLE_WIDTH = 600;
-  const GAP = 12; // gap between cards
-  const GUTTER = GAP / 2; // 6px left/right
+  const GAP = 12; // exact gap between cards
+  const GUTTER = GAP / 2; // 6px on each side
 
   const items = categories.slice(0, MAX);
 
@@ -582,13 +582,9 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
 </td>`;
   };
 
-  // Renders a row with a fixed column count; fills missing cells so last item won't stretch
   const renderRowFill = (rowItems: any[], forceCols: number | null = null) => {
-    if (!rowItems.length) return "";
-
     const n = forceCols ?? rowItems.length;
-    const missing = Math.max(0, n - rowItems.length);
-    const colPct = 100 / n;
+    if (!rowItems.length) return "";
 
     return `
 <table role="presentation" border="0" cellspacing="0" cellpadding="0"
@@ -596,9 +592,9 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
   <tr>
     ${rowItems.map((c, i) => renderCategoryCell(c, n, i)).join("")}
     ${
-      missing
-        ? Array.from({ length: missing })
-            .map(() => `<td width="${colPct}%" style="width:${colPct}%;font-size:0;line-height:0;">&nbsp;</td>`)
+      forceCols === 3 && rowItems.length < 3
+        ? Array.from({ length: 3 - rowItems.length })
+            .map(() => `<td width="${100 / 3}%" style="width:${100 / 3}%;font-size:0;line-height:0;">&nbsp;</td>`)
             .join("")
         : ""
     }
@@ -610,7 +606,7 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
   const row1 = items.slice(0, 3);
   const row2 = items.slice(3, 6);
 
-  // Mobile: 2 columns, always (so last single card stays 50%)
+  // Mobile: 2 columns
   const mobileRows: any[][] = [];
   for (let i = 0; i < items.length; i += 2) mobileRows.push(items.slice(i, i + 2));
 
@@ -642,7 +638,7 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
       <!-- Desktop (3 cols) -->
       <tr class="hide-on-mobile">
         <td align="left">
-          ${renderRowFill(row1, 3)}
+          ${renderRowFill(row1)}
         </td>
       </tr>
       ${
@@ -1609,6 +1605,7 @@ function generateProductTextHTML(block: NewsletterBlock): string {
 
 function generateTextTwoColumnsHTML(block: NewsletterBlock): string {
   const { content } = block;
+
   const leftColumn = (content as any).leftColumn || "Slovníček";
   const rightColumn =
     (content as any).rightColumn ||
@@ -1617,12 +1614,20 @@ function generateTextTwoColumnsHTML(block: NewsletterBlock): string {
   return `<!-- Text dva sloupce -->
 <tr>
   <td align="center" style="padding:24px;margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0"
+           width="600" class="wrap" style="max-width:600px;width:100%;table-layout:fixed;">
       <tr>
-        <td valign="top" width="100" style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:900 !important;color:#212121;">
+        <td class="ttc-left"
+            valign="top"
+            style="width:100px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:900;color:#212121;
+                   word-break:break-word;overflow-wrap:anywhere;">
           ${leftColumn}
         </td>
-        <td valign="top" style="padding-left:32px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500 !important;line-height:150%;color:#212121;">
+
+        <td class="ttc-right"
+            valign="top"
+            style="padding-left:32px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;line-height:150%;color:#212121;
+                   word-break:break-word;overflow-wrap:anywhere;">
           ${rightColumn}
         </td>
       </tr>
@@ -1679,6 +1684,24 @@ function getNewsletterCSS(): string {
 
     /* Responsive - Mobile */
     @media only screen and (max-width: 620px) {
+    td.ttc-left,
+    td.ttc-right {
+      display: block !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+    }
+    
+    td.ttc-right {
+      padding-left: 0 !important;
+      padding-top: 12px !important;
+    }
+    
+    /* Extra safety for long URLs/strings anywhere */
+    td, p, a, span, div {
+      word-break: break-word !important;
+      overflow-wrap: anywhere !important;
+    }
     /* Hide spacer cells used for centering/filling rows */
       td.spacer {
         display: none !important;
