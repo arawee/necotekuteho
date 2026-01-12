@@ -511,7 +511,7 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
   <tr>
     ${rowItems.map((c, i) => renderCategoryCell(c, n, i)).join("")}
     ${
-      forceThreeCols && rowItems.length < 3
+      forceCols === 3 && rowItems.length < 3
         ? Array.from({ length: 3 - rowItems.length })
             .map(() => `<td width="${100 / 3}%" style="width:${100 / 3}%;font-size:0;line-height:0;">&nbsp;</td>`)
             .join("")
@@ -564,7 +564,7 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
         row2.length
           ? `<tr class="hide-on-mobile">
                <td align="left" style="padding-top:${GAP}px;">
-                 ${renderRowFill(row2, true)}
+                 ${renderRowFill(row2, 3)}
                </td>
              </tr>`
           : ""
