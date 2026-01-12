@@ -541,8 +541,8 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
 
   const MAX = 6;
   const TABLE_WIDTH = 600;
-  const GAP = 12; // exact gap between cards
-  const GUTTER = GAP / 2; // 6px on each side
+  const GAP = 12; // gap between cards
+  const GUTTER = GAP / 2; // 6px left/right
 
   const items = categories.slice(0, MAX);
 
@@ -582,13 +582,12 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
 </td>`;
   };
 
+  // Renders a row with a fixed column count; fills missing cells so last item won't stretch
   const renderRowFill = (rowItems: any[], forceCols: number | null = null) => {
     if (!rowItems.length) return "";
 
-    const n = forceCols ?? rowItems.length; // desired number of columns
-
-    // if we force 2 cols (mobile) and only have 1 item -> add 1 empty cell
-    const missing = n - rowItems.length;
+    const n = forceCols ?? rowItems.length;
+    const missing = Math.max(0, n - rowItems.length);
     const colPct = 100 / n;
 
     return `
@@ -597,7 +596,7 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
   <tr>
     ${rowItems.map((c, i) => renderCategoryCell(c, n, i)).join("")}
     ${
-      missing > 0
+      missing
         ? Array.from({ length: missing })
             .map(() => `<td width="${colPct}%" style="width:${colPct}%;font-size:0;line-height:0;">&nbsp;</td>`)
             .join("")
@@ -607,7 +606,11 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
 </table>`;
   };
 
-  // Mobile: 2 columns (fixed) — last single item won't stretch
+  // Desktop: rows of 3
+  const row1 = items.slice(0, 3);
+  const row2 = items.slice(3, 6);
+
+  // Mobile: 2 columns, always (so last single card stays 50%)
   const mobileRows: any[][] = [];
   for (let i = 0; i < items.length; i += 2) mobileRows.push(items.slice(i, i + 2));
 
@@ -639,7 +642,7 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
       <!-- Desktop (3 cols) -->
       <tr class="hide-on-mobile">
         <td align="left">
-          ${renderRowFill(row1)}
+          ${renderRowFill(row1, 3)}
         </td>
       </tr>
       ${
