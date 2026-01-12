@@ -1096,7 +1096,7 @@ function generateArticleTextHTML(block: NewsletterBlock): string {
 
   return `<!-- Článek -->
   <tr>
-    <td align="center" style="padding:24px;margin-bottom:32px;">
+    <td align="center" style="padding:24px;margin-bottom:32px;margin-top:32px">
       <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
         <tr>
           <td style="padding:0 0;font-family:'JetBrains Mono',monospace;">
@@ -1139,7 +1139,7 @@ function generateBenefitsHTML(block: NewsletterBlock): string {
 
   const renderCell = (b: any, globalIndex: number) => {
     return `
-      <td valign="top" width="200" style="width:200px;text-align:center;font-family:'JetBrains Mono',monospace;padding:0;margin:0;">
+      <td valign="top" width="200" style="width:200px;text-align:center;font-family:'JetBrains Mono',monospace;padding:0;margin:0;margin-bottom:1rem;>
         <div style="padding:0 12px;">
           <div style="margin-bottom:16px;">
             <img src="${getBenefitIcon(b.icon, globalIndex)}" width="48" height="48" alt=""
