@@ -8,8 +8,8 @@ import { CustomPlusIcon } from "@/components/icons/CustomIcons";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-const MAX_PRODUCTS = 8;
-const COLS = 4;
+const MAX_PRODUCTS = 6;
+const COLS = 3;
 
 interface Product {
   image: string;
