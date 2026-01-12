@@ -424,7 +424,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
 
           <tr>
             <td style="padding-top:0;font-family:'JetBrains Mono',monospace;">
-              <div style="margin-top:8px;margin-bottom:8px;">${tagsHTML}</div>
+              <div style="margin-top:-8px;margin-bottom:8px;">${tagsHTML}</div>
 
               <h3 style="margin:0 0 4px 0;font-size:16px;font-weight:700;color:#212121;line-height:150%;">${p.name}</h3>
 
