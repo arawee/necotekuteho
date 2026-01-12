@@ -1113,7 +1113,7 @@ function generateArticleTextHTML(block: NewsletterBlock): string {
 
   return `<!-- Článek -->
   <tr>
-    <td align="center" style="padding:24px 0;margin-bottom:32px;">
+    <td align="center" style="padding:24px;margin-bottom:32px;">
       <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
         <tr>
           <td style="padding:0 0;font-family:'JetBrains Mono',monospace;">
