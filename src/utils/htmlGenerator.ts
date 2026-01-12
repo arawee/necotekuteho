@@ -262,7 +262,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
           </tr>
         </table>
 
-        <table width="100%" style="padding-top:0.5rem;" cellspacing="0" cellpadding="0">
+        <table width="100%" cellspacing="0" cellpadding="0">
           <tr>
             <td style="font-weight:700;">
               ${
@@ -354,7 +354,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
                     </tr>
                   </table>
 
-                  <table width="100%" style="padding-top:0.5rem;" cellspacing="0" cellpadding="0">
+                  <table width="100%" cellspacing="0" cellpadding="0">
                     <tr>
                       <td style="font-weight:700;">
                         ${
@@ -457,7 +457,7 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
           ${
             c.image
               ? `<img src="${escapeAttr(c.image)}" width="${innerW}" alt=""
-                     style="display:block;width:100%;max-width:${innerW}px;height:auto;aspect-ratio:3/4;object-fit:cover;margin-bottom:-1px;" />`
+                     style="display:block;width:100%;max-width:${innerW}px;height:auto;aspect-ratio:3/4;object-fit:cover;" />`
               : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
           }
         </td>
@@ -653,6 +653,7 @@ function generateMistaHTML(block: NewsletterBlock): string {
               
                   display:block;
                   width:100%;
+                  min-width:140px;        /* ← stops the 1ch collapse */
                   white-space:nowrap;
                   word-break:normal;
                   overflow:visible;
@@ -767,6 +768,7 @@ function generateMistaHTML(block: NewsletterBlock): string {
                         
                             display:block;
                             width:100%;
+                            min-width:140px;        /* ← stops the 1ch collapse */
                             white-space:nowrap;
                             word-break:normal;
                             overflow:visible;
@@ -1531,7 +1533,7 @@ function generateZichovecFooterHTML(block: NewsletterBlock): string {
   return `<!-- Patička ZICHOVEC -->
 <tr>
   <!-- OUTER wrapper stays white -->
-  <td align="center" style="background-color:#FFFFFF;">
+  <td align="center" style="background-color:#FFFFFF; margin-top: 2rem;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0"
            width="600" class="wrap" style="max-width:600px;width:100%;background-color:#FFFFFF;">
 
@@ -1839,7 +1841,7 @@ function generateTextTwoColumnsHTML(block: NewsletterBlock): string {
   return `<!-- Text dva sloupce -->
 <tr>
   <td align="center" style="padding:32px 24px;margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:552px;">
       <tr>
         <td valign="top"
             width="25%"
