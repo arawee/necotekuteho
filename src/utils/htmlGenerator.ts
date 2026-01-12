@@ -383,14 +383,6 @@ function generateProductListHTML(block: NewsletterBlock): string {
 
   const items = products.slice(0, MAX);
 
-  const getProductImageUrl = (p: any): string =>
-    (typeof p?.image === "string" && p.image.trim()) ||
-    (typeof p?.imageUrl === "string" && p.imageUrl.trim()) ||
-    (typeof p?.photo === "string" && p.photo.trim()) ||
-    (typeof p?.photoUrl === "string" && p.photoUrl.trim()) ||
-    (typeof p?.image?.url === "string" && p.image.url.trim()) ||
-    "";
-
   const renderProductCell = (p: any, isFirst: boolean, isLast: boolean) => {
     const padLeft = isFirst ? "0" : `${GUTTER}px`;
     const padRight = isLast ? "0" : `${GUTTER}px`;
@@ -469,7 +461,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
 
     return `
 <table role="presentation" border="0" cellspacing="0" cellpadding="0"
-       width="600" class="wrap" style="width:100%;max-width:600px;table-layout:fixed;">
+       width="600" class="wrap" style="width:100%;max-width:552px;table-layout:fixed;">
   <tr>
     ${rowItems.map((p, i) => renderProductCell(p, i === 0, i === n - 1)).join("")}
     ${
@@ -561,7 +553,7 @@ function generateMistaHTML(block: NewsletterBlock): string {
 
     <tr>
       <td style="font-family:'JetBrains Mono',monospace;">
-        <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+        <table role="pressentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
           <tr>
             <td style="padding-right:12px;width:60px;">
               <a href="${place.buttonUrl || "#"}"
@@ -589,7 +581,7 @@ function generateMistaHTML(block: NewsletterBlock): string {
 
     return `
 <table role="presentation" border="0" cellspacing="0" cellpadding="0"
-       width="600" class="wrap" style="width:100%;max-width:600px;table-layout:fixed;">
+       width="600" class="wrap" style="width:100%;max-width:552px;table-layout:fixed;">
   <tr>
     ${rowItems.map((p, i) => renderPlaceCell(p, i === 0, i === n - 1)).join("")}
     ${
@@ -615,7 +607,7 @@ function generateMistaHTML(block: NewsletterBlock): string {
   return `<!-- Místa -->
 <tr>
   <td align="center" style="padding:0;margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:552px;width:100%;">
       <tr>
         <td style="padding:24px;">
           <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
