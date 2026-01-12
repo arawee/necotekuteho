@@ -665,22 +665,29 @@ function generateLocationsHTML(block: NewsletterBlock): string {
 
   const COLS = 3;
   const MAX = 6;
-  const TABLE_WIDTH = 600;
-  const COL_WIDTH = Math.floor(TABLE_WIDTH / COLS); // 200px
+  const tableWidth = 600;
+  const GUTTER = 6;
+  const colPct = 100 / COLS;
+
+  const colInnerWidth = Math.floor((tableWidth - COLS * (GUTTER * 2)) / COLS); // 188
 
   const items = locations.slice(0, MAX);
   const row1 = items.slice(0, COLS);
   const row2 = items.slice(COLS, COLS * 2);
 
-  const renderLocationCell = (loc: any) => {
+  const renderLocationCell = (loc: any, isFirst: boolean, isLast: boolean) => {
+    const padLeft = isFirst ? "0" : `${GUTTER}px`;
+    const padRight = isLast ? "0" : `${GUTTER}px`;
+
     return `
-<td valign="top" width="${COL_WIDTH}" style="width:${COL_WIDTH}px;padding:0 6px 12px 6px;">
-  <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="background:#F4F4F4;table-layout:fixed;">
+<td valign="top" class="loc-col" width="${colPct}%" style="width:${colPct}%;padding:0 ${padRight} 12px ${padLeft};">
+  <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="background:#F4F4F4;table-layout:fixed;width:100%;">
     <tr>
       <td>
         ${
           loc.image
-            ? `<img src="${loc.image}" width="100%" style="display:block;width:100%;aspect-ratio:5/4;object-fit:cover;">`
+            ? `<img src="${escapeAttr(loc.image)}" width="${colInnerWidth}" alt=""
+                    style="display:block;width:100%;max-width:${colInnerWidth}px;height:auto;aspect-ratio:5/4;object-fit:cover;" />`
             : `<div style="width:100%;padding-top:80%;background:#E5E5E5;"></div>`
         }
       </td>
@@ -693,7 +700,8 @@ function generateLocationsHTML(block: NewsletterBlock): string {
         <p style="margin:0 0 12px 0;font-size:12px;">${loc.weekendHours}</p>
 
         <div style="margin-top:12px;">
-          <a href="${loc.primaryButtonUrl || "#"}" style="display:inline-block;width:36px;height:36px;border:1px solid #00C322;border-radius:50%;line-height:36px;text-align:center;text-decoration:none;">
+          <a href="${escapeAttr(loc.primaryButtonUrl || "#")}"
+             style="display:inline-block;width:36px;height:36px;border:1px solid #00C322;border-radius:50%;line-height:36px;text-align:center;text-decoration:none;">
             ${ARROW_ICON_SVG("#00C322")}
           </a>
         </div>
@@ -703,18 +711,54 @@ function generateLocationsHTML(block: NewsletterBlock): string {
 </td>`;
   };
 
-  const renderRow = (row: any[]) => {
-    const used = row.length * COL_WIDTH;
-    const remaining = TABLE_WIDTH - used;
-    const left = Math.floor(remaining / 2);
-    const right = remaining - left;
+  const renderRowCentered = (rowItems: any[]) => {
+    const n = rowItems.length;
+    if (!n) return "";
+
+    const spacerPctTotal = (COLS - n) * colPct;
+    const leftSpacer = spacerPctTotal > 0 ? spacerPctTotal / 2 : 0;
+    const rightSpacer = spacerPctTotal > 0 ? spacerPctTotal - leftSpacer : 0;
+
+    const leftTD =
+      leftSpacer > 0
+        ? `<td class="spacer" width="${leftSpacer}%" style="width:${leftSpacer}%;font-size:0;line-height:0;">&nbsp;</td>`
+        : "";
+    const rightTD =
+      rightSpacer > 0
+        ? `<td class="spacer" width="${rightSpacer}%" style="width:${rightSpacer}%;font-size:0;line-height:0;">&nbsp;</td>`
+        : "";
 
     return `
-<table role="presentation" width="600" style="width:600px;table-layout:fixed;">
+<table role="presentation" border="0" cellspacing="0" cellpadding="0"
+       width="600" class="wrap" style="width:100%;max-width:600px;table-layout:fixed;">
   <tr>
-    ${left ? `<td width="${left}"></td>` : ""}
-    ${row.map(renderLocationCell).join("")}
-    ${right ? `<td width="${right}"></td>` : ""}
+    ${leftTD}
+    ${rowItems.map((loc, i) => renderLocationCell(loc, i === 0, i === n - 1)).join("")}
+    ${rightTD}
+  </tr>
+</table>`;
+  };
+
+  // LEFT aligned row: fill missing cells on the RIGHT (like Products)
+  const renderRowLeft = (rowItems: any[]) => {
+    const n = rowItems.length;
+    if (!n) return "";
+
+    const missing = COLS - n;
+    const emptyTD = `<td class="spacer" width="${colPct}%" style="width:${colPct}%;font-size:0;line-height:0;">&nbsp;</td>`;
+
+    return `
+<table role="presentation" border="0" cellspacing="0" cellpadding="0"
+       width="600" class="wrap" style="width:100%;max-width:600px;table-layout:fixed;">
+  <tr>
+    ${rowItems.map((loc, i) => renderLocationCell(loc, i === 0, i === n - 1)).join("")}
+    ${
+      missing > 0
+        ? Array.from({ length: missing })
+            .map(() => emptyTD)
+            .join("")
+        : ""
+    }
   </tr>
 </table>`;
   };
@@ -726,20 +770,21 @@ function generateLocationsHTML(block: NewsletterBlock): string {
   return `
 <tr>
   <td align="center" style="padding:24px;">
-    <table role="presentation" width="600" class="wrap">
+    <table role="presentation" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td>
-          <table width="100%">
+          <table role="presentation" width="100%">
             <tr>
-              <td><h2>${content.title || "Lokace"}</h2></td>
+              <td><h2 style="margin:0;">${content.title || "Lokace"}</h2></td>
               <td align="right">${viewAllHTML}</td>
             </tr>
           </table>
         </td>
       </tr>
 
-      <tr><td align="center">${renderRow(row1)}</td></tr>
-      ${row2.length ? `<tr><td align="center" style="padding-top:12px;">${renderRow(row2)}</td></tr>` : ""}
+      <tr><td align="center" style="padding-top:12px;">${renderRowCentered(row1)}</td></tr>
+
+      ${row2.length ? `<tr><td align="left" style="padding-top:12px;">${renderRowLeft(row2)}</td></tr>` : ""}
     </table>
   </td>
 </tr>`;
@@ -1199,78 +1244,84 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
   const viewAllText = (content as any).viewAllText || "zobrazit vše";
   const viewAllUrl = (content as any).viewAllUrl || "#";
 
-  // ✅ max 6, 3 columns per row
   const COLS = 3;
   const MAX = 6;
   const tableWidth = 600;
-  const colWidth = Math.floor(tableWidth / COLS); // 200px
+  const GUTTER = 6;
+  const colPct = 100 / COLS;
+
+  // Same inner width logic as Products (prevents weird Outlook issues)
+  const colInnerWidth = Math.floor((tableWidth - COLS * (GUTTER * 2)) / COLS); // 188
 
   const items = categories.slice(0, MAX);
   const row1 = items.slice(0, COLS);
   const row2 = items.slice(COLS, COLS * 2);
 
-  const renderCategoryCell = (c: any) => {
+  const renderCategoryCell = (c: any, isFirst: boolean, isLast: boolean) => {
+    const padLeft = isFirst ? "0" : `${GUTTER}px`;
+    const padRight = isLast ? "0" : `${GUTTER}px`;
+
     return `
-      <td valign="top" width="${colWidth}" style="width:${colWidth}px;padding:0 6px 0 6px;">
-        <a href="${c.url || "#"}" style="text-decoration:none;display:block;">
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
-            <tr>
-              <td>
-                ${
-                  c.image
-                    ? `<img src="${c.image}" width="100%" alt="" style="display:block;width:100%;aspect-ratio:3/4;object-fit:cover;"/>`
-                    : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
-                }
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <span style="display:inline-block;background-color:#212121;color:#FFFFFF;font-family:'JetBrains Mono',monospace;font-size:12px;padding:4px 8px;">
-                  ${c.tag}
-                </span>
-              </td>
-            </tr>
-          </table>
-        </a>
-      </td>
-    `;
+<td valign="top" class="cat-col" width="${colPct}%" style="width:${colPct}%;padding:0 ${padRight} 0 ${padLeft};">
+  <a href="${escapeAttr(c.url || "#")}" style="text-decoration:none;display:block;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
+      <tr>
+        <td>
+          ${
+            c.image
+              ? `<img src="${escapeAttr(c.image)}" width="${colInnerWidth}" alt=""
+                      style="display:block;width:100%;max-width:${colInnerWidth}px;height:auto;aspect-ratio:3/4;object-fit:cover;" />`
+              : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
+          }
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span style="display:inline-block;background-color:#212121;color:#FFFFFF;font-family:'JetBrains Mono',monospace;font-size:12px;padding:4px 8px;">
+            ${c.tag}
+          </span>
+        </td>
+      </tr>
+    </table>
+  </a>
+</td>
+`;
   };
 
-  const renderRow = (rowItems: any[]) => {
+  // Center rows with <3 items using % spacers (keeps card width constant = 1/3)
+  const renderRowCentered = (rowItems: any[]) => {
     const n = rowItems.length;
-    const used = n * colWidth;
-    const remaining = tableWidth - used;
+    if (!n) return "";
 
-    const leftSpacer = Math.floor(remaining / 2);
-    const rightSpacer = remaining - leftSpacer;
+    const spacerPctTotal = (COLS - n) * colPct;
+    const leftSpacer = spacerPctTotal > 0 ? spacerPctTotal / 2 : 0;
+    const rightSpacer = spacerPctTotal > 0 ? spacerPctTotal - leftSpacer : 0;
 
     const leftTD =
       leftSpacer > 0
-        ? `<td width="${leftSpacer}" style="width:${leftSpacer}px;font-size:0;line-height:0;">&nbsp;</td>`
+        ? `<td class="spacer" width="${leftSpacer}%" style="width:${leftSpacer}%;font-size:0;line-height:0;">&nbsp;</td>`
         : "";
     const rightTD =
       rightSpacer > 0
-        ? `<td width="${rightSpacer}" style="width:${rightSpacer}px;font-size:0;line-height:0;">&nbsp;</td>`
+        ? `<td class="spacer" width="${rightSpacer}%" style="width:${rightSpacer}%;font-size:0;line-height:0;">&nbsp;</td>`
         : "";
 
     return `
-      <table role="presentation" border="0" cellspacing="0" cellpadding="0"
-             width="600" style="width:600px;max-width:600px;table-layout:fixed;">
-        <tr>
-          ${leftTD}
-          ${rowItems.map(renderCategoryCell).join("")}
-          ${rightTD}
-        </tr>
-      </table>
-    `;
+<table role="presentation" border="0" cellspacing="0" cellpadding="0"
+       width="600" class="wrap" style="width:100%;max-width:600px;table-layout:fixed;">
+  <tr>
+    ${leftTD}
+    ${rowItems.map((c, i) => renderCategoryCell(c, i === 0, i === n - 1)).join("")}
+    ${rightTD}
+  </tr>
+</table>`;
   };
 
   const viewAllHTML = showViewAll
     ? `
-      <a href="${viewAllUrl}" style="color:#000000;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;white-space:nowrap;">
-        <span style="text-decoration:none;">→ </span><span style="text-decoration:underline;">${viewAllText}</span>
-      </a>
-    `
+<a href="${viewAllUrl}" style="color:#000000;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;white-space:nowrap;">
+  <span style="text-decoration:none;">→ </span><span style="text-decoration:underline;">${viewAllText}</span>
+</a>`
     : "";
 
   return `<!-- Kategorie -->
@@ -1291,25 +1342,8 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
         </td>
       </tr>
 
-      <!-- Row 1 -->
-      <tr>
-        <td align="center">
-          ${renderRow(row1)}
-        </td>
-      </tr>
-
-      <!-- Row 2 -->
-      ${
-        row2.length > 0
-          ? `
-      <tr>
-        <td align="center" style="padding-top:12px;">
-          ${renderRow(row2)}
-        </td>
-      </tr>
-      `
-          : ""
-      }
+      <tr><td align="center">${renderRowCentered(row1)}</td></tr>
+      ${row2.length ? `<tr><td align="center" style="padding-top:12px;">${renderRowCentered(row2)}</td></tr>` : ""}
     </table>
   </td>
 </tr>`;
@@ -1492,6 +1526,35 @@ function getNewsletterCSS(): string {
     
     /* Responsive - Mobile */
     @media only screen and (max-width: 620px) {
+    /* Hide spacer cells used for centering/filling rows */
+      td.spacer {
+        display: none !important;
+        width: 0 !important;
+        max-width: 0 !important;
+        overflow: hidden !important;
+        font-size: 0 !important;
+        line-height: 0 !important;
+        mso-hide: all !important;
+      }
+      
+      /* Kategorie: 2 columns on phone */
+      td.cat-col {
+        display: inline-block !important;
+        width: 50% !important;
+        max-width: 50% !important;
+        box-sizing: border-box !important;
+        vertical-align: top !important;
+        padding: 0 6px 12px 6px !important; /* keep some gutter */
+      }
+      
+      /* Lokace: 1 column on phone */
+      td.loc-col {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 0 0 16px 0 !important;
+      }
           /* Hide things only on mobile */
       .hide-on-mobile {
         display: none !important;
