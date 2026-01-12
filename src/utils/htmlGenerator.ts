@@ -322,188 +322,108 @@ function generateZichovecFooterHTML(block: NewsletterBlock): string {
 </tr>`;
 }
 
-function generateProductListHTML(block: NewsletterBlock): string {
+function generateCategoriesHTML(block: NewsletterBlock): string {
   const { content } = block;
 
-  const products = Array.isArray((content as any).products)
-    ? (content as any).products
-    : [
-        {
-          name: "Magor 15",
-          alcohol: "5,9",
-          volume: "750 ml",
-          price: "113 Kč",
-          tags: [{ text: "Polotmavé bock", color: "dark" }],
-          image: "",
-          url: "#",
-        },
-        {
-          name: "Sour Passion Fruit",
-          alcohol: "5,9",
-          volume: "750 ml",
-          price: "167 Kč",
-          salePrice: "90 Kč",
-          tags: [
-            { text: "Relax", color: "dark" },
-            { text: "Poslední šance", color: "red" },
-          ],
-          image: "",
-          url: "#",
-        },
-        {
-          name: "Milky",
-          alcohol: "5,9",
-          volume: "750 ml",
-          price: "113 Kč",
-          tags: [
-            { text: "Neipa", color: "dark" },
-            { text: "Novinka", color: "green" },
-          ],
-          image: "",
-          url: "#",
-        },
-      ];
+  const categories = (content as any).categories || [
+    { image: "", tag: "→ IPA, APA a NEIPA", url: "#" },
+    { image: "", tag: "→ Sour a Ovocné", url: "#" },
+    { image: "", tag: "→ Ležáky a klasika", url: "#" },
+  ];
 
   const showViewAll = (content as any).showViewAll !== false;
   const viewAllText = (content as any).viewAllText || "zobrazit vše";
   const viewAllUrl = (content as any).viewAllUrl || "#";
 
-  const getTagBgColor = (color: string) => {
-    switch (color) {
-      case "red":
-        return "#FF4C4C";
-      case "green":
-        return "#00C322";
-      default:
-        return "#161616";
-    }
-  };
-
-  const COLS = 3;
   const MAX = 6;
-  const tableWidth = 600;
-  const GUTTER = 6;
-  const colPct = 100 / COLS;
+  const TABLE_WIDTH = 600;
+  const GAP = 12; // exact gap between cards
+  const GUTTER = GAP / 2; // 6px on each side
 
-  // 3 * (colInnerWidth + 12) = 600 => 188
-  const colInnerWidth = Math.floor((tableWidth - COLS * (GUTTER * 2)) / COLS);
+  const items = categories.slice(0, MAX);
 
-  const items = products.slice(0, MAX);
+  const renderCategoryCell = (c: any, nInRow: number, idx: number) => {
+    const colPct = 100 / nInRow;
 
-  const renderProductCell = (p: any, isFirst: boolean, isLast: boolean) => {
-    const padLeft = isFirst ? "0" : `${GUTTER}px`;
-    const padRight = isLast ? "0" : `${GUTTER}px`;
+    // total gaps per row = (n-1) * 12
+    const totalGaps = (nInRow - 1) * GAP;
+    const innerW = Math.floor((TABLE_WIDTH - totalGaps) / nInRow);
 
-    const tagsHTML = (p.tags || [])
-      .map(
-        (tag: any) => `
-          <span style="display:inline-block;background-color:${getTagBgColor(
-            tag.color,
-          )};color:#FFFFFF;font-size:10px;padding:2px 8px;margin-right:4px;margin-bottom:4px;">
-            ${tag.text}
-          </span>
-        `,
-      )
-      .join("");
-
-    const priceHTML = p.salePrice
-      ? `<span style="color:#FF4C4C;font-weight:700;">${p.salePrice}</span> <span style="font-size:10px;color:#666;text-decoration:line-through;">${p.price}</span>`
-      : `<span style="color:#212121;font-weight:700;">${p.price}</span>`;
+    const padLeft = idx === 0 ? 0 : GUTTER;
+    const padRight = idx === nInRow - 1 ? 0 : GUTTER;
 
     return `
-<td valign="top" class="stack" width="${colPct}%" style="width:${colPct}%;padding:0 ${padRight} 0 ${padLeft};">
-  <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
-    <tr>
-      <td style="background-color:#F5F5F5;">
-        ${
-          p.image
-            ? // IMPORTANT: numeric width attr prevents “row 2 image missing” in some clients
-              `<img src="${escapeAttr(p.image)}" width="${colInnerWidth}" alt="${escapeAttr(p.name)}"
-                    style="display:block;width:100%;max-width:${colInnerWidth}px;height:auto;aspect-ratio:3/4;object-fit:cover;" />`
-            : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
-        }
-      </td>
-    </tr>
-
-    <tr>
-      <td style="padding-top:0;font-family:'JetBrains Mono',monospace;">
-        <div style="margin-top:-4px;margin-bottom:8px;">${tagsHTML}</div>
-
-        <h3 style="margin:0 0 4px 0;font-size:16px;font-weight:700;color:#212121;line-height:150%;">${p.name}</h3>
-
-        <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;margin-bottom:8px;">
-          <tr>
-            <td style="font-size:10px;color:#000000;font-family:'JetBrains Mono',monospace;">
-              <strong>Alk. →</strong> ${p.alcohol}% obj.
-            </td>
-            <td align="right" style="font-size:10px;color:#000000;font-family:'JetBrains Mono',monospace;white-space:nowrap;width:68px;">
-              ${p.volume}
-            </td>
-          </tr>
-        </table>
-
-        <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
-          <tr>
-            <td style="font-family:'JetBrains Mono',monospace;">${priceHTML}</td>
-            <td align="right">
-              <a href="${escapeAttr(p.url || "#")}"
-                 style="display:inline-block;width:36px;height:36px;background-color:#00C322;border-radius:50%;text-align:center;line-height:36px;text-decoration:none;">
-                ${PLUS_ICON_SVG("#000000")}
-              </a>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-</td>
-`;
+<td valign="top" width="${colPct}%" style="width:${colPct}%;padding:0 ${padRight}px 0 ${padLeft}px;">
+  <a href="${escapeAttr(c.url || "#")}" style="text-decoration:none;display:block;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
+      <tr>
+        <td style="background:#E5E5E5;">
+          ${
+            c.image
+              ? `<img src="${escapeAttr(c.image)}" width="${innerW}" alt=""
+                     style="display:block;width:100%;max-width:${innerW}px;height:auto;aspect-ratio:3/4;object-fit:cover;" />`
+              : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
+          }
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span style="display:inline-block;background-color:#212121;color:#FFFFFF;font-family:'JetBrains Mono',monospace;font-size:12px;padding:4px 8px;">
+            ${c.tag}
+          </span>
+        </td>
+      </tr>
+    </table>
+  </a>
+</td>`;
   };
 
-  // Left aligned row (fills missing columns with empty cells on RIGHT)
-  const renderRowLeft = (rowItems: any[]) => {
-    const n = rowItems.length;
-    const missing = COLS - n;
-    const emptyTD = `<td width="${colPct}%" style="width:${colPct}%;font-size:0;line-height:0;">&nbsp;</td>`;
+  const renderRowFill = (rowItems: any[], forceThreeCols = false) => {
+    const n = forceThreeCols ? 3 : rowItems.length;
+    if (!rowItems.length) return "";
 
     return `
 <table role="presentation" border="0" cellspacing="0" cellpadding="0"
-       width="600" class="wrap" style="width:100%;max-width:600px;table-layout:fixed;">
+       width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;table-layout:fixed;">
   <tr>
-    ${rowItems.map((p, i) => renderProductCell(p, i === 0, i === n - 1)).join("")}
+    ${rowItems.map((c, i) => renderCategoryCell(c, n, i)).join("")}
     ${
-      missing > 0
-        ? Array.from({ length: missing })
-            .map(() => emptyTD)
+      forceThreeCols && rowItems.length < 3
+        ? Array.from({ length: 3 - rowItems.length })
+            .map(() => `<td width="${100 / 3}%" style="width:${100 / 3}%;font-size:0;line-height:0;">&nbsp;</td>`)
             .join("")
         : ""
     }
   </tr>
-</table>
-`;
+</table>`;
   };
 
-  const row1 = items.slice(0, COLS);
-  const row2 = items.slice(COLS, COLS * 2);
+  // Desktop: rows of 3
+  const row1 = items.slice(0, 3);
+  const row2 = items.slice(3, 6);
+
+  // Mobile: 2 columns
+  const mobileRows: any[][] = [];
+  for (let i = 0; i < items.length; i += 2) mobileRows.push(items.slice(i, i + 2));
 
   const viewAllHTML = showViewAll
     ? `
-<a href="${viewAllUrl}" style="color:#000000;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;white-space:nowrap;">
+<a href="${escapeAttr(viewAllUrl)}" style="color:#000000;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;white-space:nowrap;">
   <span style="text-decoration:none;">→ </span><span style="text-decoration:underline;">${viewAllText}</span>
-</a>
-`
+</a>`
     : "";
 
-  return `<!-- List produktů -->
+  return `<!-- Kategorie -->
 <tr>
   <td align="center" style="padding:24px;margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0"
+           width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td style="padding-bottom:1rem;">
           <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
             <tr>
               <td style="font-family:'JetBrains Mono',monospace;">
-                <h2 style="margin:0;font-size:20px;font-weight:700;color:#212121;">${content.title || "Mohlo by vám chutnat"}</h2>
+                <h2 style="margin:0;font-size:20px;font-weight:700;color:#212121;">${content.title || "Vyber si to pravé pro tebe"}</h2>
               </td>
               <td align="right">${viewAllHTML}</td>
             </tr>
@@ -511,16 +431,34 @@ function generateProductListHTML(block: NewsletterBlock): string {
         </td>
       </tr>
 
-      <tr><td align="left">${renderRowLeft(row1)}</td></tr>
-        ${
-          row2.length
-            ? `<tr class="hide-on-mobile">
-                 <td align="left" style="padding-top:12px;">
-                   ${renderRowLeft(row2)}
-                 </td>
-               </tr>`
-            : ""
-        }    
+      <!-- Desktop (3 cols) -->
+      <tr class="hide-on-mobile">
+        <td align="left">
+          ${renderRowFill(row1)}
+        </td>
+      </tr>
+      ${
+        row2.length
+          ? `<tr class="hide-on-mobile">
+               <td align="left" style="padding-top:${GAP}px;">
+                 ${renderRowFill(row2, true)}
+               </td>
+             </tr>`
+          : ""
+      }
+
+      <!-- Mobile (2 cols) -->
+      <tr class="show-on-mobile">
+        <td align="left">
+          ${mobileRows
+            .map(
+              (r, idx) =>
+                `${idx ? `<div style="height:${GAP}px;line-height:${GAP}px;font-size:0;">&nbsp;</div>` : ""}${renderRowFill(r)}`,
+            )
+            .join("")}
+        </td>
+      </tr>
+
     </table>
   </td>
 </tr>`;
@@ -714,16 +652,24 @@ function generateLocationsHTML(block: NewsletterBlock): string {
 </td>`;
   };
 
-  const renderRowFill = (rowItems: any[]) => {
-    const n = rowItems.length;
-    if (!n) return "";
+  const renderRowFill = (rowItems: any[], forceThreeCols = false) => {
+    const n = forceThreeCols ? 3 : rowItems.length;
+    if (!rowItems.length) return "";
+
     return `
-<table role="presentation" border="0" cellspacing="0" cellpadding="0"
-       width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;table-layout:fixed;">
-  <tr>
-    ${rowItems.map((loc, i) => renderLocCell(loc, i, n)).join("")}
-  </tr>
-</table>`;
+  <table role="presentation" border="0" cellspacing="0" cellpadding="0"
+         width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;table-layout:fixed;">
+    <tr>
+      ${rowItems.map((c, i) => renderCategoryCell(c, n, i)).join("")}
+      ${
+        forceThreeCols && rowItems.length < 3
+          ? Array.from({ length: 3 - rowItems.length })
+              .map(() => `<td width="${100 / 3}%" style="width:${100 / 3}%;font-size:0;line-height:0;">&nbsp;</td>`)
+              .join("")
+          : ""
+      }
+    </tr>
+  </table>`;
   };
 
   const row1 = items.slice(0, COLS);
@@ -802,7 +748,7 @@ function generateLocationsHTML(block: NewsletterBlock): string {
         row2.length
           ? `<tr class="hide-on-mobile">
                <td align="left" style="padding-top:${GAP}px;">
-                 ${renderRowFill(row2)}
+                 ${renderRowFill(row2, true)}
                </td>
              </tr>`
           : ""
