@@ -1147,7 +1147,6 @@ function generateBenefitsHTML(block: NewsletterBlock): string {
   const row1 = visible.slice(0, 3);
   const row2 = visible.slice(3, 6);
 
-  // Helper: render one benefit cell (200px column)
   const renderCell = (b: any, globalIndex: number, isFirst: boolean, isLast: boolean) => {
     let paddingLeft = "4px";
     let paddingRight = "4px";
@@ -1172,11 +1171,10 @@ function generateBenefitsHTML(block: NewsletterBlock): string {
     `;
   };
 
-  // Helper: render a row table centered, with rowCount * 200px width on desktop
   const renderRow = (row: any[], rowStartIndex: number) => {
     if (row.length === 0) return "";
 
-    const rowWidth = row.length * 200; // 1=>200, 2=>400, 3=>600 (centers naturally)
+    const rowWidth = row.length * 200; // 1=>200, 2=>400, 3=>600
     const cellsHTML = row
       .map((b, idx) => renderCell(b, rowStartIndex + idx, idx === 0, idx === row.length - 1))
       .join("");
@@ -1184,7 +1182,8 @@ function generateBenefitsHTML(block: NewsletterBlock): string {
     return `
       <tr>
         <td align="center" style="padding:0;">
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="${rowWidth}" style="width:${rowWidth}px;max-width:600px;table-layout:fixed;">
+          <table role="presentation" border="0" cellspacing="0" cellpadding="0"
+                 width="${rowWidth}" style="width:${rowWidth}px;max-width:600px;table-layout:fixed;">
             <tr>${cellsHTML}</tr>
           </table>
         </td>
@@ -1192,16 +1191,14 @@ function generateBenefitsHTML(block: NewsletterBlock): string {
     `;
   };
 
-  const rowsHTML = `
-    ${renderRow(row1, 0)}
-    ${renderRow(row2, 3)}
-  `;
-
   return `<!-- Benefity -->
 <tr>
-  <td align="center" style="padding:32px 24px 16px 24px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;table-layout:fixed;">
-      ${rowsHTML}
+  <!-- IMPORTANT: no horizontal padding here so 3x200 never compresses -->
+  <td align="center" style="padding:32px 0 16px 0;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0"
+           width="600" class="wrap" style="max-width:600px;width:100%;table-layout:fixed;">
+      ${renderRow(row1, 0)}
+      ${renderRow(row2, 3)}
     </table>
   </td>
 </tr>`;
