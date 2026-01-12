@@ -1147,26 +1147,22 @@ function generateBenefitsHTML(block: NewsletterBlock): string {
   const row1 = visible.slice(0, 3);
   const row2 = visible.slice(3, 6);
 
-  const renderCell = (b: any, globalIndex: number, isFirst: boolean, isLast: boolean) => {
-    let paddingLeft = "4px";
-    let paddingRight = "4px";
-
-    if (isFirst) {
-      paddingLeft = "0";
-      paddingRight = "8px";
-    }
-    if (isLast) {
-      paddingLeft = "8px";
-      paddingRight = "0";
-    }
-
+  const renderCell = (b: any, globalIndex: number) => {
     return `
-      <td valign="top" class="stack" width="200" style="width:200px;padding:0 ${paddingRight} 16px ${paddingLeft};text-align:center;font-family:'JetBrains Mono',monospace;">
-        <div style="margin-bottom:16px;">
-          <img src="${getBenefitIcon(b.icon, globalIndex)}" width="48" height="48" alt="" style="display:inline-block;width:48px;height:48px;object-fit:contain;"/>
-        </div>
-        <h4 style="margin:0 0 12px 0;font-size:16px;font-weight:700;color:#000000;line-height:120%;">${b.title}</h4>
-        <p style="margin:0 auto;max-width:35ch;font-size:12px;font-weight:400;color:#000000;line-height:120%;">${b.description}</p>
+      <td valign="top" width="200" style="width:200px;text-align:center;font-family:'JetBrains Mono',monospace;padding:0;margin:0;">
+        <!-- inner wrapper provides gutters WITHOUT affecting outer width -->
+        <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
+          <tr>
+            <td style="padding:0 8px 16px 8px;text-align:center;">
+              <div style="margin-bottom:16px;">
+                <img src="${getBenefitIcon(b.icon, globalIndex)}" width="48" height="48" alt=""
+                     style="display:inline-block;width:48px;height:48px;object-fit:contain;"/>
+              </div>
+              <h4 style="margin:0 0 12px 0;font-size:16px;font-weight:700;color:#000000;line-height:120%;">${b.title}</h4>
+              <p style="margin:0 auto;max-width:35ch;font-size:12px;font-weight:400;color:#000000;line-height:120%;">${b.description}</p>
+            </td>
+          </tr>
+        </table>
       </td>
     `;
   };
@@ -1175,9 +1171,7 @@ function generateBenefitsHTML(block: NewsletterBlock): string {
     if (row.length === 0) return "";
 
     const rowWidth = row.length * 200; // 1=>200, 2=>400, 3=>600
-    const cellsHTML = row
-      .map((b, idx) => renderCell(b, rowStartIndex + idx, idx === 0, idx === row.length - 1))
-      .join("");
+    const cellsHTML = row.map((b, idx) => renderCell(b, rowStartIndex + idx)).join("");
 
     return `
       <tr>
