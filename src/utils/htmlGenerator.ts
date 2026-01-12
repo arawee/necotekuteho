@@ -624,10 +624,10 @@ function generateMistaHTML(block: NewsletterBlock): string {
 
   return `<!-- Místa -->
 <tr>
-  <td align="center" style="padding:0;margin-bottom:32px;">
+  <td align="center" style="padding:16px;margin-bottom:32px;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
-        <td style="padding:24px;">
+        <td style="padding:0px;">
           <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
             <tr>
               <td style="font-family:'JetBrains Mono',monospace;">
