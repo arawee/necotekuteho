@@ -1448,7 +1448,7 @@ function generateBenefitsHTML(block: NewsletterBlock): string {
 
   const renderCell = (b: any, globalIndex: number) => {
     return `
-      <td valign="top" width="200" style="width:200px;text-align:center;font-family:'JetBrains Mono',monospace;padding:0;margin:0;padding-bottom:2rem;>
+      <td valign="top" width="200" style="width:200px;text-align:center;font-family:'JetBrains Mono',monospace;padding:0 6px;margin:0;padding-bottom:2rem;>
         <div style="padding:0 12px;">
           <div style="margin-bottom:16px;">
             <img src="${getBenefitIcon(b.icon, globalIndex)}" width="48" height="48" alt=""
@@ -1605,7 +1605,6 @@ function generateProductTextHTML(block: NewsletterBlock): string {
 
 function generateTextTwoColumnsHTML(block: NewsletterBlock): string {
   const { content } = block;
-
   const leftColumn = (content as any).leftColumn || "Slovníček";
   const rightColumn =
     (content as any).rightColumn ||
@@ -1614,20 +1613,12 @@ function generateTextTwoColumnsHTML(block: NewsletterBlock): string {
   return `<!-- Text dva sloupce -->
 <tr>
   <td align="center" style="padding:24px;margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0"
-           width="600" class="wrap" style="max-width:600px;width:100%;table-layout:fixed;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
       <tr>
-        <td class="ttc-left"
-            valign="top"
-            style="width:100px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:900;color:#212121;
-                   word-break:break-word;overflow-wrap:anywhere;">
+        <td valign="top" width="100" style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:900 !important;color:#212121;">
           ${leftColumn}
         </td>
-
-        <td class="ttc-right"
-            valign="top"
-            style="padding-left:32px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;line-height:150%;color:#212121;
-                   word-break:break-word;overflow-wrap:anywhere;">
+        <td valign="top" style="padding-left:32px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500 !important;line-height:150%;color:#212121;">
           ${rightColumn}
         </td>
       </tr>
@@ -1684,24 +1675,6 @@ function getNewsletterCSS(): string {
 
     /* Responsive - Mobile */
     @media only screen and (max-width: 620px) {
-    td.ttc-left,
-    td.ttc-right {
-      display: block !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      box-sizing: border-box !important;
-    }
-    
-    td.ttc-right {
-      padding-left: 0 !important;
-      padding-top: 12px !important;
-    }
-    
-    /* Extra safety for long URLs/strings anywhere */
-    td, p, a, span, div {
-      word-break: break-word !important;
-      overflow-wrap: anywhere !important;
-    }
     /* Hide spacer cells used for centering/filling rows */
       td.spacer {
         display: none !important;
