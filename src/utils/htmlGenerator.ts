@@ -1533,7 +1533,7 @@ function generateZichovecFooterHTML(block: NewsletterBlock): string {
   return `<!-- Patička ZICHOVEC -->
 <tr>
   <!-- OUTER wrapper stays white -->
-  <td align="center" style="background-color:#FFFFFF; margin-top: 2rem;">
+  <td align="center" style="background-color:#FFFFFF;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0"
            width="600" class="wrap" style="max-width:600px;width:100%;background-color:#FFFFFF;">
 
@@ -1578,11 +1578,11 @@ function generateZichovecFooterHTML(block: NewsletterBlock): string {
           <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
             <tr>
               <td align="center" style="font-size:0;">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="VISA" height="24" style="height:24px;margin:0 4px;"/>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/MasterCard_Logo.svg" alt="Mastercard" height="24" style="height:24px;margin:0 4px;"/>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" height="24" style="height:24px;margin:0 4px;"/>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg" alt="GPay" height="24" style="height:24px;margin:0 4px;"/>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b0/Apple_Pay_logo.svg" alt="Apple Pay" height="24" style="height:24px;margin:0 4px;"/>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="VISA" height="24" style="height:22px;margin:0 8px;"/>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/MasterCard_Logo.svg" alt="Mastercard" height="24" style="height:24px;margin:0 8px;"/>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" height="24" style="height:24px;margin:0 8px;"/>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg" alt="GPay" height="24" style="height:24px;margin:0 8px;"/>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b0/Apple_Pay_logo.svg" alt="Apple Pay" height="24" style="height:24px;margin:0 8px;"/>
               </td>
             </tr>
           </table>
@@ -1841,7 +1841,7 @@ function generateTextTwoColumnsHTML(block: NewsletterBlock): string {
   return `<!-- Text dva sloupce -->
 <tr>
   <td align="center" style="padding:32px 24px;margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:552px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
       <tr>
         <td valign="top"
             width="25%"
