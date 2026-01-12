@@ -1142,6 +1142,9 @@ function generatePromoBoxHTML(block: NewsletterBlock): string {
   // ✅ if editor gave you nothing usable, fall back to 1 default box
   const boxes = cleanBoxes.length ? cleanBoxes : [defaultBox];
 
+  // keep the same limit/behavior as before
+  const all = boxes.slice(0, 4);
+
   const generateBoxInner = (box: any) => {
     const isDark = isVeryDarkBg(box.bgColor || "#00C322");
     const textColor = isDark ? "#FFFFFF" : "#000000";
