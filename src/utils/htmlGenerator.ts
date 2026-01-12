@@ -254,9 +254,11 @@ function generateZichovecFooterHTML(block: NewsletterBlock): string {
     .join("");
 
   return `<!-- Patička ZICHOVEC -->
+
+<!-- GREEN footer content -->
 <tr>
-  <td align="center" style="background-color:#00C322;margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
+  <td align="center" style="background-color:#00C322;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td style="padding:32px;">
           <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -274,6 +276,15 @@ function generateZichovecFooterHTML(block: NewsletterBlock): string {
           </table>
         </td>
       </tr>
+    </table>
+  </td>
+</tr>
+
+<!-- WHITE strip area for payment + copyright -->
+<tr>
+  <td align="center" style="background-color:#FFFFFF;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
+      
       <!-- Payment icons -->
       <tr>
         <td style="background-color:#FFFFFF;padding:16px 0;">
@@ -290,6 +301,7 @@ function generateZichovecFooterHTML(block: NewsletterBlock): string {
           </table>
         </td>
       </tr>
+
       <!-- Copyright -->
       <tr>
         <td style="background-color:#FFFFFF;padding:16px 32px;">
@@ -317,6 +329,7 @@ function generateZichovecFooterHTML(block: NewsletterBlock): string {
           </table>
         </td>
       </tr>
+
     </table>
   </td>
 </tr>`;
@@ -1460,12 +1473,12 @@ function generateTextTwoColumnsHTML(block: NewsletterBlock): string {
   return `<!-- Text dva sloupce -->
 <tr>
   <td align="center" style="padding:24px;margin-bottom:32px;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
-        <td valign="top" width="100" style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:900;color:#212121;">
-          ${leftColumn}
+        <td valign="top" class="two-col-left" style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:900;color:#212121;width:160px;">
+          <strong style="font-weight:900;">${leftColumn}</strong>
         </td>
-        <td valign="top" style="padding-left:32px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;line-height:150%;color:#212121;">
+        <td valign="top" class="two-col-right" style="padding-left:32px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;line-height:150%;color:#212121;">
           ${rightColumn}
         </td>
       </tr>
@@ -1583,6 +1596,18 @@ function getNewsletterCSS(): string {
       /* Make images responsive */
       img {
         max-width: 100% !important;
+      }
+      /* Text two columns: stack on mobile */
+      td.two-col-left,
+      td.two-col-right {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+      }
+      td.two-col-right {
+        padding-left: 0 !important;
+        padding-top: 12px !important;
       }
       #top-container {
         padding-top: calc(28.8889% + 4rem) !important;
