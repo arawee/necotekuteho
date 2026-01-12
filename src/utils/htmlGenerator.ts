@@ -1096,7 +1096,7 @@ function generateArticleTextHTML(block: NewsletterBlock): string {
 
   return `<!-- Článek -->
   <tr>
-    <td align="center" style="padding:24px;margin-bottom:32px;padding-top:2rem">
+    <td align="center" style="padding:24px;margin-bottom:32px;padding-top:2rem !important;">
       <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
         <tr>
           <td style="padding:0 0;font-family:'JetBrains Mono',monospace;">
@@ -1173,7 +1173,7 @@ function generateBenefitsHTML(block: NewsletterBlock): string {
   return `<!-- Benefity -->
 <tr>
   <!-- IMPORTANT: no horizontal padding here so 3x200 never compresses -->
-  <td align="center" style="padding:32px 0 16px 0;">
+  <td align="center" style="padding:32px 16px 16px 16px;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0"
            width="600" class="wrap" style="max-width:600px;width:100%;table-layout:fixed;">
       ${renderRow(row1, 0)}
@@ -1497,6 +1497,8 @@ function getNewsletterCSS(): string {
         mso-hide: all !important; /* Outlook */
       }
       body, table, td {
+        width: 100% !important;
+        min-width: 100% !important;
       }
       table.wrap {
         width: 100% !important;
