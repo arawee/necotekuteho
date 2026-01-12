@@ -1105,23 +1105,42 @@ function generateBlogPostsHTML(block: NewsletterBlock): string {
 function generatePromoBoxHTML(block: NewsletterBlock): string {
   const { content } = block;
 
-  const boxes = Array.isArray((content as any).boxes)
-    ? (content as any).boxes
-    : [
-        {
-          title: "Pivní předplatné?",
-          features: [
-            { label: "Novinky", value: "Nejnovější piva jako první." },
-            { label: "Všechno víš", value: "Pravidelný přísun novinek." },
-            { label: "Doprava", value: "Zdarma – navždy." },
-          ],
-          buttonText: "→ objevit předplatné",
-          buttonUrl: "#",
-          bgColor: "#00C322",
-        },
-      ];
+  const defaultBox = {
+    title: "Pivní předplatné?",
+    features: [
+      { label: "Novinky", value: "Nejnovější piva jako první." },
+      { label: "Všechno víš", value: "Pravidelný přísun novinek." },
+      { label: "Doprava", value: "Zdarma – navždy." },
+    ],
+    buttonText: "→ objevit předplatné",
+    buttonUrl: "#",
+    bgColor: "#00C322",
+  };
 
-  const all = boxes.slice(0, 4);
+  const rawBoxes = Array.isArray((content as any).boxes) ? (content as any).boxes : [];
+
+  // ✅ remove null/undefined and also remove "never touched" empty shells
+  const cleanBoxes = rawBoxes
+    .filter(Boolean)
+    .map((b: any) => ({
+      title: String(b?.title ?? "").trim(),
+      features: Array.isArray(b?.features) ? b.features : [],
+      buttonText: String(b?.buttonText ?? "").trim(),
+      buttonUrl: String(b?.buttonUrl ?? "").trim(),
+      bgColor: String(b?.bgColor ?? "").trim(),
+    }))
+    .filter((b: any) => {
+      const hasTitle = b.title !== "";
+      const hasFeatures =
+        b.features.length > 0 &&
+        b.features.some((f: any) => String(f?.label ?? "").trim() || String(f?.value ?? "").trim());
+      const hasButton = b.buttonText !== "" || (b.buttonUrl !== "" && b.buttonUrl !== "#");
+      const hasBg = b.bgColor !== "";
+      return hasTitle || hasFeatures || hasButton || hasBg;
+    });
+
+  // ✅ if editor gave you nothing usable, fall back to 1 default box
+  const boxes = cleanBoxes.length ? cleanBoxes : [defaultBox];
 
   const generateBoxInner = (box: any) => {
     const isDark = isVeryDarkBg(box.bgColor || "#00C322");
