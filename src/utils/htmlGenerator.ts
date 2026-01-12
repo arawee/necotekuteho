@@ -894,7 +894,7 @@ function generatePromoBoxHTML(block: NewsletterBlock): string {
   if (all.length === 1) {
     return `<!-- Promo boxy -->
 <tr>
-  <td align="center" style="padding:24px;margin-bottom:32px;">
+  <td align="center" style="padding:16px;margin-bottom:32px;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td>
@@ -1511,7 +1511,7 @@ function getNewsletterCSS(): string {
         display: block !important;
         width: 100% !important;
         box-sizing: border-box !important;
-        padding: 0 0 16px 0 !important;
+        padding: 0 0 12px 0 !important;
       }
       td.stack:last-child {
         padding-bottom: 16px !important;
