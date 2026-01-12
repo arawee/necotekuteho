@@ -1148,14 +1148,14 @@ function generateGalleryDuoHTML(block: NewsletterBlock): string {
         <td width="50%" valign="top" style="padding:0;margin:0;line-height:0;font-size:0;">
           ${
             photos[0]?.url
-              ? `<img src="${photos[0].url}" width="300" alt="" style="display:block;width:100%;height:auto;border:0;outline:0;">`
+              ? `<img src="${photos[0].url}" width="300" alt="" style="display:block;width:100%;max-width:300px;height:auto;border:0;outline:0;text-decoration:none;" />`
               : `<div style="width:100%;padding-top:133.33%;background:#E5E5E5;"></div>`
           }
         </td>
         <td width="50%" valign="top" style="padding:0;margin:0;line-height:0;font-size:0;">
           ${
             photos[1]?.url
-              ? `<img src="${photos[1].url}" width="300" alt="" style="display:block;width:100%;height:auto;border:0;outline:0;">`
+              ? `<img src="${photos[1].url}" width="300" alt="" style="display:block;width:100%;max-width:300px;height:auto;border:0;outline:0;text-decoration:none;" />`
               : `<div style="width:100%;padding-top:133.33%;background:#E5E5E5;"></div>`
           }
         </td>
