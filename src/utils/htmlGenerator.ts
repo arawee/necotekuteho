@@ -1094,38 +1094,54 @@ function generatePromoBoxHTML(block: NewsletterBlock): string {
 </tr>`;
 }
 
+function imgHTML(photo: any, displayW: number) {
+  const src = escapeAttr(photo?.url || "");
+  // If editor provides original dimensions, lock the ratio via attributes
+  const ow = Number(photo?.width || photo?.w || 0);
+  const oh = Number(photo?.height || photo?.h || 0);
+
+  const hAttr = ow > 0 && oh > 0 ? ` height="${Math.round((displayW * oh) / ow)}"` : "";
+
+  return src
+    ? `<img src="${src}" width="${displayW}"${hAttr} alt=""
+         style="display:block;width:100%;height:auto;border:0;outline:0;text-decoration:none;-ms-interpolation-mode:bicubic;" />`
+    : "";
+}
+
 function generateGalleryTrioHTML(block: NewsletterBlock): string {
   const photos = block.content.photos || [];
 
   return `
 <tr>
   <td align="center" style="padding:32px 0;">
-    <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:600px;border-collapse:collapse;border-spacing:0;">
+    <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0"
+           class="wrap" style="width:100%;max-width:600px;border-collapse:collapse;border-spacing:0;table-layout:fixed;">
       <tr>
         <td style="padding:0;margin:0;line-height:0;font-size:0;">
           ${
             photos[0]?.url
-              ? `<img src="${photos[0].url}" width="600" alt="" style="display:block;width:100%;max-width:600px;height:auto;border:0;outline:0;text-decoration:none;" />`
-              : `<div style="width:100%;padding-top:100%;background:#E5E5E5;"></div>`
+              ? imgHTML(photos[0], 600)
+              : `<div style="width:100%;padding-top:56.25%;background:#E5E5E5;"></div>`
           }
         </td>
       </tr>
       <tr>
         <td style="padding:0;margin:0;line-height:0;font-size:0;">
-          <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;border-spacing:0;">
+          <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0"
+                 style="width:100%;border-collapse:collapse;border-spacing:0;table-layout:fixed;">
             <tr>
               <td width="50%" valign="top" style="padding:0;margin:0;line-height:0;font-size:0;">
                 ${
                   photos[1]?.url
-                    ? `<img src="${photos[1].url}" width="300" alt="" style="display:block;width:100%;max-width:300px;height:auto;border:0;outline:0;text-decoration:none;" />`
-                    : `<div style="width:100%;padding-top:133.33%;background:#E5E5E5;"></div>`
+                    ? imgHTML(photos[1], 300)
+                    : `<div style="width:100%;padding-top:56.25%;background:#E5E5E5;"></div>`
                 }
               </td>
               <td width="50%" valign="top" style="padding:0;margin:0;line-height:0;font-size:0;">
                 ${
                   photos[2]?.url
-                    ? `<img src="${photos[2].url}" width="300" alt="" style="display:block;width:100%;max-width:300px;height:auto;border:0;outline:0;text-decoration:none;" />`
-                    : `<div style="width:100%;padding-top:133.33%;background:#E5E5E5;"></div>`
+                    ? imgHTML(photos[2], 300)
+                    : `<div style="width:100%;padding-top:56.25%;background:#E5E5E5;"></div>`
                 }
               </td>
             </tr>
@@ -1143,20 +1159,21 @@ function generateGalleryDuoHTML(block: NewsletterBlock): string {
   return `
 <tr>
   <td align="center" style="padding:32px 0;">
-    <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:600px;border-collapse:collapse;border-spacing:0;">
+    <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0"
+           class="wrap" style="width:100%;max-width:600px;border-collapse:collapse;border-spacing:0;table-layout:fixed;">
       <tr>
         <td width="50%" valign="top" style="padding:0;margin:0;line-height:0;font-size:0;">
           ${
             photos[0]?.url
-              ? `<img src="${photos[0].url}" width="300" alt="" style="display:block;width:100%;max-width:300px;height:auto;border:0;outline:0;text-decoration:none;" />`
-              : `<div style="width:100%;padding-top:133.33%;background:#E5E5E5;"></div>`
+              ? imgHTML(photos[0], 300)
+              : `<div style="width:100%;padding-top:56.25%;background:#E5E5E5;"></div>`
           }
         </td>
         <td width="50%" valign="top" style="padding:0;margin:0;line-height:0;font-size:0;">
           ${
             photos[1]?.url
-              ? `<img src="${photos[1].url}" width="300" alt="" style="display:block;width:100%;max-width:300px;height:auto;border:0;outline:0;text-decoration:none;" />`
-              : `<div style="width:100%;padding-top:133.33%;background:#E5E5E5;"></div>`
+              ? imgHTML(photos[1], 300)
+              : `<div style="width:100%;padding-top:56.25%;background:#E5E5E5;"></div>`
           }
         </td>
       </tr>
@@ -1171,15 +1188,11 @@ function generateGallerySingleHTML(block: NewsletterBlock): string {
   return `
 <tr>
   <td align="center" style="padding:32px 0;">
-    <table role="presentation" width="600" style="width:600px;table-layout:fixed;">
+    <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0"
+           class="wrap" style="width:100%;max-width:600px;border-collapse:collapse;border-spacing:0;table-layout:fixed;">
       <tr>
-        <td>
-          ${
-            photo?.url
-              ? `<img src="${photo.url}" width="600" alt=""
-                      style="display:block;width:100%;max-width:600px;height:auto;border:0;outline:0;text-decoration:none;" />`
-              : `<div style="width:100%;padding-top:100%;background:#E5E5E5;"></div>`
-          }
+        <td style="padding:0;margin:0;line-height:0;font-size:0;">
+          ${photo?.url ? imgHTML(photo, 600) : `<div style="width:100%;padding-top:56.25%;background:#E5E5E5;"></div>`}
         </td>
       </tr>
     </table>
