@@ -64,7 +64,7 @@ const Auth = () => {
       className="min-h-screen flex items-center justify-center p-4"
       style={{ backgroundColor: '#00C322' }}
     >
-      <Card className="w-full max-w-md border-0 shadow-xl bg-white">
+      <Card className="w-full max-w-md border-0 shadow-none bg-white">
         <CardHeader className="space-y-4 text-center pb-2">
           <div className="flex justify-center">
             <ZichovecLogo />
