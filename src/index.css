@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* JetBrains Mono Font - using Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap");
 
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
@@ -42,7 +42,7 @@ All colors MUST be HSL.
     --ring: 134 100% 38%;
 
     --radius: 0rem;
-    
+
     /* Zichovec brand colors - updated */
     --zichovec-green: 134 100% 38%;
     --zichovec-black: 0 0% 13%;
@@ -102,7 +102,7 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: 0 0% 95%;
     --sidebar-border: 0 0% 20%;
     --sidebar-ring: 134 100% 38%;
-    
+
     /* Zichovec brand colors dark mode */
     --zichovec-green: 134 100% 38%;
     --zichovec-black: 0 0% 98%;
@@ -122,26 +122,29 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'JetBrains Mono', monospace;
+    font-family: "JetBrains Mono", monospace;
     font-size: 14px;
   }
-  
+
+  #lovable-badge {
+    display: none;
+  }
+
   /* Rich Text Editor Styles */
   .rich-text-editor:empty:before {
     content: attr(data-placeholder);
     color: #9ca3af;
     pointer-events: none;
   }
-  
+
   .rich-text-editor a {
-    color: #007BA0 !important;
+    color: #007ba0 !important;
     text-decoration: underline !important;
   }
 }
 
 /* Newsletter Email Template Styles */
 @layer base {
-
   /* Email Base Styles */
   .newsletter-email body,
   .newsletter-email #bodyTable,
@@ -169,7 +172,7 @@ All colors MUST be HSL.
   }
 
   /* Images */
-  .newsletter-email .header-img, 
+  .newsletter-email .header-img,
   .newsletter-email .uvod-img {
     width: 100%;
     aspect-ratio: 2 / 1;
@@ -184,10 +187,10 @@ All colors MUST be HSL.
 
   /* Summary Section */
   .newsletter-email .souhrn-bg {
-    background: #F8F3EE;
+    background: #f8f3ee;
   }
 
-  .newsletter-email .souhrn-td, 
+  .newsletter-email .souhrn-td,
   .newsletter-email .podekovani-td {
     padding: 96px 48px;
     color: #393939;
@@ -212,7 +215,7 @@ All colors MUST be HSL.
     color: #393939;
   }
 
-  .newsletter-email .souhrn-pair, 
+  .newsletter-email .souhrn-pair,
   .newsletter-email .citace-pair {
     margin: 32px 0;
     font-size: 16px;
@@ -275,7 +278,7 @@ All colors MUST be HSL.
   .newsletter-email .btn {
     display: inline-block;
     padding: 7px 19px;
-    font-family: 'Space Mono', monospace, Arial, sans-serif;
+    font-family: "Space Mono", monospace, Arial, sans-serif;
     font-size: 14px;
     line-height: 150%;
     font-weight: 400;
@@ -288,13 +291,13 @@ All colors MUST be HSL.
 
   .newsletter-email .btn--green,
   .newsletter-email .btn--yellow {
-    border-color: #00D954;
-    background: #00D954;
+    border-color: #00d954;
+    background: #00d954;
     color: #212121;
   }
-  
+
   .newsletter-email .btn--arrow::after {
-    content: ' →';
+    content: " →";
   }
 
   .newsletter-email .btn-spacer {
@@ -326,13 +329,14 @@ All colors MUST be HSL.
     border-radius: 32px;
     display: block;
     aspect-ratio: 4 / 7;
-    background: url('https://storage.googleapis.com/yogamovementstudio33228/hero.png') center center / cover no-repeat;
+    background: url("https://storage.googleapis.com/yogamovementstudio33228/hero.png") center center / cover no-repeat;
   }
 
   .newsletter-email .promo-right {
     width: 65%;
     border-radius: 32px;
-    background: url('https://storage.googleapis.com/yogamovementstudio33228/ad-bg-1.png') center center / cover no-repeat;
+    background: url("https://storage.googleapis.com/yogamovementstudio33228/ad-bg-1.png") center center / cover
+      no-repeat;
     padding: 48px;
   }
 
@@ -452,32 +456,32 @@ All colors MUST be HSL.
   }
 
   @media only screen and (max-width: 470px) {
-    .newsletter-email .photos-wrap { 
-      max-width: 100% !important; 
+    .newsletter-email .photos-wrap {
+      max-width: 100% !important;
     }
 
-    .newsletter-email .photos-col { 
-      display: block !important; 
-      width: 100% !important; 
-      padding-left: 0 !important; 
-      padding-right: 0 !important; 
+    .newsletter-email .photos-col {
+      display: block !important;
+      width: 100% !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
     }
 
-    .newsletter-email .photos-gutter { 
-      height: 16px !important; 
-      line-height: 16px !important; 
+    .newsletter-email .photos-gutter {
+      height: 16px !important;
+      line-height: 16px !important;
     }
 
-    .newsletter-email .photos-offset { 
-      padding-top: 0 !important; 
+    .newsletter-email .photos-offset {
+      padding-top: 0 !important;
     }
 
-    .newsletter-email .spacer { 
-      height: 0 !important; 
+    .newsletter-email .spacer {
+      height: 0 !important;
     }
 
-    .newsletter-email .photos-img { 
-      width: 100% !important; 
+    .newsletter-email .photos-img {
+      width: 100% !important;
       height: auto !important;
     }
 
