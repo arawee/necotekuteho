@@ -127,7 +127,7 @@ All colors MUST be HSL.
   }
 
   #lovable-badge {
-    display: none;
+    display: none !important;
   }
 
   /* Rich Text Editor Styles */
