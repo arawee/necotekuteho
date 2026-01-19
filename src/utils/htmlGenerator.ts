@@ -161,7 +161,7 @@ function generateZichovecHeaderWithMenuHTML(block: NewsletterBlock): string {
     .map(
       (item: any) =>
         `<a href="${item.url}"
-            style="display:inline-block;color:#212121;font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;text-decoration:none;padding:0 10px;white-space:nowrap;">
+            style="display:inline-block;color:#212121;font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;text-decoration:none;padding:0 10px;white-space:nowrap;line-height:150%;">
           ${item.text}
         </a>`,
     )
@@ -278,7 +278,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
             </td>
             <td align="right">
               <a href="${escapeAttr(p.url || "#")}"
-                 style="display:inline-block;width:36px;height:36px;background:#00C322;border-radius:50%;line-height:36px;text-align:center;">
+                 style="display:inline-block;width:36px;height:36px;background:#00C322;border-radius:50%;line-height:36px;text-align:center;white-space:nowrap;">
                 ${PLUS_ICON_SVG("#000")}
               </a>
             </td>
@@ -370,7 +370,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
                       </td>
                       <td align="right">
                         <a href="${escapeAttr(p.url || "#")}"
-                           style="display:inline-block;width:36px;height:36px;background:#00C322;border-radius:50%;line-height:36px;text-align:center;">
+                           style="display:inline-block;width:36px;height:36px;background:#00C322;border-radius:50%;line-height:36px;text-align:center;white-space:nowrap;">
                           ${PLUS_ICON_SVG("#000")}
                         </a>
                       </td>
@@ -636,24 +636,22 @@ function generateMistaHTML(block: NewsletterBlock): string {
       <td style="font-family:'JetBrains Mono',monospace;">
         <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
           <tr>
-            <td style="padding-right:12px;width:60px;">
+            <td valign="middle" style="width:52px;">
               <a href="${escapeAttr(place.buttonUrl || "#")}"
                  style="display:inline-block;width:36px;height:36px;border:1px solid #00C322;border-radius:50%;text-align:center;line-height:36px;text-decoration:none;">
                 ${ARROW_ICON_SVG("#00C322")}
               </a>
             </td>
-            <td align="right" style="width:100%;text-align:right;">
+            <td valign="middle" style="text-align:left;padding-left:16px;">
               <h3
                 style="
                   margin:0;
                   font-size:16px;
                   font-weight:700;
                   color:#212121;
-                  text-align:right;
-              
+                  text-align:left;
                   display:block;
                   width:100%;
-                  min-width:140px;        /* ← stops the 1ch collapse */
                   white-space:nowrap;
                   word-break:normal;
                   overflow:visible;
@@ -751,24 +749,22 @@ function generateMistaHTML(block: NewsletterBlock): string {
                 <td style="font-family:'JetBrains Mono',monospace;">
                   <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
                     <tr>
-                      <td style="padding-right:12px;width:60px;">
+                      <td valign="middle" style="width:52px;">
                         <a href="${escapeAttr(place.buttonUrl || "#")}"
                            style="display:inline-block;width:36px;height:36px;border:1px solid #00C322;border-radius:50%;text-align:center;line-height:36px;text-decoration:none;">
                           ${ARROW_ICON_SVG("#00C322")}
                         </a>
                       </td>
-                      <td align="right" style="width:100%;text-align:right;">
+                      <td valign="middle" style="text-align:left;padding-left:16px;">
                         <h3
                           style="
                             margin:0;
                             font-size:16px;
                             font-weight:700;
                             color:#212121;
-                            text-align:right;
-                        
+                            text-align:left;
                             display:block;
                             width:100%;
-                            min-width:140px;        /* ← stops the 1ch collapse */
                             white-space:nowrap;
                             word-break:normal;
                             overflow:visible;
@@ -837,9 +833,10 @@ function generateLocationsHTML(block: NewsletterBlock): string {
   const viewAllText = content.viewAllText || "zobrazit vše";
   const viewAllUrl = content.viewAllUrl || "#";
 
-  const MAX = 6;
+  // Max 2 per row, max 4 total
+  const MAX = 4;
   const TABLE_WIDTH = 600;
-  const COLS = 3;
+  const COLS = 2;
 
   const GAP = 12; // exact
   const GUTTER = GAP / 2; // 6px
@@ -888,8 +885,8 @@ function generateLocationsHTML(block: NewsletterBlock): string {
 </td>`;
   };
 
-  const renderRowFill = (rowItems: any[], forceThreeCols = false) => {
-    const n = forceThreeCols ? 3 : rowItems.length;
+  const renderRowFill = (rowItems: any[], forceTwoCols = false) => {
+    const n = forceTwoCols ? 2 : rowItems.length;
     if (!rowItems.length) return "";
 
     return `
@@ -898,9 +895,9 @@ function generateLocationsHTML(block: NewsletterBlock): string {
     <tr>
       ${rowItems.map((c, i) => renderLocCell(c, i, n)).join("")}
       ${
-        forceThreeCols && rowItems.length < 3
-          ? Array.from({ length: 3 - rowItems.length })
-              .map(() => `<td width="${100 / 3}%" style="width:${100 / 3}%;font-size:0;line-height:0;">&nbsp;</td>`)
+        forceTwoCols && rowItems.length < 2
+          ? Array.from({ length: 2 - rowItems.length })
+              .map(() => `<td width="${100 / 2}%" style="width:${100 / 2}%;font-size:0;line-height:0;">&nbsp;</td>`)
               .join("")
           : ""
       }
@@ -1042,42 +1039,65 @@ function generateBlogPostsHTML(block: NewsletterBlock): string {
   const viewAllText = content.viewAllText || "zobrazit vše";
   const viewAllUrl = content.viewAllUrl || "#";
 
-  const postCount = Math.min(posts.length, 3);
+  // Max 2 per row, max 4 total
+  const MAX_POSTS = 4;
+  const COLS = 2;
+  const TABLE_WIDTH = 600;
+  const GAP = 12;
+  const GUTTER = GAP / 2;
 
-  const postCards = posts
-    .slice(0, 3)
-    .map((post: any, idx: number) => {
-      const paddingLeft = idx === 0 ? "0" : "6px";
-      const paddingRight = idx === postCount - 1 ? "0" : "6px";
+  const items = posts.slice(0, MAX_POSTS);
+  const row1 = items.slice(0, COLS);
+  const row2 = items.slice(COLS, COLS * 2);
 
-      return `
-    <td valign="top" class="stack" style="padding:0 ${paddingRight} 0 ${paddingLeft};">
-      <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
-        <tr>
-          <td>
-            ${
-              post.image
-                ? `<img src="${post.image}" width="100%" alt="${post.title}" style="display:block;width:100%;aspect-ratio:3/4;object-fit:cover;"/>`
-                : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
-            }
-          </td>
-        </tr>
-        <tr>
-          <td style="background-color:#F4F4F4;padding:12px;font-family:'JetBrains Mono',monospace;">
-            <h3 style="margin:0 0 8px 0;font-size:20px;font-weight:700;color:#212121;">${post.title}</h3>
-            <p style="margin:0 0 12px 0;font-size:12px;color:#212121;">${post.excerpt}</p>
-            <div style="text-align:right;">
-              <a href="${post.url || "#"}" style="display:inline-block;width:36px;height:36px;border:1px solid #00C322;border-radius:50%;text-align:center;line-height:36px;text-decoration:none;">
-                ${ARROW_ICON_SVG("#00C322")}
-              </a>
-            </div>
-          </td>
-        </tr>
-      </table>
-    </td>
-  `;
-    })
-    .join("");
+  const renderPostCell = (post: any, idx: number, nInRow: number) => {
+    const colPct = 100 / nInRow;
+    const totalGaps = (nInRow - 1) * GAP;
+    const innerW = Math.floor((TABLE_WIDTH - totalGaps) / nInRow);
+    const padLeft = idx === 0 ? 0 : GUTTER;
+    const padRight = idx === nInRow - 1 ? 0 : GUTTER;
+
+    return `
+<td valign="top" width="${colPct}%" style="width:${colPct}%;padding:0 ${padRight}px 0 ${padLeft}px;">
+  <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
+    <tr>
+      <td>
+        ${
+          post.image
+            ? `<img src="${post.image}" width="${innerW}" alt="${post.title}" style="display:block;width:100%;max-width:${innerW}px;height:auto;aspect-ratio:3/4;object-fit:cover;"/>`
+            : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
+        }
+      </td>
+    </tr>
+    <tr>
+      <td style="background-color:#F4F4F4;padding:12px;font-family:'JetBrains Mono',monospace;">
+        <h3 style="margin:0 0 8px 0;font-size:20px;font-weight:700;color:#212121;">${post.title}</h3>
+        <p style="margin:0 0 12px 0;font-size:12px;color:#212121;">${post.excerpt}</p>
+        <div style="text-align:right;">
+          <a href="${post.url || "#"}" style="display:inline-block;width:36px;height:36px;border:1px solid #00C322;border-radius:50%;text-align:center;line-height:36px;text-decoration:none;">
+            ${ARROW_ICON_SVG("#00C322")}
+          </a>
+        </div>
+      </td>
+    </tr>
+  </table>
+</td>`;
+  };
+
+  const renderRow = (row: any[], forceCols?: number) => {
+    if (!row.length) return "";
+    const n = forceCols ?? row.length;
+    const missing = forceCols ? Math.max(0, n - row.length) : 0;
+    const colPct = 100 / n;
+
+    return `
+<table role="presentation" border="0" cellspacing="0" cellpadding="0" width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;table-layout:fixed;">
+  <tr>
+    ${row.map((p, i) => renderPostCell(p, i, n)).join("")}
+    ${missing ? Array.from({ length: missing }).map(() => `<td width="${colPct}%" style="width:${colPct}%;font-size:0;line-height:0;">&nbsp;</td>`).join("") : ""}
+  </tr>
+</table>`;
+  };
 
   const viewAllHTML = showViewAll
     ? `
@@ -1132,9 +1152,8 @@ function generateBlogPostsHTML(block: NewsletterBlock): string {
       </tr>
       <tr>
         <td>
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
-            <tr>${postCards}</tr>
-          </table>
+          ${renderRow(row1)}
+          ${row2.length ? `<div style="height:${GAP}px;line-height:${GAP}px;font-size:0;">&nbsp;</div>${renderRow(row2, COLS)}` : ""}
         </td>
       </tr>
     </table>
@@ -1572,29 +1591,12 @@ function generateZichovecFooterHTML(block: NewsletterBlock): string {
         </td>
       </tr>
 
-      <!-- Payment icons (WHITE) -->
-      <tr>
-        <td style="background-color:#FFFFFF;padding:32px 0 16px 0;">
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
-            <tr>
-              <td align="center" style="font-size:0;">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="VISA" height="24" style="height:24px;margin:0 4px;"/>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/MasterCard_Logo.svg" alt="Mastercard" height="24" style="height:24px;margin:0 4px;"/>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" height="24" style="height:24px;margin:0 4px;"/>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg" alt="GPay" height="24" style="height:24px;margin:0 4px;"/>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b0/Apple_Pay_logo.svg" alt="Apple Pay" height="24" style="height:24px;margin:0 4px;"/>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-
       <!-- Copyright (WHITE) -->
       <tr>
         <td style="background-color:#FFFFFF;padding:16px 32px;">
           <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
             <tr>
-              <td style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#212121;">
+              <td valign="top" class="stack" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#212121;padding-bottom:8px;">
                 <div>${String(content.copyright || "Copyright © 2025 Pivovar ZICHOVEC.").replace(
                   /\s*Všechna práva vyhrazena\.?/gi,
                   "",
@@ -1602,16 +1604,16 @@ function generateZichovecFooterHTML(block: NewsletterBlock): string {
                 <div>Všechna práva vyhrazena.</div>
               </td>
 
-              <td align="right" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#212121;">
+              <td valign="top" align="right" class="stack" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#212121;">
                 <table role="presentation" border="0" cellspacing="0" cellpadding="0">
                   <tr>
-                    <td style="padding-right:16px;">
+                    <td style="padding-right:16px;white-space:nowrap;">
                       <div>Vývoj</div>
-                      <a href="https://www.fv-studio.cz/" style="color:#A073FF;text-decoration:underline;">FY STUDIO + Shoptet</a>
+                      <a href="https://www.fv-studio.cz/" style="color:#A073FF;text-decoration:underline;white-space:nowrap;">FY STUDIO + Shoptet</a>
                     </td>
-                    <td>
+                    <td style="white-space:nowrap;">
                       <div>Design</div>
-                      <a href="https://www.vanek.studio" style="color:#A073FF;text-decoration:underline;">Vaněk.Studio</a>
+                      <a href="https://www.vanek.studio" style="color:#A073FF;text-decoration:underline;white-space:nowrap;">Vaněk.Studio</a>
                     </td>
                   </tr>
                 </table>
@@ -1708,19 +1710,24 @@ function generatePoziceHTML(block: NewsletterBlock): string {
   const viewAllText = (content as any).viewAllText || "zobrazit vše";
   const viewAllUrl = (content as any).viewAllUrl || "#";
 
-  const posCount = Math.min(positions.length, 3);
+  // Max 2 per row, max 4 total
+  const MAX_POZICE = 4;
+  const COLS = 2;
 
-  const positionCells = positions
-    .slice(0, 3)
-    .map((p: any, idx: number) => {
-      const isDark = isColorDark(p.bgColor || "#F4F4F4");
-      const textColor = isDark ? "#FFFFFF" : "#000000";
-      const borderColor = isDark ? "#FFFFFF" : "#212121";
-      const paddingLeft = idx === 0 ? "0" : "6px";
-      const paddingRight = idx === posCount - 1 ? "0" : "6px";
+  const items = positions.slice(0, MAX_POZICE);
+  const row1 = items.slice(0, COLS);
+  const row2 = items.slice(COLS, COLS * 2);
 
-      return `
-    <td valign="top" class="stack" style="padding:0 ${paddingRight} 0 ${paddingLeft};">
+  const renderPoziceCell = (p: any, idx: number, nInRow: number) => {
+    const isDark = isColorDark(p.bgColor || "#F4F4F4");
+    const textColor = isDark ? "#FFFFFF" : "#000000";
+    const borderColor = isDark ? "#FFFFFF" : "#212121";
+    const colPct = 100 / nInRow;
+    const padLeft = idx === 0 ? "0" : "6px";
+    const padRight = idx === nInRow - 1 ? "0" : "6px";
+
+    return `
+    <td valign="top" width="${colPct}%" style="width:${colPct}%;padding:0 ${padRight} 0 ${padLeft};">
       <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="background-color:${p.bgColor || "#F4F4F4"};">
         <tr>
           <td style="padding:16px;font-family:'JetBrains Mono',monospace;">
@@ -1734,8 +1741,22 @@ function generatePoziceHTML(block: NewsletterBlock): string {
         </tr>
       </table>
     </td>`;
-    })
-    .join("");
+  };
+
+  const renderRow = (row: any[], forceCols?: number) => {
+    if (!row.length) return "";
+    const n = forceCols ?? row.length;
+    const missing = forceCols ? Math.max(0, n - row.length) : 0;
+    const colPct = 100 / n;
+
+    return `
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
+      <tr>
+        ${row.map((p, i) => renderPoziceCell(p, i, n)).join("")}
+        ${missing ? Array.from({ length: missing }).map(() => `<td width="${colPct}%" style="width:${colPct}%;font-size:0;line-height:0;">&nbsp;</td>`).join("") : ""}
+      </tr>
+    </table>`;
+  };
 
   const viewAllHTML = showViewAll
     ? `
@@ -1790,9 +1811,8 @@ function generatePoziceHTML(block: NewsletterBlock): string {
       </tr>
       <tr>
         <td>
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
-            <tr>${positionCells}</tr>
-          </table>
+          ${renderRow(row1)}
+          ${row2.length ? `<div style="height:12px;line-height:12px;font-size:0;">&nbsp;</div>${renderRow(row2, COLS)}` : ""}
         </td>
       </tr>
     </table>

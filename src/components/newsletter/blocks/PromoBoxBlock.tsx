@@ -6,6 +6,7 @@ import { CustomPlusIcon, CustomArrowIcon } from "@/components/icons/CustomIcons"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const MAX_PROMOS = 4;
+const MAX_PER_ROW = 2;
 
 interface Feature {
   label: string;
@@ -223,14 +224,12 @@ export const PromoBoxBlock = ({ block, onUpdate }: PromoBoxBlockProps) => {
         {boxes.length === 1 ? (
           <div className="w-full">{renderBox(boxes[0], 0)}</div>
         ) : (
-          <div className="flex flex-col sm:flex-row gap-3 items-start">
-            <div className="flex-1 min-w-0 flex flex-col gap-3">
-              {leftBoxes.map(({ box, index }) => renderBox(box, index))}
-            </div>
-
-            <div className="flex-1 min-w-0 flex flex-col gap-3">
-              {rightBoxes.map(({ box, index }) => renderBox(box, index))}
-            </div>
+          <div className="flex flex-wrap gap-3" style={{ maxWidth: '100%' }}>
+            {boxes.slice(0, MAX_PROMOS).map((box, index) => (
+              <div key={index} style={{ flex: '0 0 calc(50% - 6px)', maxWidth: 'calc(50% - 6px)' }}>
+                {renderBox(box, index)}
+              </div>
+            ))}
           </div>
         )}
 

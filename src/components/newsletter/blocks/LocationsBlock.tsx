@@ -116,8 +116,8 @@ export const LocationsBlock = ({ block, onUpdate }: LocationsBlockProps) => {
     onUpdate({ ...block.content, locations: newLocations } as any);
   };
 
-  // Limit to max 6 locations
-  const displayedLocations = locations.slice(0, 6);
+  // Limit to max 4 locations (2 per row, 2 rows)
+  const displayedLocations = locations.slice(0, 4);
 
   return (
     <div className="border border-border p-6 bg-white">
@@ -153,27 +153,21 @@ export const LocationsBlock = ({ block, onUpdate }: LocationsBlockProps) => {
           </div>
         </div>
 
-        {/* Locations grid - max 3 per row, fill space */}
+        {/* Locations grid - max 2 per row, max 4 total */}
         <div style={{ 
           display: 'flex', 
           flexWrap: 'wrap', 
           gap: '12px' 
         }}>
           {displayedLocations.map((location: Location, index: number) => {
-            // Calculate flex basis: if less than 3 cards, they should fill the row
-            const totalCards = displayedLocations.length;
-            const flexBasis = totalCards < 3 
-              ? `calc(${100 / totalCards}% - ${(totalCards - 1) * 12 / totalCards}px)` 
-              : 'calc(33.333% - 8px)';
-
             return (
               <div 
                 key={index} 
                 className="group relative flex flex-col"
                 style={{ 
                   backgroundColor: '#F4F4F4', 
-                  flex: `0 0 ${flexBasis}`,
-                  maxWidth: flexBasis
+                  flex: '0 0 calc(50% - 6px)',
+                  maxWidth: 'calc(50% - 6px)'
                 }}
               >
                 {/* Remove button */}
@@ -290,8 +284,8 @@ export const LocationsBlock = ({ block, onUpdate }: LocationsBlockProps) => {
           })}
         </div>
 
-        {/* Add location button - disabled when max 6 */}
-        {locations.length < 6 && (
+        {/* Add location button - disabled when max 4 */}
+        {locations.length < 4 && (
           <div className="mt-4 flex justify-center">
             <button
               onClick={addLocation}
