@@ -1999,7 +1999,7 @@ function getNewsletterCSS(): string {
         overflow: hidden !important;
         mso-hide: all !important; /* Outlook */
       }
-      body, table, td:not(#mista td) {
+      body, table:not(#mista table), td:not(#mista td) {
         width: 100% !important;
         min-width: 100% !important;
       }
