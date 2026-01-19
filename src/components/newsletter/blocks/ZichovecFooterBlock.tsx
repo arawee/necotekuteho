@@ -185,32 +185,22 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
           ))}
         </div>
 
-        {/* Payment icons - white background, 8px gap, flex wrap */}
-        <div className="py-4 flex justify-center flex-wrap" style={{ backgroundColor: '#FFFFFF', gap: '8px', paddingLeft: 0, paddingRight: 0 }}>
-          {paymentIcons.map((payment) => (
-            <img 
-              key={payment.name} 
-              src={payment.src}
-              alt={payment.name}
-              className="h-6 w-auto object-contain"
-            />
-          ))}
-        </div>
+        {/* Credits row - white background */}
 
         {/* Copyright - white background, 10px fontsize, NOT editable */}
-        <div className="px-8 py-4 flex justify-between items-start" style={{ backgroundColor: '#FFFFFF', color: '#212121', fontSize: '10px' }}>
-          <div>
+        <div className="px-8 py-4 flex flex-col sm:flex-row justify-between items-start gap-4" style={{ backgroundColor: '#FFFFFF', color: '#212121', fontSize: '10px' }}>
+          <div className="flex-shrink-0">
             <div>{(block.content.copyright || 'Copyright © 2025 Pivovar ZICHOVEC.').replace(/\s*Všechna práva vyhrazena\.?/gi, '')}</div>
             <div>Všechna práva vyhrazena.</div>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-4 flex-shrink-0">
             <div className="flex flex-col">
               <span>Vývoj</span>
-              <a href="https://www.fv-studio.cz/" target="_blank" rel="noopener noreferrer" style={{ color: '#A073FF', textDecoration: 'underline' }}>FY STUDIO + Shoptet</a>
+              <a href="https://www.fv-studio.cz/" target="_blank" rel="noopener noreferrer" style={{ color: '#A073FF', textDecoration: 'underline' }} className="whitespace-nowrap">FY STUDIO + Shoptet</a>
             </div>
             <div className="flex flex-col">
               <span>Design</span>
-              <a href="https://www.vanek.studio" target="_blank" rel="noopener noreferrer" style={{ color: '#A073FF', textDecoration: 'underline' }}>Vaněk.Studio</a>
+              <a href="https://www.vanek.studio" target="_blank" rel="noopener noreferrer" style={{ color: '#A073FF', textDecoration: 'underline' }} className="whitespace-nowrap">Vaněk.Studio</a>
             </div>
           </div>
         </div>

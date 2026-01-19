@@ -109,10 +109,10 @@ export const BlogPostsBlock = ({ block, onUpdate }: BlogPostsBlockProps) => {
           </div>
         </div>
 
-        {/* Blog posts grid - flex with gap 12px, equal height cards */}
-        <div style={{ display: 'flex', gap: '12px', alignItems: 'stretch' }}>
-          {posts.slice(0, 3).map((post: BlogPost, index: number) => (
-            <div key={index} className="group relative flex flex-col" style={{ flex: '1 1 0' }}>
+        {/* Blog posts grid - max 2 per row, max 4 total */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'stretch' }}>
+          {posts.slice(0, 4).map((post: BlogPost, index: number) => (
+            <div key={index} className="group relative flex flex-col" style={{ flex: '0 0 calc(50% - 6px)', maxWidth: 'calc(50% - 6px)' }}>
               {/* Remove button */}
               <button
                 onClick={() => removePost(index)}
@@ -181,7 +181,7 @@ export const BlogPostsBlock = ({ block, onUpdate }: BlogPostsBlockProps) => {
         </div>
 
         {/* Add post button */}
-        {posts.length < 3 && (
+        {posts.length < 4 && (
           <div className="mt-4 flex justify-center">
             <button
               onClick={addPost}

@@ -124,13 +124,13 @@ export const PoziceBlock = ({ block, onUpdate }: PoziceBlockProps) => {
           </div>
         </div>
 
-        {/* Positions grid - flex, max 3, fill container */}
-        <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-          {positions.slice(0, 3).map((position: Position, index: number) => (
+        {/* Positions grid - max 2 per row, max 4 total */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'flex-start' }}>
+          {positions.slice(0, 4).map((position: Position, index: number) => (
             <div 
-              key={index} 
+              key={index}
               className="group p-4 flex flex-col relative"
-              style={{ backgroundColor: position.bgColor || '#F4F4F4', flex: '1 1 0' }}
+              style={{ backgroundColor: position.bgColor || '#F4F4F4', flex: '0 0 calc(50% - 6px)', maxWidth: 'calc(50% - 6px)' }}
             >
               {/* Remove button */}
               <button
@@ -191,7 +191,7 @@ export const PoziceBlock = ({ block, onUpdate }: PoziceBlockProps) => {
         </div>
 
         {/* Add position button */}
-        {positions.length < 3 && (
+        {positions.length < 4 && (
           <div className="mt-4 flex justify-center">
             <button
               onClick={addPosition}
