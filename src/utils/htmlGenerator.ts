@@ -787,7 +787,7 @@ function generateMistaHTML(block: NewsletterBlock): string {
 
   return `<!-- Místa -->
 <tr>
-  <td align="center" style="padding:32px 24px;">
+  <td id='mista' align="center" style="padding:32px 24px;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td style="padding:0px;">
@@ -1999,7 +1999,7 @@ function getNewsletterCSS(): string {
         overflow: hidden !important;
         mso-hide: all !important; /* Outlook */
       }
-      body, table, td {
+      body, table, td:not(#mista) {
         width: 100% !important;
         min-width: 100% !important;
       }
