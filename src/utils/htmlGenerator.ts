@@ -177,7 +177,7 @@ function generateZichovecHeaderWithMenuHTML(block: NewsletterBlock): string {
           <div id='top-container' style="width:100%;max-width:600px;margin:0 auto;height:0;padding-top:calc(28.8889% + 2rem);position:relative;overflow:hidden;">
             
             <!-- Logo centered (kept clear of bottom menu) -->
-            <div id='top-logo' style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;padding-bottom:1rem;">
+            <div id='top-logo' style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;padding-bottom:3rem !important;">
               <div style="width:87.2917%;max-width:523.75px;">
                 ${ZICHOVEC_LOGO_SVG}
               </div>
@@ -2024,7 +2024,7 @@ function getNewsletterCSS(): string {
         padding-top: calc(28.8889% + 4rem) !important;
       }
       #top-logo {
-        padding-bottom: 2rem !important;
+        padding-bottom: 3rem !important;
       }
       /* Stack footer columns */
       .footer-col {
