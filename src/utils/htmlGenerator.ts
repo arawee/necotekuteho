@@ -749,7 +749,7 @@ function generateMistaHTML(block: NewsletterBlock): string {
                 <td style="font-family:'JetBrains Mono',monospace;">
                   <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
                     <tr>
-                      <td valign="middle" style="width:52px;">
+                      <td valign="middle" style="width:36px;">
                         <a href="${escapeAttr(place.buttonUrl || "#")}"
                            style="display:inline-block;width:36px;height:36px;border:1px solid #00C322;border-radius:50%;text-align:center;line-height:36px;text-decoration:none;">
                           ${ARROW_ICON_SVG("#00C322")}
@@ -1094,7 +1094,13 @@ function generateBlogPostsHTML(block: NewsletterBlock): string {
 <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;table-layout:fixed;">
   <tr>
     ${row.map((p, i) => renderPostCell(p, i, n)).join("")}
-    ${missing ? Array.from({ length: missing }).map(() => `<td width="${colPct}%" style="width:${colPct}%;font-size:0;line-height:0;">&nbsp;</td>`).join("") : ""}
+    ${
+      missing
+        ? Array.from({ length: missing })
+            .map(() => `<td width="${colPct}%" style="width:${colPct}%;font-size:0;line-height:0;">&nbsp;</td>`)
+            .join("")
+        : ""
+    }
   </tr>
 </table>`;
   };
@@ -1753,7 +1759,13 @@ function generatePoziceHTML(block: NewsletterBlock): string {
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
       <tr>
         ${row.map((p, i) => renderPoziceCell(p, i, n)).join("")}
-        ${missing ? Array.from({ length: missing }).map(() => `<td width="${colPct}%" style="width:${colPct}%;font-size:0;line-height:0;">&nbsp;</td>`).join("") : ""}
+        ${
+          missing
+            ? Array.from({ length: missing })
+                .map(() => `<td width="${colPct}%" style="width:${colPct}%;font-size:0;line-height:0;">&nbsp;</td>`)
+                .join("")
+            : ""
+        }
       </tr>
     </table>`;
   };
