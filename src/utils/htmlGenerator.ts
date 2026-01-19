@@ -398,7 +398,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
               <td align="right">
                 ${
                   showViewAll
-                    ? `<a href="${escapeAttr(viewAllUrl)}" style="font-size:14px;text-decoration:underline;">${viewAllText}</a>`
+                    ? `<a href="${escapeAttr(viewAllUrl)}" style="font-size:14px;text-decoration:underline;white-space:nowrap;">${viewAllText}</a>`
                     : ""
                 }
               </td>
