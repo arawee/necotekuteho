@@ -248,7 +248,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
               (t: any) =>
                 `<span style="display:inline-block;background:${tagBg(
                   t.color,
-                )};color:#fff;font-size:10px;padding:2px 8px;margin-right:4px;margin-bottom:4px;margin-top:-4px !important;">${t.text}</span>`,
+                )};color:#fff;font-size:10px;padding:2px 8px;margin-right:4px;margin-bottom:4px;position:relative;top:-4px !important;">${t.text}</span>`,
             )
             .join("")}
         </div>
@@ -505,7 +505,7 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
   const viewAllHTML = showViewAll
     ? `
 <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="right">
-  <tr>
+  <tr style="top: -2px; position: relative;">
     <td nowrap
         style="
           white-space:nowrap;
@@ -1331,8 +1331,8 @@ function generateGalleryTrioHTML(block: NewsletterBlock): string {
 
   // Helper for 3:4 ratio image
   const img34HTML = (photo: { url: string; alt?: string }, width: number) => {
-    const height = Math.round(width * 4 / 3);
-    return `<img src="${photo.url}" alt="${photo.alt || ''}" width="${width}" style="display:block;width:100%;height:auto;object-fit:cover;aspect-ratio:3/4;" />`;
+    const height = Math.round((width * 4) / 3);
+    return `<img src="${photo.url}" alt="${photo.alt || ""}" width="${width}" style="display:block;width:100%;height:auto;object-fit:cover;aspect-ratio:3/4;" />`;
   };
 
   return `
@@ -1382,7 +1382,7 @@ function generateGalleryDuoHTML(block: NewsletterBlock): string {
 
   // Helper for 3:4 ratio image
   const img34HTML = (photo: { url: string; alt?: string }, width: number) => {
-    return `<img src="${photo.url}" alt="${photo.alt || ''}" width="${width}" style="display:block;width:100%;height:auto;object-fit:cover;aspect-ratio:3/4;" />`;
+    return `<img src="${photo.url}" alt="${photo.alt || ""}" width="${width}" style="display:block;width:100%;height:auto;object-fit:cover;aspect-ratio:3/4;" />`;
   };
 
   return `
@@ -1416,7 +1416,7 @@ function generateGallerySingleHTML(block: NewsletterBlock): string {
 
   // Helper for 3:4 ratio image
   const img34HTML = (p: { url: string; alt?: string }, width: number) => {
-    return `<img src="${p.url}" alt="${p.alt || ''}" width="${width}" style="display:block;width:100%;height:auto;object-fit:cover;aspect-ratio:3/4;" />`;
+    return `<img src="${p.url}" alt="${p.alt || ""}" width="${width}" style="display:block;width:100%;height:auto;object-fit:cover;aspect-ratio:3/4;" />`;
   };
 
   return `
