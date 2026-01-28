@@ -256,7 +256,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
               (t: any) =>
                 `<span style="display:inline-block;background:${tagBg(
                   t.color,
-                )};color:#fff;font-size:10px;padding:2px 8px;margin:0 4px 4px 0;">${t.text}</span>`,
+                )};color:#fff;font-size:10px;padding:6px 8px;margin:0 4px 4px 0;">${t.text}</span>`,
             )
             .join("")}
         </div>
@@ -348,7 +348,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
                         (t: any) =>
                           `<span style="display:inline-block;background:${tagBg(
                             t.color,
-                          )};color:#fff;font-size:10px;padding:2px 8px;margin:0 4px 4px 0;">${t.text}</span>`,
+                          )};color:#fff;font-size:10px;padding:6px 8px;margin:0 4px 4px 0;">${t.text}</span>`,
                       )
                       .join("")}
                   </div>
@@ -472,7 +472,7 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
       </tr>
       <tr>
         <td style="padding:0;margin:0;">
-          <span style="display:inline-block;background-color:#212121;color:#FFFFFF;font-family:'JetBrains Mono',monospace;font-size:12px;padding:4px 8px;">
+          <span style="display:inline-block;background-color:#212121;color:#FFFFFF;font-family:'JetBrains Mono',monospace;font-size:12px;padding:6px 8px;">
             ${c.tag}
           </span>
         </td>
