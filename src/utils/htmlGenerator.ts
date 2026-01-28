@@ -248,7 +248,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
               (t: any) =>
                 `<span style="display:inline-block;background:${tagBg(
                   t.color,
-                )};color:#fff;font-size:10px;padding:2px 8px;margin-right:4px;margin-bottom:4px;position:relative;top:-4px !important;">${t.text}</span>`,
+                )};color:#fff;font-size:10px;padding:2px 8px;margin-right:4px;margin-bottom:4px;margin-top:-4px !important;">${t.text}</span>`,
             )
             .join("")}
         </div>
@@ -505,7 +505,7 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
   const viewAllHTML = showViewAll
     ? `
 <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="right">
-  <tr style="top: -2px; position: relative;">
+  <tr style="position:relative;top:-2px;">
     <td nowrap
         style="
           white-space:nowrap;
