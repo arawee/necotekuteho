@@ -228,27 +228,26 @@ function generateProductListHTML(block: NewsletterBlock): string {
 
     return `
 <td valign="top" width="${colPct}%" style="width:${colPct}%;padding:0 ${padR} 0 ${padL};">
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="table-layout:fixed;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="table-layout:fixed;border-collapse:collapse;">
     <tr>
-      <td>
+      <td style="padding:0;margin:0;line-height:0;font-size:0;">
         ${
           p.image
             ? `<img src="${escapeAttr(p.image)}" width="${innerW}" alt="${escapeAttr(p.name || "")}"
-                 style="display:block;width:100%;max-width:${innerW}px;height:auto;aspect-ratio:3/4;object-fit:cover;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;" />`
-            : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
+                 style="display:block;width:100%;max-width:${innerW}px;height:auto;aspect-ratio:3/4;object-fit:cover;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;vertical-align:bottom;" />`
+            : `<div style="width:100%;padding-top:133.33%;background:#E5E5E5;"></div>`
         }
       </td>
     </tr>
-
     <tr>
-      <td style="font-family:'JetBrains Mono',monospace;padding-top:0px;">
-        <div style="margin-bottom:8px; margin-top:-5.5px;">
+      <td style="font-family:'JetBrains Mono',monospace;padding:0;margin:0;">
+        <div style="margin:0 0 8px 0;padding:0;line-height:1;">
           ${(p.tags || [])
             .map(
               (t: any) =>
                 `<span style="display:inline-block;background:${tagBg(
                   t.color,
-                )};color:#fff;font-size:10px;padding:2px 8px;margin-right:4px;margin-bottom:4px;margin-top:-4px !important;">${t.text}</span>`,
+                )};color:#fff;font-size:10px;padding:2px 8px;margin:0 4px 4px 0;">${t.text}</span>`,
             )
             .join("")}
         </div>
@@ -321,26 +320,26 @@ function generateProductListHTML(block: NewsletterBlock): string {
              style="width:100%;max-width:600px;table-layout:fixed;">
         <tr>
           <td style="padding:0;">
-            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="table-layout:fixed;">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="table-layout:fixed;border-collapse:collapse;">
               <tr>
-                <td>
+                <td style="padding:0;margin:0;line-height:0;font-size:0;">
                   ${
                     p.image
                       ? `<img src="${escapeAttr(p.image)}" width="600" alt="${escapeAttr(p.name || "")}"
-                             style="display:block;width:100%;max-width:600px;height:auto;aspect-ratio:3/4;object-fit:cover;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;" />`
-                      : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
+                             style="display:block;width:100%;max-width:600px;height:auto;aspect-ratio:3/4;object-fit:cover;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;vertical-align:bottom;" />`
+                      : `<div style="width:100%;padding-top:133.33%;background:#E5E5E5;"></div>`
                   }
                 </td>
               </tr>
               <tr>
-                <td style="font-family:'JetBrains Mono',monospace;padding-top:0px;">
-                  <div style="margin-bottom:8px;margin-top:-5.5px;">
+                <td style="font-family:'JetBrains Mono',monospace;padding:0;margin:0;">
+                  <div style="margin:0 0 8px 0;padding:0;line-height:1;">
                     ${(p.tags || [])
                       .map(
                         (t: any) =>
                           `<span style="display:inline-block;background:${tagBg(
                             t.color,
-                          )};color:#fff;font-size:10px;padding:2px 8px;margin-right:4px;margin-bottom:4px;margin-top:-4px !important;">${t.text}</span>`,
+                          )};color:#fff;font-size:10px;padding:2px 8px;margin:0 4px 4px 0;">${t.text}</span>`,
                       )
                       .join("")}
                   </div>
@@ -451,19 +450,19 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
     return `
 <td valign="top" width="${colPct}%" style="width:${colPct}%;padding:0 ${padRight}px 0 ${padLeft}px;">
   <a href="${escapeAttr(c.url || "#")}" style="text-decoration:none;display:block;">
-    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;border-collapse:collapse;">
       <tr>
-        <td style="background:#E5E5E5;">
+        <td style="background:#E5E5E5;padding:0;margin:0;line-height:0;font-size:0;">
           ${
             c.image
               ? `<img src="${escapeAttr(c.image)}" width="${innerW}" alt=""
-                     style="display:block;width:100%;max-width:${innerW}px;height:auto;aspect-ratio:3/4;object-fit:cover;" />`
-              : `<div style="width:100%;padding-top:133%;background:#E5E5E5;"></div>`
+                     style="display:block;width:100%;max-width:${innerW}px;height:auto;aspect-ratio:3/4;object-fit:cover;vertical-align:bottom;" />`
+              : `<div style="width:100%;padding-top:133.33%;background:#E5E5E5;"></div>`
           }
         </td>
       </tr>
       <tr>
-        <td>
+        <td style="padding:0;margin:0;">
           <span style="display:inline-block;background-color:#212121;color:#FFFFFF;font-family:'JetBrains Mono',monospace;font-size:12px;padding:4px 8px;">
             ${c.tag}
           </span>
