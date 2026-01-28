@@ -16,14 +16,14 @@ export const GallerySingleBlock = ({ block, onUpdate }: GallerySingleBlockProps)
   return (
     <div className="bg-white border border-border">
       <div className="max-w-2xl mx-auto">
-        {/* 1:1 ratio */}
-        <div className="aspect-square overflow-hidden">
+        {/* 3:4 ratio */}
+        <div className="aspect-[3/4] overflow-hidden">
           <ImageUpload
             currentImage={photo.url}
             onImageUploaded={updatePhoto}
-            aspectRatio="square"
+            aspectRatio="portrait"
             placeholder="Nahrát foto"
-            className="w-full h-full"
+            className="w-full h-full object-cover"
             showBorder={false}
           />
         </div>

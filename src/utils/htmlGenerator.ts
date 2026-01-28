@@ -1329,6 +1329,12 @@ function imgHTML(photo: any, displayW: number) {
 function generateGalleryTrioHTML(block: NewsletterBlock): string {
   const photos = block.content.photos || [];
 
+  // Helper for 3:4 ratio image
+  const img34HTML = (photo: { url: string; alt?: string }, width: number) => {
+    const height = Math.round(width * 4 / 3);
+    return `<img src="${photo.url}" alt="${photo.alt || ''}" width="${width}" style="display:block;width:100%;height:auto;object-fit:cover;aspect-ratio:3/4;" />`;
+  };
+
   return `
 <tr>
   <td align="center" style="padding:32px 0;">
@@ -1338,8 +1344,8 @@ function generateGalleryTrioHTML(block: NewsletterBlock): string {
         <td style="padding:0;margin:0;line-height:0;font-size:0;">
           ${
             photos[0]?.url
-              ? imgHTML(photos[0], 600)
-              : `<div style="width:100%;padding-top:56.25%;background:#E5E5E5;"></div>`
+              ? img34HTML(photos[0], 600)
+              : `<div style="width:100%;padding-top:133.33%;background:#E5E5E5;"></div>`
           }
         </td>
       </tr>
@@ -1351,15 +1357,15 @@ function generateGalleryTrioHTML(block: NewsletterBlock): string {
               <td width="50%" valign="top" style="padding:0;margin:0;line-height:0;font-size:0;">
                 ${
                   photos[1]?.url
-                    ? imgHTML(photos[1], 300)
-                    : `<div style="width:100%;padding-top:56.25%;background:#E5E5E5;"></div>`
+                    ? img34HTML(photos[1], 300)
+                    : `<div style="width:100%;padding-top:133.33%;background:#E5E5E5;"></div>`
                 }
               </td>
               <td width="50%" valign="top" style="padding:0;margin:0;line-height:0;font-size:0;">
                 ${
                   photos[2]?.url
-                    ? imgHTML(photos[2], 300)
-                    : `<div style="width:100%;padding-top:56.25%;background:#E5E5E5;"></div>`
+                    ? img34HTML(photos[2], 300)
+                    : `<div style="width:100%;padding-top:133.33%;background:#E5E5E5;"></div>`
                 }
               </td>
             </tr>
@@ -1374,6 +1380,11 @@ function generateGalleryTrioHTML(block: NewsletterBlock): string {
 function generateGalleryDuoHTML(block: NewsletterBlock): string {
   const photos = block.content.photos || [];
 
+  // Helper for 3:4 ratio image
+  const img34HTML = (photo: { url: string; alt?: string }, width: number) => {
+    return `<img src="${photo.url}" alt="${photo.alt || ''}" width="${width}" style="display:block;width:100%;height:auto;object-fit:cover;aspect-ratio:3/4;" />`;
+  };
+
   return `
 <tr>
   <td align="center" style="padding:32px 0;">
@@ -1383,15 +1394,15 @@ function generateGalleryDuoHTML(block: NewsletterBlock): string {
         <td width="50%" valign="top" style="padding:0;margin:0;line-height:0;font-size:0;">
           ${
             photos[0]?.url
-              ? imgHTML(photos[0], 300)
-              : `<div style="width:100%;padding-top:56.25%;background:#E5E5E5;"></div>`
+              ? img34HTML(photos[0], 300)
+              : `<div style="width:100%;padding-top:133.33%;background:#E5E5E5;"></div>`
           }
         </td>
         <td width="50%" valign="top" style="padding:0;margin:0;line-height:0;font-size:0;">
           ${
             photos[1]?.url
-              ? imgHTML(photos[1], 300)
-              : `<div style="width:100%;padding-top:56.25%;background:#E5E5E5;"></div>`
+              ? img34HTML(photos[1], 300)
+              : `<div style="width:100%;padding-top:133.33%;background:#E5E5E5;"></div>`
           }
         </td>
       </tr>
@@ -1403,6 +1414,11 @@ function generateGalleryDuoHTML(block: NewsletterBlock): string {
 function generateGallerySingleHTML(block: NewsletterBlock): string {
   const photo = block.content.photos?.[0];
 
+  // Helper for 3:4 ratio image
+  const img34HTML = (p: { url: string; alt?: string }, width: number) => {
+    return `<img src="${p.url}" alt="${p.alt || ''}" width="${width}" style="display:block;width:100%;height:auto;object-fit:cover;aspect-ratio:3/4;" />`;
+  };
+
   return `
 <tr>
   <td align="center" style="padding:32px 0;">
@@ -1410,7 +1426,7 @@ function generateGallerySingleHTML(block: NewsletterBlock): string {
            class="wrap" style="width:100%;max-width:600px;border-collapse:collapse;border-spacing:0;table-layout:fixed;">
       <tr>
         <td style="padding:0;margin:0;line-height:0;font-size:0;">
-          ${photo?.url ? imgHTML(photo, 600) : `<div style="width:100%;padding-top:56.25%;background:#E5E5E5;"></div>`}
+          ${photo?.url ? img34HTML(photo, 600) : `<div style="width:100%;padding-top:133.33%;background:#E5E5E5;"></div>`}
         </td>
       </tr>
     </table>
