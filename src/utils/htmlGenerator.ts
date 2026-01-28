@@ -505,7 +505,7 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
   const viewAllHTML = showViewAll
     ? `
 <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="right">
-  <tr style="position:relative;top:-2px;">
+  <tr style="position:relative;top:-4px;">
     <td nowrap
         style="
           white-space:nowrap;
