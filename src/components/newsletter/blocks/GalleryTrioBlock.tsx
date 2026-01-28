@@ -23,14 +23,14 @@ export const GalleryTrioBlock = ({ block, onUpdate }: GalleryTrioBlockProps) => 
     <div className="bg-white border border-border">
       <div className="max-w-2xl mx-auto">
         <div className="grid grid-cols-1">
-          {/* Main large image - 1:1 ratio */}
-          <div className="aspect-square overflow-hidden">
+          {/* Main large image - 3:4 ratio */}
+          <div className="aspect-[3/4] overflow-hidden">
             <ImageUpload
               currentImage={photos[0]?.url}
               onImageUploaded={(url) => updatePhoto(0, url)}
-              aspectRatio="square"
+              aspectRatio="portrait"
               placeholder="Nahrát hlavní foto"
-              className="w-full h-full"
+              className="w-full h-full object-cover"
               showBorder={false}
             />
           </div>
@@ -43,7 +43,7 @@ export const GalleryTrioBlock = ({ block, onUpdate }: GalleryTrioBlockProps) => 
                 onImageUploaded={(url) => updatePhoto(1, url)}
                 aspectRatio="portrait"
                 placeholder="Nahrát foto 2"
-                className="w-full h-full"
+                className="w-full h-full object-cover"
                 showBorder={false}
               />
             </div>
@@ -53,7 +53,7 @@ export const GalleryTrioBlock = ({ block, onUpdate }: GalleryTrioBlockProps) => 
                 onImageUploaded={(url) => updatePhoto(2, url)}
                 aspectRatio="portrait"
                 placeholder="Nahrát foto 3"
-                className="w-full h-full"
+                className="w-full h-full object-cover"
                 showBorder={false}
               />
             </div>
