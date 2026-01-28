@@ -105,6 +105,14 @@ export function generateHTMLFromBlocks(blocks: NewsletterBlock[]): string {
     })
     .join("\n\n");
 
+  const unsubscribeHTML = `
+<!-- Unsubscribe Link -->
+<tr>
+  <td align="center" style="padding:24px 16px;background-color:#FFFFFF;">
+    <a href="*|UNSUB|*" style="font-family:'JetBrains Mono',monospace;font-size:14px;color:#212121;text-decoration:underline;">odhlásit z odběru newsletteru</a>
+  </td>
+</tr>`;
+
   return `<!DOCTYPE html>
 <html lang="cs">
 <head>
@@ -119,6 +127,7 @@ export function generateHTMLFromBlocks(blocks: NewsletterBlock[]): string {
 <body class="newsletter-email">
 <table role="presentation" border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
 ${blockHTML}
+${unsubscribeHTML}
 </table>
 </body>
 </html>`;
