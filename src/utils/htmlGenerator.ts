@@ -8,15 +8,12 @@ const escapeAttr = (v: any) =>
     .replace(/>/g, "&gt;");
 
 // SVG Icons for email HTML
-const ARROW_ICON_SVG = (color: string = "#00C322") => `
-<svg width="8" height="8" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;">
-  <path d="M4.16156 11.5628L7.22156 7.66281C7.54156 7.23615 7.88156 6.97615 8.24156 6.88281H0.00156253V4.68281H8.16156C8.02823 4.64281 7.86823 4.55615 7.68156 4.42281C7.50823 4.28948 7.3549 4.13615 7.22156 3.96281L4.14156 0.00281215H6.90156L11.4016 5.76281L6.88156 11.5628H4.16156Z" fill="${color}"/>
-</svg>`;
+// Email-safe icons using text characters with fallback
+// SVG icons for modern clients, with text fallback for email clients that strip SVG
+const ARROW_ICON_SVG = (color: string = "#00C322") => `<span style="color:${color};font-size:14px;font-weight:bold;">→</span>`;
 
-const PLUS_ICON_SVG = (color: string = "#000000") => `
-<svg width="8" height="8" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;">
-  <path d="M3.58031 9.51937V5.91937H0.000312582V3.59937H3.58031V-0.000625372H6.06031V3.59937H9.64031V5.91937H6.06031V9.51937H3.58031Z" fill="${color}"/>
-</svg>`;
+const PLUS_ICON_SVG = (color: string = "#000000") => `<span style="color:${color};font-size:14px;font-weight:bold;">+</span>`;
+
 
 // The Zichovec logo SVG
 const ZICHOVEC_LOGO_SVG = `
@@ -169,10 +166,8 @@ function generateZichovecHeaderWithMenuHTML(block: NewsletterBlock): string {
   const menuHTML = menuItems
     .map(
       (item: any) =>
-        `<a href="${item.url}"
-            style="display:inline-block;color:#212121;font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;text-decoration:none;padding:0 10px;white-space:nowrap;line-height:150%;">
-          ${item.text}
-        </a>`,
+        `<a href="${escapeAttr(item.url || "#")}"
+            style="display:inline-block;color:#212121;font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;text-decoration:none;padding:0 10px;white-space:nowrap;line-height:150%;">${item.text}</a>`,
     )
     .join("");
 
@@ -1191,27 +1186,18 @@ function generatePromoBoxHTML(block: NewsletterBlock): string {
 
   const rawBoxes = Array.isArray((content as any).boxes) ? (content as any).boxes : [];
 
-  // ✅ remove null/undefined and also remove "never touched" empty shells
+  // Keep all valid boxes - just filter out null/undefined
   const cleanBoxes = rawBoxes
     .filter(Boolean)
     .map((b: any) => ({
-      title: String(b?.title ?? "").trim(),
+      title: String(b?.title ?? "Nový box"),
       features: Array.isArray(b?.features) ? b.features : [],
-      buttonText: String(b?.buttonText ?? "").trim(),
-      buttonUrl: String(b?.buttonUrl ?? "").trim(),
-      bgColor: String(b?.bgColor ?? "").trim(),
-    }))
-    .filter((b: any) => {
-      const hasTitle = b.title !== "";
-      const hasFeatures =
-        b.features.length > 0 &&
-        b.features.some((f: any) => String(f?.label ?? "").trim() || String(f?.value ?? "").trim());
-      const hasButton = b.buttonText !== "" || (b.buttonUrl !== "" && b.buttonUrl !== "#");
-      const hasBg = b.bgColor !== "";
-      return hasTitle || hasFeatures || hasButton || hasBg;
-    });
+      buttonText: String(b?.buttonText ?? "→ akce"),
+      buttonUrl: String(b?.buttonUrl ?? "#"),
+      bgColor: String(b?.bgColor ?? "#00C322"),
+    }));
 
-  // ✅ if editor gave you nothing usable, fall back to 1 default box
+  // If no boxes at all, use default
   const boxes = cleanBoxes.length ? cleanBoxes : [defaultBox];
 
   // keep the same limit/behavior as before
@@ -1557,22 +1543,23 @@ function generateZichovecFooterHTML(block: NewsletterBlock): string {
     { text: "LinkedIn", url: "#" },
   ];
 
-  const phoneNumber = (content.footerText || "602 555 555").replace(/^\+420\s*/, "").replace(/^tel\.\s*/i, "");
+  const phoneNumber = (content.footerText || "+420 602 555 555").replace(/^tel\.\s*/i, "");
 
+  // Generate column HTML with vertical stacking of links
   const columnHTML = columns
     .map(
       (col: any) => `
         <td valign="top" width="25%" class="stack"
-            style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#212121;">
-          <h4 style="margin:0 0 1rem 0;font-size:16px;font-weight:700;color:#212121;">${col.title}</h4>
-          <div style="display:flex;flex-direction:column;gap:4px;">
+            style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#212121;vertical-align:top;">
+          <h4 style="margin:0 0 12px 0;font-size:16px;font-weight:700;color:#212121;">${col.title}</h4>
+          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
             ${col.links
               .map(
                 (link: any) =>
-                  `<a href="${escapeAttr(link.url)}" style="color:#212121;text-decoration:none;display:block;margin-bottom:4px;">${link.text}</a>`,
+                  `<tr><td style="padding:0 0 4px 0;"><a href="${escapeAttr(link.url)}" style="color:#212121;text-decoration:none;font-size:12px;display:block;">${link.text}</a></td></tr>`,
               )
               .join("")}
-          </div>
+          </table>
         </td>
       `,
     )
@@ -1596,19 +1583,17 @@ function generateZichovecFooterHTML(block: NewsletterBlock): string {
                   <tr>
                     <!-- Contact column -->
                     <td valign="top" width="25%" class="stack"
-                        style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#212121;">
-                      <p style="margin:0 0 1rem 0;font-weight:700;text-decoration:underline;">${phoneNumber}</p>
-                      <p style="margin:0 0 24px 0;">
-                        <a href="mailto:${escapeAttr(email)}" style="color:#212121;font-weight:700;text-decoration:underline;">Email</a>
-                      </p>
-                      <div style="display:flex;flex-direction:column;gap:4px;">
+                        style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#212121;vertical-align:top;">
+                      <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
+                        <tr><td style="padding:0 0 4px 0;"><a href="tel:${escapeAttr(phoneNumber.replace(/\s/g, ''))}" style="color:#212121;font-weight:700;text-decoration:underline;font-size:12px;">${phoneNumber}</a></td></tr>
+                        <tr><td style="padding:0 0 24px 0;"><a href="mailto:${escapeAttr(email)}" style="color:#212121;font-weight:700;text-decoration:underline;font-size:12px;">${email}</a></td></tr>
                         ${socials
                           .map(
                             (s: any) =>
-                              `<a href="${escapeAttr(s.url)}" style="color:#212121;font-weight:700;text-decoration:underline;display:block;margin-bottom:4px;">${s.text}</a>`,
+                              `<tr><td style="padding:0 0 4px 0;"><a href="${escapeAttr(s.url)}" style="color:#212121;font-weight:700;text-decoration:underline;font-size:12px;">${s.text}</a></td></tr>`,
                           )
                           .join("")}
-                      </div>
+                      </table>
                     </td>
 
                     ${columnHTML}
@@ -1949,6 +1934,15 @@ function getNewsletterCSS(): string {
       border: 0;
       outline: none;
       text-decoration: none;
+      pointer-events: none;
+    }
+    /* Prevent right-click download menu on images */
+    img {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
     }
     
     /* Base styles */
