@@ -133,7 +133,7 @@ function generateZichovecHeaderHTML(block: NewsletterBlock): string {
   <td align="center" style="background-color:#00C322;padding:48px 24px;border-bottom:2rem solid white;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;margin:0 auto;">
       <tr>
-        <td align="center" valign="middle" style="padding:0;margin:0;text-align:center;">
+        <td align="center" valign="middle" style="padding:0;margin:0;text-align:center;align-content:center;justify-items:center;">
           ${ZICHOVEC_LOGO_HTML}
         </td>
       </tr>
@@ -164,7 +164,7 @@ function generateZichovecHeaderWithMenuHTML(block: NewsletterBlock): string {
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;margin:0 auto;">
       <!-- Logo row -->
       <tr>
-        <td align="center" valign="middle" style="padding:48px 24px 24px 24px;text-align:center;">
+        <td align="center" valign="middle" style="padding:48px 24px 24px 24px;text-align:center;align-content:center;justify-items:center;">
           ${ZICHOVEC_LOGO_HTML}
         </td>
       </tr>
@@ -1642,9 +1642,10 @@ function generateBenefitsHTML(block: NewsletterBlock): string {
   const row1 = visible.slice(0, 3);
   const row2 = visible.slice(3, 6);
 
-  const renderCell = (b: any, globalIndex: number) => {
+  const renderCell = (b: any, globalIndex: number, colCount: number) => {
+    const colWidth = Math.floor(600 / colCount);
     return `
-      <td valign="top" width="200" style="width:100%;text-align:center;font-family:'JetBrains Mono',monospace;padding:0;margin:0;padding-bottom:2rem;">
+      <td valign="top" width="${colWidth}" style="width:${colWidth}px;text-align:center;font-family:'JetBrains Mono',monospace;padding:0;margin:0;padding-bottom:2rem;">
         <div style="padding:0 12px;">
           <div style="margin-bottom:16px;">
             <img src="${getBenefitIcon(b.icon, globalIndex)}" width="48" height="48" alt=""
@@ -1660,14 +1661,14 @@ function generateBenefitsHTML(block: NewsletterBlock): string {
   const renderRow = (row: any[], rowStartIndex: number) => {
     if (row.length === 0) return "";
 
-    const rowWidth = row.length * 197; // 1=>200, 2=>400, 3=>600
-    const cellsHTML = row.map((b, idx) => renderCell(b, rowStartIndex + idx)).join("");
+    const colCount = row.length;
+    const cellsHTML = row.map((b, idx) => renderCell(b, rowStartIndex + idx, colCount)).join("");
 
     return `
       <tr>
         <td align="center" style="padding:0;">
           <table role="presentation" border="0" cellspacing="0" cellpadding="0"
-                 width="${rowWidth}" style="width:${rowWidth}px;max-width:600px;table-layout:fixed;">
+                 width="600" style="width:600px;max-width:600px;table-layout:fixed;">
             <tr>${cellsHTML}</tr>
           </table>
         </td>
@@ -1726,9 +1727,9 @@ function generatePoziceHTML(block: NewsletterBlock): string {
           <td style="padding:16px;font-family:'JetBrains Mono',monospace;">
             <h4 style="margin:0 0 12px 0;font-size:16px;font-weight:700;color:${textColor};">${p.title}</h4>
             <p style="margin:0 0 1rem 0;font-size:12px;color:${textColor};">${p.description}</p>
-            <a href="${p.buttonUrl || "#"}" style="display:inline-flex;align-items:center;padding:12px 24px;border:1px solid ${borderColor};color:${textColor};font-size:12px;text-decoration:none;">
-              ${ARROW_ICON_SVG(borderColor)}
-              <span style="margin-left:8px;">${p.buttonText}</span>
+            <a href="${p.buttonUrl || "#"}" style="display:inline-block;padding:12px 24px;border:1px solid ${borderColor};color:${textColor};font-size:12px;text-decoration:none;line-height:1;">
+              <span style="display:inline-block;vertical-align:middle;line-height:1;">${ARROW_ICON_SVG(borderColor)}</span>
+              <span style="display:inline-block;vertical-align:middle;margin-left:8px;line-height:1;">${p.buttonText}</span>
             </a>
           </td>
         </tr>
