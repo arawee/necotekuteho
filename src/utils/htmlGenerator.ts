@@ -15,8 +15,8 @@ const ARROW_ICON_SVG = (color: string = "#00C322") => `<span style="display:inli
 const PLUS_ICON_SVG = (color: string = "#000000") => `<span style="display:inline-block;color:${color};font-size:14px;font-weight:bold;text-decoration:none;line-height:1;vertical-align:middle;">+</span>`;
 
 
-// The Zichovec logo - hosted SVG for email client compatibility
-const ZICHOVEC_LOGO_URL = "https://yzbjnjhrrvqcdwfdoksa.supabase.co/storage/v1/object/public/newsletter-images/images/zichovec-logo.svg";
+// The Zichovec logo - hosted PNG with transparent background for email client compatibility
+const ZICHOVEC_LOGO_URL = "https://yzbjnjhrrvqcdwfdoksa.supabase.co/storage/v1/object/public/newsletter-images/images/zichovec-logo-transparent.png";
 const ZICHOVEC_LOGO_HTML = `<img src="${ZICHOVEC_LOGO_URL}" alt="ZICHOVEC" width="524" style="display:block;width:100%;max-width:524px;height:auto;margin:0 auto;" />`;
 
 // Helper function to determine if a color is dark
