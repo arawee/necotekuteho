@@ -10,14 +10,18 @@ const escapeAttr = (v: any) =>
 // SVG Icons for email HTML
 // Email-safe icons using text characters with fallback
 // SVG icons for modern clients, with text fallback for email clients that strip SVG
-const ARROW_ICON_SVG = (color: string = "#00C322") => `<span style="display:inline-block;color:${color};font-size:14px;font-weight:bold;text-decoration:none;line-height:1;vertical-align:middle;">→</span>`;
+// NOTE: iOS Mail tends to render glyphs a couple px too high when nested in table/buttons.
+// Using a small relative offset is a pragmatic fix while keeping text-character icons.
+const ARROW_ICON_SVG = (color: string = "#00C322") =>
+  `<span style="display:inline-block;color:${color};font-size:14px;font-weight:bold;text-decoration:none;line-height:1;vertical-align:middle;position:relative;top:1px;">→</span>`;
 
-const PLUS_ICON_SVG = (color: string = "#000000") => `<span style="display:inline-block;color:${color};font-size:14px;font-weight:bold;text-decoration:none;line-height:1;vertical-align:middle;">+</span>`;
+const PLUS_ICON_SVG = (color: string = "#000000") =>
+  `<span style="display:inline-block;color:${color};font-size:14px;font-weight:bold;text-decoration:none;line-height:1;vertical-align:middle;position:relative;top:1px;">+</span>`;
 
 
 // The Zichovec logo - hosted PNG with transparent background for email client compatibility
 const ZICHOVEC_LOGO_URL = "https://yzbjnjhrrvqcdwfdoksa.supabase.co/storage/v1/object/public/newsletter-images/images/zichovec-logo-transparent.png";
-const ZICHOVEC_LOGO_HTML = `<img src="${ZICHOVEC_LOGO_URL}" alt="ZICHOVEC" width="400" style="display:block;width:400px;max-width:100%;height:auto;margin:0;border:0;outline:none;" />`;
+const ZICHOVEC_LOGO_HTML = `<img src="${ZICHOVEC_LOGO_URL}" alt="ZICHOVEC" width="400" style="display:block;width:400px;max-width:100%;height:auto;margin:0 auto;border:0;outline:none;" />`;
 
 // Helper function to determine if a color is dark
 const isColorDark = (hexColor: string): boolean => {
@@ -133,7 +137,7 @@ function generateZichovecHeaderHTML(block: NewsletterBlock): string {
   <td align="center" style="background-color:#00C322;padding:48px 24px;border-bottom:2rem solid white;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;margin:0 auto;">
       <tr>
-        <td align="center" valign="middle" style="padding:0;margin:0;text-align:center;align-content:center;justify-items:center;">
+        <td align="center" valign="middle" style="padding:0;margin:0;text-align:center;display:grid;justify-items:center;align-content:center;">
           ${ZICHOVEC_LOGO_HTML}
         </td>
       </tr>
@@ -164,7 +168,7 @@ function generateZichovecHeaderWithMenuHTML(block: NewsletterBlock): string {
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;margin:0 auto;">
       <!-- Logo row -->
       <tr>
-        <td align="center" valign="middle" style="padding:48px 24px 24px 24px;text-align:center;align-content:center;justify-items:center;">
+        <td align="center" valign="middle" style="padding:48px 24px 24px 24px;text-align:center;display:grid;justify-items:center;align-content:center;">
           ${ZICHOVEC_LOGO_HTML}
         </td>
       </tr>
@@ -258,7 +262,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
                   : `${p.price || ""}`
               }
             </td>
-            <td align="right">
+            <td align="right" style="text-align:right;">
               <a href="${escapeAttr(p.url || "#")}"
                  style="display:inline-block;width:36px;height:36px;background:#00C322;border-radius:50%;line-height:36px;text-align:center;white-space:nowrap;text-decoration:none;">
                 ${PLUS_ICON_SVG("#000")}
@@ -350,7 +354,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
                             : `${p.price || ""}`
                         }
                       </td>
-                      <td align="right">
+                      <td align="right" style="text-align:right;">
                         <a href="${escapeAttr(p.url || "#")}"
                            style="display:inline-block;width:36px;height:36px;background:#00C322;border-radius:50%;line-height:36px;text-align:center;white-space:nowrap;text-decoration:none;">
                           ${PLUS_ICON_SVG("#000")}
@@ -374,10 +378,10 @@ function generateProductListHTML(block: NewsletterBlock): string {
     <table role="presentation" width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;">
       <tr>
         <td style="padding-bottom:16px;">
-          <table width="100%">
+          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
             <tr>
               <td><h2 style="margin:0;font-size:20px;">${content.title || "Mohlo by vám chutnat"}</h2></td>
-              <td align="right">
+              <td align="right" style="text-align:right;">
                 ${
                   showViewAll
                     ? `<a href="${escapeAttr(viewAllUrl)}" style="font-size:14px;text-decoration:none;white-space:nowrap;"><span style="text-decoration:none;">→ </span><span style="text-decoration:underline;">${viewAllText}</span></a>`
@@ -486,7 +490,7 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
 
   const viewAllHTML = showViewAll
     ? `
-<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="right">
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="right" style="margin:0 0 0 auto;">
   <tr style="position:relative;top:-4px;">
     <td style="
           white-space:nowrap;
@@ -674,7 +678,7 @@ function generateMistaHTML(block: NewsletterBlock): string {
 
   const viewAllHTML = showViewAll
     ? `
-<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="right">
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="right" style="margin:0 0 0 auto;">
   <tr>
     <td nowrap
         style="
@@ -1210,7 +1214,7 @@ function generatePromoBoxHTML(block: NewsletterBlock): string {
             <table role="presentation" border="0" cellspacing="0" cellpadding="0" style="margin-bottom:24px;">
               ${featuresHTML}
             </table>
-            <a href="${box.buttonUrl || "#"}" style="display:inline-block;padding:12px 24px;border:1px solid ${borderColor};color:${textColor};font-size:14px;text-decoration:none;">
+            <a href="${box.buttonUrl || "#"}" style="display:inline-block;width:auto;white-space:nowrap;padding:12px 24px;border:1px solid ${borderColor};color:${textColor};font-size:14px;text-decoration:none;line-height:1;">
               ${box.buttonText}
             </a>
           </td>
