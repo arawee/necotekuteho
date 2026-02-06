@@ -14,7 +14,7 @@ const ICON_INLINE = (glyph: string, color: string, sizePx: number = 14) =>
   `<span style="display:inline-block;color:${color};font-size:${sizePx}px;font-weight:700;line-height:1;height:${sizePx}px;vertical-align:middle;text-decoration:none;mso-line-height-rule:exactly;">${glyph}</span>`;
 
 const ICON_CIRCLE = (glyph: string, color: string, boxPx: number = 36, sizePx: number = 16) =>
-  `<span style="display:block;width:${boxPx}px;height:${boxPx}px;line-height:${boxPx}px;text-align:center;color:${color};font-size:${sizePx}px;font-weight:700;text-decoration:none;mso-line-height-rule:exactly;">${glyph}</span>`;
+  `<span style="display:block;width:${boxPx}px;height:${boxPx}px;line-height:${boxPx}px;text-align:center;color:${color};font-size:${sizePx}px;font-weight:700;text-decoration:none;mso-line-height-rule:exactly;position:relative;top:1px;">${glyph}</span>`;
 
 // Keep existing names for inline usage
 const ARROW_ICON_SVG = (color: string = "#00C322") => ICON_INLINE("→", color, 14);
@@ -499,9 +499,7 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
 
   const viewAllHTML = showViewAll
     ? `<a href="${escapeAttr(viewAllUrl)}"
-         style="display:inline-block;white-space:nowrap;word-break:keep-all;-ms-word-break:keep-all;-webkit-hyphens:none;hyphens:none;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;line-height:1;mso-line-height-rule:exactly;">
-         <span style="white-space:nowrap;">→ <span style="text-decoration:underline;">${viewAllText}</span></span>
-       </a>`
+         style="display:block;white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;line-height:1;mso-line-height-rule:exactly;">→ <span style="text-decoration:underline;">${viewAllText}</span></a>`
     : "";
 
   return `<!-- Kategorie -->
@@ -662,9 +660,7 @@ function generateMistaHTML(block: NewsletterBlock): string {
 
   const viewAllHTML = showViewAll
     ? `<a href="${escapeAttr(viewAllUrl)}"
-         style="display:inline-block;white-space:nowrap;word-break:keep-all;-ms-word-break:keep-all;-webkit-hyphens:none;hyphens:none;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;line-height:1;mso-line-height-rule:exactly;">
-         <span style="white-space:nowrap;">→ <span style="text-decoration:underline;">${viewAllText}</span></span>
-       </a>`
+         style="display:block;white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;line-height:1;mso-line-height-rule:exactly;">→ <span style="text-decoration:underline;">${viewAllText}</span></a>`
     : "";
 
   const mobileBlocks = items
@@ -853,9 +849,7 @@ function generateLocationsHTML(block: NewsletterBlock): string {
 
   const viewAllHTML = showViewAll
     ? `<a href="${escapeAttr(viewAllUrl)}"
-         style="display:inline-block;white-space:nowrap;word-break:keep-all;-ms-word-break:keep-all;-webkit-hyphens:none;hyphens:none;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;line-height:1;mso-line-height-rule:exactly;">
-         <span style="white-space:nowrap;">→ <span style="text-decoration:underline;">${viewAllText}</span></span>
-       </a>`
+         style="display:block;white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;line-height:1;mso-line-height-rule:exactly;">→ <span style="text-decoration:underline;">${viewAllText}</span></a>`
     : "";
 
   // Mobile: 1 column, one card per row, with 12px vertical gaps
@@ -1022,9 +1016,7 @@ function generateBlogPostsHTML(block: NewsletterBlock): string {
 
   const viewAllHTML = showViewAll
     ? `<a href="${escapeAttr(viewAllUrl)}"
-         style="display:inline-block;white-space:nowrap;word-break:keep-all;-ms-word-break:keep-all;-webkit-hyphens:none;hyphens:none;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;line-height:1;mso-line-height-rule:exactly;">
-         <span style="white-space:nowrap;">→ <span style="text-decoration:underline;">${viewAllText}</span></span>
-       </a>`
+         style="display:block;white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;line-height:1;mso-line-height-rule:exactly;">→ <span style="text-decoration:underline;">${viewAllText}</span></a>`
     : "";
 
   return `<!-- Blog posty -->
@@ -1666,9 +1658,7 @@ function generatePoziceHTML(block: NewsletterBlock): string {
 
   const viewAllHTML = showViewAll
     ? `<a href="${escapeAttr(viewAllUrl)}"
-         style="display:inline-block;white-space:nowrap;word-break:keep-all;-ms-word-break:keep-all;-webkit-hyphens:none;hyphens:none;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;line-height:1;mso-line-height-rule:exactly;">
-         <span style="white-space:nowrap;">→ <span style="text-decoration:underline;">${viewAllText}</span></span>
-       </a>`
+         style="display:block;white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;line-height:1;mso-line-height-rule:exactly;">→ <span style="text-decoration:underline;">${viewAllText}</span></a>`
     : "";
 
   return `<!-- Pozice -->
