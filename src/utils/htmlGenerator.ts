@@ -8,15 +8,22 @@ const escapeAttr = (v: any) =>
     .replace(/>/g, "&gt;");
 
 // SVG Icons for email HTML
-// Email-safe icons using text characters with fallback
-// SVG icons for modern clients, with text fallback for email clients that strip SVG
-// NOTE: iOS Mail tends to render glyphs a couple px too high when nested in table/buttons.
-// Using a small relative offset is a pragmatic fix while keeping text-character icons.
-const ARROW_ICON_SVG = (color: string = "#00C322") =>
-  `<span style="display:inline-block;color:${color};font-size:14px;font-weight:bold;text-decoration:none;line-height:1;vertical-align:middle;position:relative;top:1px;">→</span>`;
+// Email-safe icons: use text glyphs, but wrap them in predictable inline/circle boxes
+// so iOS Mail doesn't shift baselines inside buttons.
+const ICON_INLINE = (glyph: string, color: string, sizePx: number = 14) =>
+  `<span style="display:inline-block;color:${color};font-size:${sizePx}px;font-weight:700;line-height:1;height:${sizePx}px;vertical-align:middle;text-decoration:none;mso-line-height-rule:exactly;">${glyph}</span>`;
 
-const PLUS_ICON_SVG = (color: string = "#000000") =>
-  `<span style="display:inline-block;color:${color};font-size:14px;font-weight:bold;text-decoration:none;line-height:1;vertical-align:middle;position:relative;top:1px;">+</span>`;
+const ICON_CIRCLE = (glyph: string, color: string, boxPx: number = 36, sizePx: number = 16) =>
+  `<span style="display:block;width:${boxPx}px;height:${boxPx}px;line-height:${boxPx}px;text-align:center;color:${color};font-size:${sizePx}px;font-weight:700;text-decoration:none;mso-line-height-rule:exactly;">${glyph}</span>`;
+
+// Keep existing names for inline usage
+const ARROW_ICON_SVG = (color: string = "#00C322") => ICON_INLINE("→", color, 14);
+const PLUS_ICON_SVG = (color: string = "#000000") => ICON_INLINE("+", color, 14);
+
+// Use these inside 36x36 circular buttons
+const ARROW_ICON_CIRCLE = (color: string = "#00C322") => ICON_CIRCLE("→", color, 36, 16);
+const PLUS_ICON_CIRCLE = (color: string = "#000000") => ICON_CIRCLE("+", color, 36, 16);
+
 
 
 // The Zichovec logo - hosted PNG with transparent background for email client compatibility
@@ -263,9 +270,9 @@ function generateProductListHTML(block: NewsletterBlock): string {
               }
             </td>
             <td align="right" style="text-align:right;">
-              <a href="${escapeAttr(p.url || "#")}"
+              <a href="${escapeAttr(p.url || "#") }"
                  style="display:inline-block;width:36px;height:36px;background:#00C322;border-radius:50%;line-height:36px;text-align:center;white-space:nowrap;text-decoration:none;">
-                ${PLUS_ICON_SVG("#000")}
+                ${PLUS_ICON_CIRCLE("#000")}
               </a>
             </td>
           </tr>
@@ -355,9 +362,9 @@ function generateProductListHTML(block: NewsletterBlock): string {
                         }
                       </td>
                       <td align="right" style="text-align:right;">
-                        <a href="${escapeAttr(p.url || "#")}"
+                        <a href="${escapeAttr(p.url || "#") }"
                            style="display:inline-block;width:36px;height:36px;background:#00C322;border-radius:50%;line-height:36px;text-align:center;white-space:nowrap;text-decoration:none;">
-                          ${PLUS_ICON_SVG("#000")}
+                          ${PLUS_ICON_CIRCLE("#000")}
                         </a>
                       </td>
                     </tr>
@@ -380,11 +387,13 @@ function generateProductListHTML(block: NewsletterBlock): string {
         <td style="padding-bottom:16px;">
           <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
             <tr>
-              <td><h2 style="margin:0;font-size:20px;">${content.title || "Mohlo by vám chutnat"}</h2></td>
-              <td align="right" style="text-align:right;">
+              <td width="100%" style="width:100%;">
+                <h2 style="margin:0;font-size:20px;">${content.title || "Mohlo by vám chutnat"}</h2>
+              </td>
+              <td width="1%" align="right" style="width:1%;text-align:right;white-space:nowrap;">
                 ${
                   showViewAll
-                    ? `<a href="${escapeAttr(viewAllUrl)}" style="font-size:14px;text-decoration:none;white-space:nowrap;"><span style="text-decoration:none;">→ </span><span style="text-decoration:underline;">${viewAllText}</span></a>`
+                    ? `<a href="${escapeAttr(viewAllUrl)}" style="display:inline-block;font-size:14px;text-decoration:none;white-space:nowrap;mso-line-height-rule:exactly;"><span style="text-decoration:none;">→ </span><span style="text-decoration:underline;">${viewAllText}</span></a>`
                     : ""
                 }
               </td>
@@ -489,37 +498,10 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
   for (let i = 0; i < items.length; i += 2) mobileRows.push(items.slice(i, i + 2));
 
   const viewAllHTML = showViewAll
-    ? `
-<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="right" style="margin:0 0 0 auto;">
-  <tr style="position:relative;top:-4px;">
-    <td style="
-          white-space:nowrap;
-          mso-line-height-rule:exactly;
-          word-break:keep-all;
-          -ms-word-break:keep-all;
-          -webkit-hyphens:none;
-          hyphens:none;
-        ">
-      <a href="${escapeAttr(viewAllUrl)}"
-         style="
-           display:inline-block;
-           white-space:nowrap;
-           word-break:keep-all;
-           -ms-word-break:keep-all;
-           -webkit-hyphens:none;
-           hyphens:none;
-           font-family:'JetBrains Mono',monospace;
-           font-size:14px;
-           text-decoration:none;
-           line-height:1;
-         ">
-        <span style="white-space:nowrap;">
-          → <span style="text-decoration:underline;">${viewAllText}</span>
-        </span>
-      </a>
-    </td>
-  </tr>
-</table>`
+    ? `<a href="${escapeAttr(viewAllUrl)}"
+         style="display:inline-block;white-space:nowrap;word-break:keep-all;-ms-word-break:keep-all;-webkit-hyphens:none;hyphens:none;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;line-height:1;mso-line-height-rule:exactly;">
+         <span style="white-space:nowrap;">→ <span style="text-decoration:underline;">${viewAllText}</span></span>
+       </a>`
     : "";
 
   return `<!-- Kategorie -->
@@ -529,12 +511,14 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
            width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td style="padding-bottom:1rem;">
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
+          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
             <tr>
-              <td style="font-family:'JetBrains Mono',monospace;">
+              <td width="100%" style="width:100%;font-family:'JetBrains Mono',monospace;">
                 <h2 style="margin:0;font-size:20px;font-weight:700;color:#212121;">${content.title || "Vyber si to pravé pro tebe"}</h2>
               </td>
-              <td align="right">${viewAllHTML}</td>
+              <td width="1%" align="right" style="width:1%;text-align:right;white-space:nowrap;">
+                ${viewAllHTML}
+              </td>
             </tr>
           </table>
         </td>
@@ -622,9 +606,9 @@ function generateMistaHTML(block: NewsletterBlock): string {
         <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
           <tr>
             <td valign="middle" style="width:36px;">
-              <a href="${escapeAttr(place.buttonUrl || "#")}"
-                 style="display:inline-block;width:36px;height:36px;border:1px solid #00C322;border-radius:50%;text-align:center;line-height:36px;text-decoration:none;">
-                ${ARROW_ICON_SVG("#00C322")}
+              <a href="${escapeAttr(place.buttonUrl || "#") }"
+                 style="display:inline-block;width:36px;height:36px;border:1px solid #00C322;border-radius:50%;line-height:36px;text-align:center;text-decoration:none;">
+                ${ARROW_ICON_CIRCLE("#00C322")}
               </a>
             </td>
             <td valign="middle" style="text-align:left;padding-left:16px;">
@@ -677,38 +661,10 @@ function generateMistaHTML(block: NewsletterBlock): string {
   };
 
   const viewAllHTML = showViewAll
-    ? `
-<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="right" style="margin:0 0 0 auto;">
-  <tr>
-    <td nowrap
-        style="
-          white-space:nowrap;
-          mso-line-height-rule:exactly;
-          word-break:keep-all;
-          -ms-word-break:keep-all;
-          -webkit-hyphens:none;
-          hyphens:none;
-        ">
-      <a href="${escapeAttr(viewAllUrl)}"
-         style="
-           display:inline-block;
-           white-space:nowrap;
-           word-break:keep-all;
-           -ms-word-break:keep-all;
-           -webkit-hyphens:none;
-           hyphens:none;
-           font-family:'JetBrains Mono',monospace;
-           font-size:14px;
-           text-decoration:none;
-           line-height:1;
-         ">
-        <span style="white-space:nowrap;">
-          → <span style="text-decoration:underline;">${viewAllText}</span>
-        </span>
-      </a>
-    </td>
-  </tr>
-</table>`
+    ? `<a href="${escapeAttr(viewAllUrl)}"
+         style="display:inline-block;white-space:nowrap;word-break:keep-all;-ms-word-break:keep-all;-webkit-hyphens:none;hyphens:none;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;line-height:1;mso-line-height-rule:exactly;">
+         <span style="white-space:nowrap;">→ <span style="text-decoration:underline;">${viewAllText}</span></span>
+       </a>`
     : "";
 
   const mobileBlocks = items
@@ -735,9 +691,9 @@ function generateMistaHTML(block: NewsletterBlock): string {
                   <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
                     <tr>
                       <td valign="middle" style="width:36px;">
-                        <a href="${escapeAttr(place.buttonUrl || "#")}"
-                           style="display:inline-block;width:36px;height:36px;border:1px solid #00C322;border-radius:50%;text-align:center;line-height:36px;text-decoration:none;">
-                          ${ARROW_ICON_SVG("#00C322")}
+                        <a href="${escapeAttr(place.buttonUrl || "#") }"
+                           style="display:inline-block;width:36px;height:36px;border:1px solid #00C322;border-radius:50%;line-height:36px;text-align:center;text-decoration:none;">
+                          ${ARROW_ICON_CIRCLE("#00C322")}
                         </a>
                       </td>
                       <td valign="middle" style="text-align:left;padding-left:16px;">
@@ -776,12 +732,14 @@ function generateMistaHTML(block: NewsletterBlock): string {
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td style="padding:0px;">
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
             <tr>
-              <td style="font-family:'JetBrains Mono',monospace;">
+              <td width="100%" style="width:100%;font-family:'JetBrains Mono',monospace;">
                 <h2 style="margin:0;font-size:20px;font-weight:700;color:#212121;">${content.title || "Kde nás ochutnáte?"}</h2>
               </td>
-              <td align="right">${viewAllHTML}</td>
+              <td width="1%" align="right" style="width:1%;text-align:right;white-space:nowrap;">
+                ${viewAllHTML}
+              </td>
             </tr>
           </table>
 
@@ -894,38 +852,10 @@ function generateLocationsHTML(block: NewsletterBlock): string {
   const row2 = items.slice(COLS, COLS * 2);
 
   const viewAllHTML = showViewAll
-    ? `
-<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="right">
-  <tr>
-    <td nowrap
-        style="
-          white-space:nowrap;
-          mso-line-height-rule:exactly;
-          word-break:keep-all;
-          -ms-word-break:keep-all;
-          -webkit-hyphens:none;
-          hyphens:none;
-        ">
-      <a href="${escapeAttr(viewAllUrl)}"
-         style="
-           display:inline-block;
-           white-space:nowrap;
-           word-break:keep-all;
-           -ms-word-break:keep-all;
-           -webkit-hyphens:none;
-           hyphens:none;
-           font-family:'JetBrains Mono',monospace;
-           font-size:14px;
-           text-decoration:none;
-           line-height:1;
-         ">
-        <span style="white-space:nowrap;">
-          → <span style="text-decoration:underline;">${viewAllText}</span>
-        </span>
-      </a>
-    </td>
-  </tr>
-</table>`
+    ? `<a href="${escapeAttr(viewAllUrl)}"
+         style="display:inline-block;white-space:nowrap;word-break:keep-all;-ms-word-break:keep-all;-webkit-hyphens:none;hyphens:none;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;line-height:1;mso-line-height-rule:exactly;">
+         <span style="white-space:nowrap;">→ <span style="text-decoration:underline;">${viewAllText}</span></span>
+       </a>`
     : "";
 
   // Mobile: 1 column, one card per row, with 12px vertical gaps
@@ -957,9 +887,9 @@ function generateLocationsHTML(block: NewsletterBlock): string {
                   <p style="margin:0 0 12px 0;font-size:12px;">${loc.weekendHours || ""}</p>
 
                   <div style="margin-top:12px;">
-                    <a href="${escapeAttr(loc.primaryButtonUrl || "#")}"
+                    <a href="${escapeAttr(loc.primaryButtonUrl || "#") }"
                        style="display:inline-block;width:36px;height:36px;border:1px solid #00C322;border-radius:50%;line-height:36px;text-align:center;text-decoration:none;">
-                      ${ARROW_ICON_SVG("#00C322")}
+                      ${ARROW_ICON_CIRCLE("#00C322")}
                     </a>
                   </div>
                 </td>
@@ -978,10 +908,10 @@ function generateLocationsHTML(block: NewsletterBlock): string {
     <table role="presentation" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td>
-          <table width="100%" role="presentation" cellspacing="0" cellpadding="0">
+          <table width="100%" role="presentation" cellspacing="0" cellpadding="0" style="width:100%;table-layout:fixed;">
             <tr>
-              <td><h2 style="margin:0;">${content.title || "Lokace"}</h2></td>
-              <td align="right">${viewAllHTML}</td>
+              <td width="100%" style="width:100%;"><h2 style="margin:0;">${content.title || "Lokace"}</h2></td>
+              <td width="1%" align="right" style="width:1%;text-align:right;white-space:nowrap;">${viewAllHTML}</td>
             </tr>
           </table>
 
@@ -1091,38 +1021,10 @@ function generateBlogPostsHTML(block: NewsletterBlock): string {
   };
 
   const viewAllHTML = showViewAll
-    ? `
-<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="right">
-  <tr>
-    <td nowrap
-        style="
-          white-space:nowrap;
-          mso-line-height-rule:exactly;
-          word-break:keep-all;
-          -ms-word-break:keep-all;
-          -webkit-hyphens:none;
-          hyphens:none;
-        ">
-      <a href="${escapeAttr(viewAllUrl)}"
-         style="
-           display:inline-block;
-           white-space:nowrap;
-           word-break:keep-all;
-           -ms-word-break:keep-all;
-           -webkit-hyphens:none;
-           hyphens:none;
-           font-family:'JetBrains Mono',monospace;
-           font-size:14px;
-           text-decoration:none;
-           line-height:1;
-         ">
-        <span style="white-space:nowrap;">
-          → <span style="text-decoration:underline;">${viewAllText}</span>
-        </span>
-      </a>
-    </td>
-  </tr>
-</table>`
+    ? `<a href="${escapeAttr(viewAllUrl)}"
+         style="display:inline-block;white-space:nowrap;word-break:keep-all;-ms-word-break:keep-all;-webkit-hyphens:none;hyphens:none;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;line-height:1;mso-line-height-rule:exactly;">
+         <span style="white-space:nowrap;">→ <span style="text-decoration:underline;">${viewAllText}</span></span>
+       </a>`
     : "";
 
   return `<!-- Blog posty -->
@@ -1131,12 +1033,12 @@ function generateBlogPostsHTML(block: NewsletterBlock): string {
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td style="padding-bottom:1rem;">
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
+          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
             <tr>
-              <td style="font-family:'JetBrains Mono',monospace;">
+              <td width="100%" style="width:100%;font-family:'JetBrains Mono',monospace;">
                 <h2 style="margin:0;font-size:20px;font-weight:700;color:#212121;">${content.title || "Novinky od ZICHOVCE"}</h2>
               </td>
-              <td align="right">${viewAllHTML}</td>
+              <td width="1%" align="right" style="width:1%;text-align:right;white-space:nowrap;">${viewAllHTML}</td>
             </tr>
           </table>
         </td>
@@ -1731,8 +1633,8 @@ function generatePoziceHTML(block: NewsletterBlock): string {
           <td style="padding:16px;font-family:'JetBrains Mono',monospace;">
             <h4 style="margin:0 0 12px 0;font-size:16px;font-weight:700;color:${textColor};">${p.title}</h4>
             <p style="margin:0 0 1rem 0;font-size:12px;color:${textColor};">${p.description}</p>
-            <a href="${p.buttonUrl || "#"}" style="display:inline-block;padding:12px 24px;border:1px solid ${borderColor};color:${textColor};font-size:12px;text-decoration:none;line-height:1;">
-              <span style="display:inline-block;vertical-align:middle;line-height:1;">${ARROW_ICON_SVG(borderColor)}</span>
+            <a href="${p.buttonUrl || "#"}" style="display:inline-block;padding:12px 24px;border:1px solid ${borderColor};color:${textColor};font-size:12px;text-decoration:none;line-height:1;mso-line-height-rule:exactly;white-space:nowrap;width:auto;">
+              ${ARROW_ICON_SVG(borderColor)}
               <span style="display:inline-block;vertical-align:middle;margin-left:8px;line-height:1;">${p.buttonText}</span>
             </a>
           </td>
@@ -1763,38 +1665,10 @@ function generatePoziceHTML(block: NewsletterBlock): string {
   };
 
   const viewAllHTML = showViewAll
-    ? `
-<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="right">
-  <tr>
-    <td nowrap
-        style="
-          white-space:nowrap;
-          mso-line-height-rule:exactly;
-          word-break:keep-all;
-          -ms-word-break:keep-all;
-          -webkit-hyphens:none;
-          hyphens:none;
-        ">
-      <a href="${escapeAttr(viewAllUrl)}"
-         style="
-           display:inline-block;
-           white-space:nowrap;
-           word-break:keep-all;
-           -ms-word-break:keep-all;
-           -webkit-hyphens:none;
-           hyphens:none;
-           font-family:'JetBrains Mono',monospace;
-           font-size:14px;
-           text-decoration:none;
-           line-height:1;
-         ">
-        <span style="white-space:nowrap;">
-          → <span style="text-decoration:underline;">${viewAllText}</span>
-        </span>
-      </a>
-    </td>
-  </tr>
-</table>`
+    ? `<a href="${escapeAttr(viewAllUrl)}"
+         style="display:inline-block;white-space:nowrap;word-break:keep-all;-ms-word-break:keep-all;-webkit-hyphens:none;hyphens:none;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;line-height:1;mso-line-height-rule:exactly;">
+         <span style="white-space:nowrap;">→ <span style="text-decoration:underline;">${viewAllText}</span></span>
+       </a>`
     : "";
 
   return `<!-- Pozice -->
@@ -1803,12 +1677,12 @@ function generatePoziceHTML(block: NewsletterBlock): string {
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td style="padding-bottom:1rem;">
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
+          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
             <tr>
-              <td style="font-family:'JetBrains Mono',monospace;">
+              <td width="100%" style="width:100%;font-family:'JetBrains Mono',monospace;">
                 <h2 style="margin:0;font-size:20px;font-weight:700;color:#212121;">${content.title || "Volné pozice"}</h2>
               </td>
-              <td align="right">${viewAllHTML}</td>
+              <td width="1%" align="right" style="width:1%;text-align:right;white-space:nowrap;">${viewAllHTML}</td>
             </tr>
           </table>
         </td>
