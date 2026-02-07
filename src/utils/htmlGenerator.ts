@@ -13,32 +13,8 @@ const escapeAttr = (v: any) =>
 const ICON_INLINE = (glyph: string, color: string, sizePx: number = 14) =>
   `<span style="display:inline-block;color:${color};font-size:${sizePx}px;font-weight:700;line-height:1;height:${sizePx}px;vertical-align:middle;text-decoration:none;mso-line-height-rule:exactly;">${glyph}</span>`;
 
-const ICON_CIRCLE = (glyph: string, color: string) => `
-<table role="presentation" width="36" height="36" cellspacing="0" cellpadding="0"
-       style="width:36px;height:36px;border-collapse:collapse;">
-  <tr>
-    <td
-      width="36"
-      height="36"
-      align="center"
-      valign="middle"
-      style="
-        width:36px;
-        height:36px;
-        font-size:16px;
-        font-weight:700;
-        line-height:1;
-        color:${color};
-        mso-line-height-rule:exactly;
-        -webkit-text-size-adjust:100%;
-        text-size-adjust:100%;
-      "
-    >
-      ${glyph}
-    </td>
-  </tr>
-</table>
-`;
+const ICON_CIRCLE = (glyph: string, color: string, boxPx: number = 36, sizePx: number = 16) =>
+  `<span style="display:block;width:${boxPx}px;height:${boxPx}px;line-height:${boxPx}px;text-align:center;color:${color};font-size:${sizePx}px;font-weight:700;text-decoration:none;mso-line-height-rule:exactly;position:relative;top:2px;">${glyph}</span>`;
 
 // Keep existing names for inline usage
 const ARROW_ICON_SVG = (color: string = "#00C322") => ICON_INLINE("→", color, 14);
@@ -278,9 +254,9 @@ function generateProductListHTML(block: NewsletterBlock): string {
           </tr>
         </table>
 
-        <table width="100%" cellspacing="0" cellpadding="0" style="margin-top:16px;">
+        <table width="100%" cellspacing="0" cellpadding="0">
           <tr>
-            <td valign="top" style="font-weight:700;line-height:1.2;">
+            <td style="font-weight:700;">
               ${
                 p.salePrice
                   ? `
@@ -292,24 +268,9 @@ function generateProductListHTML(block: NewsletterBlock): string {
                   : `${p.price || ""}`
               }
             </td>
-        
-            <td valign="top" align="right" style="width:36px;">
-              <a
-                href="${escapeAttr(p.url || "#")}"
-                style="
-                  display:block;
-                  width:36px;
-                  height:36px;
-                  background:#00C322;
-                  border-radius:50%;
-                  text-align:center;
-                  line-height:36px;
-                  text-decoration:none;
-                  padding:0;
-                  margin:0;
-                  font-size:0;
-                "
-              >
+            <td align="right" style="text-align:right;">
+              <a href="${escapeAttr(p.url || "#")}"
+                 style="display:inline-block;width:36px;height:36px;background:#00C322;border-radius:50%;line-height:36px;text-align:center;white-space:nowrap;text-decoration:none;">
                 ${PLUS_ICON_CIRCLE("#000")}
               </a>
             </td>
@@ -385,9 +346,9 @@ function generateProductListHTML(block: NewsletterBlock): string {
                     </tr>
                   </table>
 
-                  <table width="100%" cellspacing="0" cellpadding="0" style="margin-top:16px;">
+                  <table width="100%" cellspacing="0" cellpadding="0">
                     <tr>
-                      <td style="font-weight:700;line-height:1.2;">
+                      <td style="font-weight:700;">
                         ${
                           p.salePrice
                             ? `
@@ -400,28 +361,10 @@ function generateProductListHTML(block: NewsletterBlock): string {
                         }
                       </td>
                     </tr>
-                  </table>
-                  
-                  <!-- BUTTON -->
-                  <table width="100%" cellspacing="0" cellpadding="0" style="margin-top:8px;">
                     <tr>
-                      <td align="left">
-                        <a
-                          href="${escapeAttr(p.url || "#")}"
-                          style="
-                            display:block;
-                            width:36px;
-                            height:36px;
-                            background:#00C322;
-                            border-radius:50%;
-                            text-align:center;
-                            line-height:36px;
-                            text-decoration:none;
-                            padding:0;
-                            margin:0;
-                            font-size:0;
-                          "
-                        >
+                      <td style="padding-top:8px;">
+                        <a href="${escapeAttr(p.url || "#")}"
+                           style="display:inline-block;width:36px;height:36px;background:#00C322;border-radius:50%;line-height:36px;text-align:center;white-space:nowrap;text-decoration:none;">
                           ${PLUS_ICON_CIRCLE("#000")}
                         </a>
                       </td>
