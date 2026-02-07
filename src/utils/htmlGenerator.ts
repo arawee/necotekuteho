@@ -14,7 +14,7 @@ const ICON_INLINE = (glyph: string, color: string, sizePx: number = 14) =>
   `<span style="display:inline-block;color:${color};font-size:${sizePx}px;font-weight:700;line-height:1;height:${sizePx}px;vertical-align:middle;text-decoration:none;mso-line-height-rule:exactly;">${glyph}</span>`;
 
 const ICON_CIRCLE = (glyph: string, color: string, boxPx: number = 36, sizePx: number = 16) =>
-  `<span style="display:block;width:${boxPx}px;height:${boxPx}px;line-height:${boxPx}px;text-align:center;color:${color};font-size:${sizePx}px;font-weight:700;text-decoration:none;mso-line-height-rule:exactly;position:relative;top:1px;">${glyph}</span>`;
+  `<span style="display:block;width:${boxPx}px;height:${boxPx}px;line-height:${boxPx}px;text-align:center;color:${color};font-size:${sizePx}px;font-weight:700;text-decoration:none;mso-line-height-rule:exactly;position:relative;top:2px;">${glyph}</span>`;
 
 // Keep existing names for inline usage
 const ARROW_ICON_SVG = (color: string = "#00C322") => ICON_INLINE("→", color, 14);
@@ -361,7 +361,9 @@ function generateProductListHTML(block: NewsletterBlock): string {
                             : `${p.price || ""}`
                         }
                       </td>
-                      <td align="right" style="text-align:right;">
+                    </tr>
+                    <tr>
+                      <td style="padding-top:8px;">
                         <a href="${escapeAttr(p.url || "#") }"
                            style="display:inline-block;width:36px;height:36px;background:#00C322;border-radius:50%;line-height:36px;text-align:center;white-space:nowrap;text-decoration:none;">
                           ${PLUS_ICON_CIRCLE("#000")}
@@ -498,8 +500,7 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
   for (let i = 0; i < items.length; i += 2) mobileRows.push(items.slice(i, i + 2));
 
   const viewAllHTML = showViewAll
-    ? `<a href="${escapeAttr(viewAllUrl)}"
-         style="display:block;white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;line-height:1;mso-line-height-rule:exactly;">→ <span style="text-decoration:underline;">${viewAllText}</span></a>`
+    ? `<a href="${escapeAttr(viewAllUrl)}" style="display:inline-block;font-size:14px;text-decoration:none;white-space:nowrap;mso-line-height-rule:exactly;"><span style="text-decoration:none;">→ </span><span style="text-decoration:underline;">${viewAllText}</span></a>`
     : "";
 
   return `<!-- Kategorie -->
@@ -509,7 +510,7 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
            width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td style="padding-bottom:1rem;">
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
+          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
             <tr>
               <td width="100%" style="width:100%;font-family:'JetBrains Mono',monospace;">
                 <h2 style="margin:0;font-size:20px;font-weight:700;color:#212121;">${content.title || "Vyber si to pravé pro tebe"}</h2>
@@ -659,8 +660,7 @@ function generateMistaHTML(block: NewsletterBlock): string {
   };
 
   const viewAllHTML = showViewAll
-    ? `<a href="${escapeAttr(viewAllUrl)}"
-         style="display:block;white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;line-height:1;mso-line-height-rule:exactly;">→ <span style="text-decoration:underline;">${viewAllText}</span></a>`
+    ? `<a href="${escapeAttr(viewAllUrl)}" style="display:inline-block;font-size:14px;text-decoration:none;white-space:nowrap;mso-line-height-rule:exactly;"><span style="text-decoration:none;">→ </span><span style="text-decoration:underline;">${viewAllText}</span></a>`
     : "";
 
   const mobileBlocks = items
@@ -728,7 +728,7 @@ function generateMistaHTML(block: NewsletterBlock): string {
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td style="padding:0px;">
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
+          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
             <tr>
               <td width="100%" style="width:100%;font-family:'JetBrains Mono',monospace;">
                 <h2 style="margin:0;font-size:20px;font-weight:700;color:#212121;">${content.title || "Kde nás ochutnáte?"}</h2>
@@ -848,8 +848,7 @@ function generateLocationsHTML(block: NewsletterBlock): string {
   const row2 = items.slice(COLS, COLS * 2);
 
   const viewAllHTML = showViewAll
-    ? `<a href="${escapeAttr(viewAllUrl)}"
-         style="display:block;white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;line-height:1;mso-line-height-rule:exactly;">→ <span style="text-decoration:underline;">${viewAllText}</span></a>`
+    ? `<a href="${escapeAttr(viewAllUrl)}" style="display:inline-block;font-size:14px;text-decoration:none;white-space:nowrap;mso-line-height-rule:exactly;"><span style="text-decoration:none;">→ </span><span style="text-decoration:underline;">${viewAllText}</span></a>`
     : "";
 
   // Mobile: 1 column, one card per row, with 12px vertical gaps
@@ -902,7 +901,7 @@ function generateLocationsHTML(block: NewsletterBlock): string {
     <table role="presentation" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td>
-          <table width="100%" role="presentation" cellspacing="0" cellpadding="0" style="width:100%;table-layout:fixed;">
+          <table width="100%" role="presentation" cellspacing="0" cellpadding="0" style="width:100%;">
             <tr>
               <td width="100%" style="width:100%;"><h2 style="margin:0;">${content.title || "Lokace"}</h2></td>
               <td width="1%" align="right" style="width:1%;text-align:right;white-space:nowrap;">${viewAllHTML}</td>
@@ -982,9 +981,9 @@ function generateBlogPostsHTML(block: NewsletterBlock): string {
       <td style="background-color:#F4F4F4;padding:12px;font-family:'JetBrains Mono',monospace;">
         <h3 style="margin:0 0 8px 0;font-size:20px;font-weight:700;color:#212121;">${post.title}</h3>
         <p style="margin:0 0 12px 0;font-size:12px;color:#212121;">${post.excerpt}</p>
-        <div style="text-align:right;">
+        <div style="text-align:left;">
           <a href="${post.url || "#"}" style="display:inline-block;width:36px;height:36px;border:1px solid #00C322;border-radius:50%;text-align:center;line-height:36px;text-decoration:none;">
-            ${ARROW_ICON_SVG("#00C322")}
+            ${ARROW_ICON_CIRCLE("#00C322")}
           </a>
         </div>
       </td>
@@ -1015,8 +1014,7 @@ function generateBlogPostsHTML(block: NewsletterBlock): string {
   };
 
   const viewAllHTML = showViewAll
-    ? `<a href="${escapeAttr(viewAllUrl)}"
-         style="display:block;white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;line-height:1;mso-line-height-rule:exactly;">→ <span style="text-decoration:underline;">${viewAllText}</span></a>`
+    ? `<a href="${escapeAttr(viewAllUrl)}" style="display:inline-block;font-size:14px;text-decoration:none;white-space:nowrap;mso-line-height-rule:exactly;"><span style="text-decoration:none;">→ </span><span style="text-decoration:underline;">${viewAllText}</span></a>`
     : "";
 
   return `<!-- Blog posty -->
@@ -1025,7 +1023,7 @@ function generateBlogPostsHTML(block: NewsletterBlock): string {
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td style="padding-bottom:1rem;">
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
+          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
             <tr>
               <td width="100%" style="width:100%;font-family:'JetBrains Mono',monospace;">
                 <h2 style="margin:0;font-size:20px;font-weight:700;color:#212121;">${content.title || "Novinky od ZICHOVCE"}</h2>
@@ -1657,8 +1655,7 @@ function generatePoziceHTML(block: NewsletterBlock): string {
   };
 
   const viewAllHTML = showViewAll
-    ? `<a href="${escapeAttr(viewAllUrl)}"
-         style="display:block;white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:14px;text-decoration:none;line-height:1;mso-line-height-rule:exactly;">→ <span style="text-decoration:underline;">${viewAllText}</span></a>`
+    ? `<a href="${escapeAttr(viewAllUrl)}" style="display:inline-block;font-size:14px;text-decoration:none;white-space:nowrap;mso-line-height-rule:exactly;"><span style="text-decoration:none;">→ </span><span style="text-decoration:underline;">${viewAllText}</span></a>`
     : "";
 
   return `<!-- Pozice -->
@@ -1667,7 +1664,7 @@ function generatePoziceHTML(block: NewsletterBlock): string {
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap" style="max-width:600px;width:100%;">
       <tr>
         <td style="padding-bottom:1rem;">
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
+          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
             <tr>
               <td width="100%" style="width:100%;font-family:'JetBrains Mono',monospace;">
                 <h2 style="margin:0;font-size:20px;font-weight:700;color:#212121;">${content.title || "Volné pozice"}</h2>
