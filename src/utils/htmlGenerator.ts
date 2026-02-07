@@ -13,8 +13,32 @@ const escapeAttr = (v: any) =>
 const ICON_INLINE = (glyph: string, color: string, sizePx: number = 14) =>
   `<span style="display:inline-block;color:${color};font-size:${sizePx}px;font-weight:700;line-height:1;height:${sizePx}px;vertical-align:middle;text-decoration:none;mso-line-height-rule:exactly;">${glyph}</span>`;
 
-const ICON_CIRCLE = (glyph: string, color: string, boxPx: number = 36, sizePx: number = 16) =>
-  `<span style="display:block;width:${boxPx}px;height:${boxPx}px;line-height:${boxPx}px;text-align:center;color:${color};font-size:${sizePx}px;font-weight:700;text-decoration:none;mso-line-height-rule:exactly;position:relative;top:4px;">${glyph}</span>`;
+const ICON_CIRCLE = (glyph: string, color: string) => `
+<table role="presentation" width="36" height="36" cellspacing="0" cellpadding="0"
+       style="width:36px;height:36px;border-collapse:collapse;">
+  <tr>
+    <td
+      width="36"
+      height="36"
+      align="center"
+      valign="middle"
+      style="
+        width:36px;
+        height:36px;
+        font-size:16px;
+        font-weight:700;
+        line-height:1;
+        color:${color};
+        mso-line-height-rule:exactly;
+        -webkit-text-size-adjust:100%;
+        text-size-adjust:100%;
+      "
+    >
+      ${glyph}
+    </td>
+  </tr>
+</table>
+`;
 
 // Keep existing names for inline usage
 const ARROW_ICON_SVG = (color: string = "#00C322") => ICON_INLINE("→", color, 14);
@@ -24,10 +48,9 @@ const PLUS_ICON_SVG = (color: string = "#000000") => ICON_INLINE("+", color, 14)
 const ARROW_ICON_CIRCLE = (color: string = "#00C322") => ICON_CIRCLE("→", color, 36, 16);
 const PLUS_ICON_CIRCLE = (color: string = "#000000") => ICON_CIRCLE("+", color, 36, 16);
 
-
-
 // The Zichovec logo - hosted PNG with transparent background for email client compatibility
-const ZICHOVEC_LOGO_URL = "https://yzbjnjhrrvqcdwfdoksa.supabase.co/storage/v1/object/public/newsletter-images/images/zichovec-logo-transparent.png";
+const ZICHOVEC_LOGO_URL =
+  "https://yzbjnjhrrvqcdwfdoksa.supabase.co/storage/v1/object/public/newsletter-images/images/zichovec-logo-transparent.png";
 const ZICHOVEC_LOGO_HTML = `<img src="${ZICHOVEC_LOGO_URL}" alt="ZICHOVEC" width="400" style="display:block;width:400px;max-width:100%;height:auto;margin:0 auto;border:0;outline:none;" />`;
 
 // Helper function to determine if a color is dark
@@ -255,9 +278,9 @@ function generateProductListHTML(block: NewsletterBlock): string {
           </tr>
         </table>
 
-        <table width="100%" cellspacing="0" cellpadding="0">
+        <table width="100%" cellspacing="0" cellpadding="0" style="margin-top:16px;">
           <tr>
-            <td style="font-weight:700;">
+            <td valign="top" style="font-weight:700;line-height:1.2;">
               ${
                 p.salePrice
                   ? `
@@ -269,9 +292,24 @@ function generateProductListHTML(block: NewsletterBlock): string {
                   : `${p.price || ""}`
               }
             </td>
-            <td align="right" style="text-align:right;">
-              <a href="${escapeAttr(p.url || "#") }"
-                 style="display:inline-block;width:36px;height:36px;background:#00C322;border-radius:50%;line-height:36px;text-align:center;white-space:nowrap;text-decoration:none;">
+        
+            <td valign="top" align="right" style="width:36px;">
+              <a
+                href="${escapeAttr(p.url || "#")}"
+                style="
+                  display:block;
+                  width:36px;
+                  height:36px;
+                  background:#00C322;
+                  border-radius:50%;
+                  text-align:center;
+                  line-height:36px;
+                  text-decoration:none;
+                  padding:0;
+                  margin:0;
+                  font-size:0;
+                "
+              >
                 ${PLUS_ICON_CIRCLE("#000")}
               </a>
             </td>
@@ -347,9 +385,9 @@ function generateProductListHTML(block: NewsletterBlock): string {
                     </tr>
                   </table>
 
-                  <table width="100%" cellspacing="0" cellpadding="0">
+                  <table width="100%" cellspacing="0" cellpadding="0" style="margin-top:16px;">
                     <tr>
-                      <td style="font-weight:700;">
+                      <td style="font-weight:700;line-height:1.2;">
                         ${
                           p.salePrice
                             ? `
@@ -362,10 +400,28 @@ function generateProductListHTML(block: NewsletterBlock): string {
                         }
                       </td>
                     </tr>
+                  </table>
+                  
+                  <!-- BUTTON -->
+                  <table width="100%" cellspacing="0" cellpadding="0" style="margin-top:8px;">
                     <tr>
-                      <td style="padding-top:2rem;">
-                        <a href="${escapeAttr(p.url || "#") }"
-                           style="display:inline-block;width:36px;height:36px;background:#00C322;border-radius:50%;line-height:36px;text-align:center;white-space:nowrap;text-decoration:none;">
+                      <td align="left">
+                        <a
+                          href="${escapeAttr(p.url || "#")}"
+                          style="
+                            display:block;
+                            width:36px;
+                            height:36px;
+                            background:#00C322;
+                            border-radius:50%;
+                            text-align:center;
+                            line-height:36px;
+                            text-decoration:none;
+                            padding:0;
+                            margin:0;
+                            font-size:0;
+                          "
+                        >
                           ${PLUS_ICON_CIRCLE("#000")}
                         </a>
                       </td>
@@ -605,7 +661,7 @@ function generateMistaHTML(block: NewsletterBlock): string {
         <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
           <tr>
             <td valign="middle" style="width:36px;">
-              <a href="${escapeAttr(place.buttonUrl || "#") }"
+              <a href="${escapeAttr(place.buttonUrl || "#")}"
                  style="display:inline-block;width:36px;height:36px;border:1px solid #00C322;border-radius:50%;line-height:36px;text-align:center;text-decoration:none;">
                 ${ARROW_ICON_CIRCLE("#00C322")}
               </a>
@@ -687,7 +743,7 @@ function generateMistaHTML(block: NewsletterBlock): string {
                   <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
                     <tr>
                       <td valign="middle" style="width:36px;">
-                        <a href="${escapeAttr(place.buttonUrl || "#") }"
+                        <a href="${escapeAttr(place.buttonUrl || "#")}"
                            style="display:inline-block;width:36px;height:36px;border:1px solid #00C322;border-radius:50%;line-height:36px;text-align:center;text-decoration:none;">
                           ${ARROW_ICON_CIRCLE("#00C322")}
                         </a>
@@ -815,7 +871,7 @@ function generateLocationsHTML(block: NewsletterBlock): string {
         <div style="margin-top:12px;">
           <a href="${escapeAttr(loc.primaryButtonUrl || "#")}"
              style="display:inline-block;width:36px;height:36px;border:1px solid #00C322;border-radius:50%;line-height:36px;text-align:center;text-decoration:none;">
-            ${ARROW_ICON_CIRCLE("#00C322")}
+            ${ARROW_ICON_SVG("#00C322")}
           </a>
         </div>
       </td>
@@ -879,8 +935,8 @@ function generateLocationsHTML(block: NewsletterBlock): string {
                   <p style="margin:0 0 4px 0;font-size:12px;">${loc.hours || ""}</p>
                   <p style="margin:0 0 12px 0;font-size:12px;">${loc.weekendHours || ""}</p>
 
-                  <div style="margin-top:12px;text-align:left;">
-                    <a href="${escapeAttr(loc.primaryButtonUrl || "#") }"
+                  <div style="margin-top:12px;">
+                    <a href="${escapeAttr(loc.primaryButtonUrl || "#")}"
                        style="display:inline-block;width:36px;height:36px;border:1px solid #00C322;border-radius:50%;line-height:36px;text-align:center;text-decoration:none;">
                       ${ARROW_ICON_CIRCLE("#00C322")}
                     </a>
@@ -1062,15 +1118,13 @@ function generatePromoBoxHTML(block: NewsletterBlock): string {
   const rawBoxes = Array.isArray((content as any).boxes) ? (content as any).boxes : [];
 
   // Keep all valid boxes - just filter out null/undefined
-  const cleanBoxes = rawBoxes
-    .filter(Boolean)
-    .map((b: any) => ({
-      title: String(b?.title ?? "Nový box"),
-      features: Array.isArray(b?.features) ? b.features : [],
-      buttonText: String(b?.buttonText ?? "→ akce"),
-      buttonUrl: String(b?.buttonUrl ?? "#"),
-      bgColor: String(b?.bgColor ?? "#00C322"),
-    }));
+  const cleanBoxes = rawBoxes.filter(Boolean).map((b: any) => ({
+    title: String(b?.title ?? "Nový box"),
+    features: Array.isArray(b?.features) ? b.features : [],
+    buttonText: String(b?.buttonText ?? "→ akce"),
+    buttonUrl: String(b?.buttonUrl ?? "#"),
+    bgColor: String(b?.bgColor ?? "#00C322"),
+  }));
 
   // If no boxes at all, use default
   const boxes = cleanBoxes.length ? cleanBoxes : [defaultBox];
@@ -1460,7 +1514,7 @@ function generateZichovecFooterHTML(block: NewsletterBlock): string {
                     <td valign="top" width="25%" class="stack"
                         style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#212121;vertical-align:top;">
                       <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
-                        <tr><td style="padding:0 0 4px 0;"><a href="tel:${escapeAttr(phoneNumber.replace(/\s/g, ''))}" style="color:#212121;font-weight:700;text-decoration:underline;font-size:12px;">${phoneNumber}</a></td></tr>
+                        <tr><td style="padding:0 0 4px 0;"><a href="tel:${escapeAttr(phoneNumber.replace(/\s/g, ""))}" style="color:#212121;font-weight:700;text-decoration:underline;font-size:12px;">${phoneNumber}</a></td></tr>
                         <tr><td style="padding:0 0 24px 0;"><a href="mailto:${escapeAttr(email)}" style="color:#212121;font-weight:700;text-decoration:underline;font-size:12px;">Email</a></td></tr>
                         ${socials
                           .map(
