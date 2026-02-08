@@ -14,7 +14,7 @@ const ICON_INLINE = (glyph: string, color: string, sizePx: number = 14) =>
   `<span style="display:inline-block;color:${color};font-size:${sizePx}px;font-weight:700;line-height:1;height:${sizePx}px;vertical-align:middle;text-decoration:none;mso-line-height-rule:exactly;">${glyph}</span>`;
 
 const ICON_CIRCLE = (glyph: string, color: string, boxPx: number = 36, sizePx: number = 16) =>
-  `<span style="display:block;width:${boxPx}px;height:${boxPx}px;padding-top:4px;line-height:${boxPx - 4}px;box-sizing:border-box;text-align:center;color:${color};font-size:${sizePx}px;font-weight:700;text-decoration:none;mso-line-height-rule:exactly;">${glyph}</span>`;
+  `<span class="icon-glyph" style="display:block;width:${boxPx}px;height:${boxPx}px;line-height:${boxPx}px;box-sizing:border-box;text-align:center;color:${color};font-size:${sizePx}px;font-weight:700;text-decoration:none;mso-line-height-rule:exactly;">${glyph}</span>`;
 
 // Keep existing names for inline usage
 const ARROW_ICON_SVG = (color: string = "#00C322") => ICON_INLINE("→", color, 14);
@@ -254,7 +254,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
           </tr>
         </table>
 
-        <table width="100%" cellspacing="0" cellpadding="0" style="padding-top:1rem;">
+        <table width="100%" cellspacing="0" cellpadding="0">
           <tr>
             <td style="font-weight:700;">
               ${
@@ -268,9 +268,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
                   : `${p.price || ""}`
               }
             </td>
-          </tr>
-          <tr>
-            <td style="padding-top:2rem;">
+            <td align="right" style="text-align:right;">
               <a href="${escapeAttr(p.url || "#")}"
                  style="display:inline-block;width:36px;height:36px;background:#00C322;border-radius:50%;line-height:36px;text-align:center;white-space:nowrap;text-decoration:none;">
                 ${PLUS_ICON_CIRCLE("#000")}
@@ -1892,6 +1890,11 @@ function getNewsletterCSS(): string {
         display: block !important;
         width: 100% !important;
         padding-bottom: 24px !important;
+      }
+      /* Push icon glyphs down on mobile for better centering */
+      .icon-glyph {
+        padding-top: 4px !important;
+        line-height: 32px !important;
       }
     }
   `;
