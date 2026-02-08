@@ -218,7 +218,8 @@ function generateProductListHTML(block: NewsletterBlock): string {
           : `${p.price || ""}`
       }
     </td>
-    <td valign="middle">
+    <td valign="middle"
+    style="width:auto !important; min-width:0 !important; text-align:right;">
       <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="right">
         <tr>
           <td>
