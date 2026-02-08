@@ -255,8 +255,8 @@ function generateProductListHTML(block: NewsletterBlock): string {
         </table>
 
         <table width="100%" cellspacing="0" cellpadding="0">
-          <tr valign="middle">
-            <td style="font-weight:700;vertical-align:middle;">
+          <tr>
+            <td style="font-weight:700;">
               ${
                 p.salePrice
                   ? `
@@ -267,34 +267,26 @@ function generateProductListHTML(block: NewsletterBlock): string {
                   `
                   : `${p.price || ""}`
               }
-            
             </td>
-        
-            <td width="1%" align="right"
-                style="white-space:nowrap;vertical-align:middle;padding-top:16px;">
-              <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="right">
+          </tr>
+          <tr>
+            <td style="padding-top:16px;">
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0">
                 <tr>
-                  <td style="padding:0;margin:0;">
+                  <td>
                     <a href="${escapeAttr(p.url || "#")}"
                        style="display:block;text-decoration:none;">
                       <table role="presentation"
+                             width="36"
+                             height="36"
                              cellspacing="0"
                              cellpadding="0"
                              border="0"
-                             style="
-                               width:36px;
-                               height:36px;
-                               min-width:36px;
-                               max-width:36px;
-                               min-height:36px;
-                               max-height:36px;
-                               background:#00C322;
-                               border-radius:36px;
-                             ">
+                             style="background:#00C322;border-radius:50%;">
                         <tr>
                           <td align="center" valign="middle"
-                              style="padding:0;margin:0;line-height:0;font-size:0;">
-                            <span style="display:block;line-height:0;">
+                              style="line-height:0;font-size:0;padding-top:2px;">
+                            <span style="display:block;">
                               ${PLUS_ICON_CIRCLE("#000")}
                             </span>
                           </td>
@@ -400,28 +392,16 @@ function generateProductListHTML(block: NewsletterBlock): string {
                               <a href="${escapeAttr(p.url || "#")}"
                                  style="display:block;text-decoration:none;">
                                 <table role="presentation"
+                                       width="36"
+                                       height="36"
                                        cellspacing="0"
                                        cellpadding="0"
                                        border="0"
-                                       style="
-                                         width:36px;
-                                         height:36px;
-                                         min-width:36px;
-                                         max-width:36px;
-                                         min-height:36px;
-                                         max-height:36px;
-                                         background:#00C322;
-                                         border-radius:36px;
-                                       ">
+                                       style="background:#00C322;border-radius:50%;">
                                   <tr>
                                     <td align="center" valign="middle"
-                                        style="
-                                          padding:0;
-                                          margin:0;
-                                          line-height:0;
-                                          font-size:0;
-                                        ">
-                                      <span style="display:block;line-height:0;">
+                                        style="line-height:0;font-size:0;padding-top:2px;">
+                                      <span style="display:block;">
                                         ${PLUS_ICON_CIRCLE("#000")}
                                       </span>
                                     </td>
