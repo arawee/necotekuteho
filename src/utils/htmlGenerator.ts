@@ -206,11 +206,26 @@ function generateProductListHTML(block: NewsletterBlock): string {
   const tagBg = (c: string) => (c === "red" ? "#FF4C4C" : c === "green" ? "#00C322" : "#161616");
 
   const renderPriceRow = (p: any) => `
-  <table width="100%" cellspacing="0" cellpadding="0" dir="rtl">
+  <table width="100%" cellspacing="0" cellpadding="0">
     <tr>
   
-      <!-- BUTTON CELL (comes first visually because RTL) -->
-      <td width="36" valign="middle" align="center" dir="ltr">
+      <!-- PRICE -->
+      <td valign="middle" style="font-weight:700;white-space:nowrap;">
+        ${
+          p.salePrice
+            ? `<span style="color:#FF4C4C;">${p.salePrice}</span>
+               <span style="margin-left:8px;font-size:12px;text-decoration:line-through;">
+                 ${p.price || ""}
+               </span>`
+            : `${p.price || ""}`
+        }
+      </td>
+  
+      <!-- SPACER (THIS IS THE KEY) -->
+      <td width="100%" style="font-size:0;line-height:0;">&nbsp;</td>
+  
+      <!-- BUTTON -->
+      <td valign="middle" width="36" style="width:36px;">
         <a href="${escapeAttr(p.url || "#")}"
            style="
              display:block;
@@ -227,18 +242,6 @@ function generateProductListHTML(block: NewsletterBlock): string {
            ">
           +
         </a>
-      </td>
-  
-      <!-- PRICE CELL -->
-      <td valign="middle" style="font-weight:700;" dir="ltr">
-        ${
-          p.salePrice
-            ? `<span style="color:#FF4C4C;">${p.salePrice}</span>
-               <span style="margin-left:8px;font-size:12px;text-decoration:line-through;">
-                 ${p.price || ""}
-               </span>`
-            : `${p.price || ""}`
-        }
       </td>
   
     </tr>
