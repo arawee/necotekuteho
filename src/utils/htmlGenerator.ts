@@ -268,12 +268,13 @@ function generateProductListHTML(block: NewsletterBlock): string {
                   : `${p.price || ""}`
               }
             </td>
-            <td width="1%" align="right" style="white-space:nowrap;">
+            <td width="1%" align="right"
+                style="white-space:nowrap;padding-top:16px;">
               <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="right">
                 <tr>
                   <td>
                     <a href="${escapeAttr(p.url || "#")}"
-                       style="text-decoration:none;display:block;">
+                       style="display:block;text-decoration:none;">
                       <table role="presentation"
                              width="36"
                              height="36"
@@ -282,8 +283,11 @@ function generateProductListHTML(block: NewsletterBlock): string {
                              border="0"
                              style="background:#00C322;border-radius:50%;">
                         <tr>
-                          <td align="center" valign="middle" style="line-height:0;font-size:0;">
-                            ${PLUS_ICON_CIRCLE("#000")}
+                          <td align="center" valign="middle"
+                              style="line-height:0;font-size:0;padding-top:2px;">
+                            <span style="display:block;">
+                              ${PLUS_ICON_CIRCLE("#000")}
+                            </span>
                           </td>
                         </tr>
                       </table>
@@ -380,11 +384,32 @@ function generateProductListHTML(block: NewsletterBlock): string {
                       </td>
                     </tr>
                     <tr>
-                      <td style="padding-top:8px;">
-                        <a href="${escapeAttr(p.url || "#")}"
-                           style="display:inline-block;width:36px;height:36px;background:#00C322;border-radius:50%;line-height:36px;text-align:center;white-space:nowrap;text-decoration:none;">
-                          ${PLUS_ICON_CIRCLE("#000")}
-                        </a>
+                      <td style="padding-top:16px;">
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                          <tr>
+                            <td>
+                              <a href="${escapeAttr(p.url || "#")}"
+                                 style="display:block;text-decoration:none;">
+                                <table role="presentation"
+                                       width="36"
+                                       height="36"
+                                       cellspacing="0"
+                                       cellpadding="0"
+                                       border="0"
+                                       style="background:#00C322;border-radius:50%;">
+                                  <tr>
+                                    <td align="center" valign="middle"
+                                        style="line-height:0;font-size:0;padding-top:2px;">
+                                      <span style="display:block;">
+                                        ${PLUS_ICON_CIRCLE("#000")}
+                                      </span>
+                                    </td>
+                                  </tr>
+                                </table>
+                              </a>
+                            </td>
+                          </tr>
+                        </table>
                       </td>
                     </tr>
                   </table>
