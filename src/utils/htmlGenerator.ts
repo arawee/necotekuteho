@@ -205,15 +205,45 @@ function generateProductListHTML(block: NewsletterBlock): string {
 
   const tagBg = (c: string) => (c === "red" ? "#FF4C4C" : c === "green" ? "#00C322" : "#161616");
 
+  const showViewAll = (content as any).showViewAll !== false;
+  const viewAllText = (content as any).viewAllText || "zobrazit vše";
+  const viewAllUrl = (content as any).viewAllUrl || "#";
+
+  const viewAllHTML = showViewAll
+    ? `<a href="${escapeAttr(viewAllUrl)}"
+         style="display:inline-block;font-size:14px;text-decoration:none;white-space:nowrap;mso-line-height-rule:exactly;">
+         <span style="text-decoration:none;">→ </span>
+         <span style="text-decoration:underline;">${viewAllText}</span>
+       </a>`
+    : "";
+
   const renderPriceRow = (p: any) => `
   <table width="100%" cellspacing="0" cellpadding="0">
+
+    <tr>
+      <td style="padding-bottom:1rem;">
+        <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+          <tr>
+            <td width="100%" style="width:100%;font-family:'JetBrains Mono',monospace;">
+              <h2 style="margin:0;font-size:20px;font-weight:700;color:#212121;">
+                ${content.title || "Vyber si to pravé pro tebe"}
+              </h2>
+            </td>
+            <td width="1%" align="right" style="width:1%;text-align:right;white-space:nowrap;">
+              ${viewAllHTML}
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    
     <tr>
       <!-- PRICE -->
-      <td valign="middle" style="font-weight:700;">
+      <td valign="middle" style="font-weight:700;white-space:nowrap;">
         ${
           p.salePrice
             ? `<span style="color:#FF4C4C;">${p.salePrice}</span>
-               <span style="margin-left:8px;font-size:12px;text-decoration:line-through;">
+               <span style="margin-left:8px;font-size:12px;text-decoration:line-through;white-space:nowrap;">
                  ${p.price || ""}
                </span>`
             : `${p.price || ""}`
@@ -306,7 +336,16 @@ function generateProductListHTML(block: NewsletterBlock): string {
           ${(p.tags || [])
             .map(
               (t: any) =>
-                `<span style="background:${tagBg(t.color)};color:#fff;font-size:10px;padding:6px 8px;margin-right:4px;">
+                `<span
+                  style="
+                    display:inline-block;
+                    background:${tagBg(t.color)};
+                    color:#fff;
+                    font-size:10px;
+                    padding:6px 8px;
+                    margin-right:4px;
+                    white-space:nowrap;
+                  ">
                   ${t.text}
                 </span>`,
             )
@@ -395,7 +434,7 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
       </tr>
       <tr>
         <td style="padding:0;margin:0;">
-          <span style="display:inline-block;background-color:#212121;color:#FFFFFF;font-family:'JetBrains Mono',monospace;font-size:12px;padding:6px 8px;">
+          <span style="display:inline-block;background-color:#212121;color:#FFFFFF;font-family:'JetBrains Mono',monospace;font-size:12px;padding:6px 8px;white-space:nowrap;">
             ${c.tag}
           </span>
         </td>
