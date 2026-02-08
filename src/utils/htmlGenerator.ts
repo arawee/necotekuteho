@@ -255,47 +255,40 @@ function generateProductListHTML(block: NewsletterBlock): string {
         </table>
 
         <table width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <td style="font-weight:700;">
+          <tr valign="middle">
+            <!-- PRICE -->
+            <td style="font-weight:700;vertical-align:middle;">
               ${
                 p.salePrice
                   ? `
-                    <span style="color:#FF4C4C;">${p.salePrice}</span>
-                    <span style="display:inline-block;margin-left:8px;color:#000000;font-size:12px;font-weight:500;text-decoration:line-through;white-space:nowrap;">
-                      ${p.price || ""}
-                    </span>
-                  `
+                  <span style="color:#FF4C4C;">${p.salePrice}</span>
+                  <span style="margin-left:8px;color:#000000;font-size:12px;font-weight:500;text-decoration:line-through;white-space:nowrap;">
+                    ${p.price || ""}
+                  </span>
+                `
                   : `${p.price || ""}`
               }
             </td>
-          </tr>
-          <tr>
-            <td style="padding-top:16px;">
-              <table role="presentation" cellspacing="0" cellpadding="0" border="0">
-                <tr>
-                  <td>
-                    <a href="${escapeAttr(p.url || "#")}"
-                       style="display:block;text-decoration:none;">
-                      <table role="presentation"
-                             width="36"
-                             height="36"
-                             cellspacing="0"
-                             cellpadding="0"
-                             border="0"
-                             style="background:#00C322;border-radius:50%;">
-                        <tr>
-                          <td align="center" valign="middle"
-                              style="line-height:0;font-size:0;padding-top:2px;">
-                            <span style="display:block;">
-                              ${PLUS_ICON_CIRCLE("#000")}
-                            </span>
-                          </td>
-                        </tr>
-                      </table>
-                    </a>
-                  </td>
-                </tr>
-              </table>
+        
+            <!-- BUTTON -->
+            <td width="36" align="right" valign="middle"
+                style="width:36px;vertical-align:middle;">
+              <a href="${escapeAttr(p.url || "#")}"
+                 style="
+                   display:block;
+                   width:36px;
+                   height:36px;
+                   background:#00C322;
+                   border-radius:50%;
+                   text-align:center;
+                   line-height:36px;
+                   font-size:20px;
+                   font-weight:700;
+                   text-decoration:none;
+                   color:#000000;
+                 ">
+                +
+              </a>
             </td>
           </tr>
         </table>
@@ -370,47 +363,40 @@ function generateProductListHTML(block: NewsletterBlock): string {
                   </table>
 
                   <table width="100%" cellspacing="0" cellpadding="0">
-                    <tr>
-                      <td style="font-weight:700;">
+                    <tr valign="middle">
+                      <!-- PRICE -->
+                      <td style="font-weight:700;vertical-align:middle;">
                         ${
                           p.salePrice
                             ? `
-                              <span style="color:#FF4C4C;">${p.salePrice}</span>
-                              <span style="display:inline-block;margin-left:8px;color:#000000;font-size:12px;font-weight:500;text-decoration:line-through;white-space:nowrap;">
-                                ${p.price || ""}
-                              </span>
-                            `
+                            <span style="color:#FF4C4C;">${p.salePrice}</span>
+                            <span style="margin-left:8px;color:#000000;font-size:12px;font-weight:500;text-decoration:line-through;white-space:nowrap;">
+                              ${p.price || ""}
+                            </span>
+                          `
                             : `${p.price || ""}`
                         }
                       </td>
-                    </tr>
-                    <tr>
-                      <td style="padding-top:16px;">
-                        <table role="presentation" cellspacing="0" cellpadding="0" border="0">
-                          <tr>
-                            <td>
-                              <a href="${escapeAttr(p.url || "#")}"
-                                 style="display:block;text-decoration:none;">
-                                <table role="presentation"
-                                       width="36"
-                                       height="36"
-                                       cellspacing="0"
-                                       cellpadding="0"
-                                       border="0"
-                                       style="background:#00C322;border-radius:50%;">
-                                  <tr>
-                                    <td align="center" valign="middle"
-                                        style="line-height:0;font-size:0;padding-top:2px;">
-                                      <span style="display:block;">
-                                        ${PLUS_ICON_CIRCLE("#000")}
-                                      </span>
-                                    </td>
-                                  </tr>
-                                </table>
-                              </a>
-                            </td>
-                          </tr>
-                        </table>
+                  
+                      <!-- BUTTON -->
+                      <td width="36" align="right" valign="middle"
+                          style="width:36px;vertical-align:middle;">
+                        <a href="${escapeAttr(p.url || "#")}"
+                           style="
+                             display:block;
+                             width:36px;
+                             height:36px;
+                             background:#00C322;
+                             border-radius:50%;
+                             text-align:center;
+                             line-height:36px;
+                             font-size:20px;
+                             font-weight:700;
+                             text-decoration:none;
+                             color:#000000;
+                           ">
+                          +
+                        </a>
                       </td>
                     </tr>
                   </table>
