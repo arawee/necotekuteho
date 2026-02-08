@@ -189,24 +189,9 @@ function generateZichovecHeaderWithMenuHTML(block: NewsletterBlock): string {
 </tr>`;
 }
 
-function generateProductListHTML(block: NewsletterBlock): string {
-  const { content } = block;
-
-  const products = Array.isArray((content as any).products) ? (content as any).products : [];
-
-  const COLS = 3;
-  const MAX = 6;
-  const TABLE_WIDTH = 600;
-  const GUTTER = 6;
-
-  const items = products.slice(0, MAX);
-  const row1 = items.slice(0, COLS);
-  const row2 = items.slice(COLS, COLS * 2);
-
-  const tagBg = (c: string) => (c === "red" ? "#FF4C4C" : c === "green" ? "#00C322" : "#161616");
-
-  const renderPriceRow = (p: any) => `
-<table width="100%" cellspacing="0" cellpadding="0">
+const renderPriceRow = (p: any) => `
+<!-- DESKTOP -->
+<table width="100%" cellspacing="0" cellpadding="0" class="hide-on-mobile">
   <tr>
     <td valign="middle" style="font-weight:700;">
       ${
@@ -218,17 +203,10 @@ function generateProductListHTML(block: NewsletterBlock): string {
           : `${p.price || ""}`
       }
     </td>
-
-    <!-- THIS IS THE IMPORTANT PART -->
-    <td valign="middle"
-        style="
-          width:auto !important;
-          min-width:0 !important;
-          text-align:right;
-        ">
+    <td width="36" align="right" valign="middle">
       <a href="#"
          style="
-           display:inline-block;
+           display:block;
            width:36px;
            height:36px;
            line-height:36px;
@@ -244,77 +222,44 @@ function generateProductListHTML(block: NewsletterBlock): string {
       </a>
     </td>
   </tr>
-</table>`;
+</table>
 
-  const renderCell = (p: any, i: number, n: number) => {
-    const colPct = 100 / n;
-    const totalGaps = (n - 1) * (GUTTER * 2);
-    const innerW = Math.floor((TABLE_WIDTH - totalGaps) / n);
-
-    const padL = i === 0 ? "0" : `${GUTTER}px`;
-    const padR = i === n - 1 ? "0" : `${GUTTER}px`;
-
-    return `
-<td width="${colPct}%" valign="top" style="padding:0 ${padR} 0 ${padL};">
-  <table width="100%" cellspacing="0" cellpadding="0">
-    <tr>
-      <td style="line-height:0;font-size:0;">
-        ${
-          p.image
-            ? `<img src="${escapeAttr(p.image)}" width="${innerW}"
-                   style="display:block;width:100%;height:auto;border:0;" />`
-            : `<div style="width:100%;padding-top:133.33%;background:#E5E5E5;"></div>`
-        }
-      </td>
-    </tr>
-    <tr>
-      <td style="font-family:'JetBrains Mono',monospace;">
-        <div style="margin:8px 0;">
-          ${(p.tags || [])
-            .map(
-              (t: any) =>
-                `<span style="background:${tagBg(t.color)};color:#fff;font-size:10px;padding:6px 8px;margin-right:4px;">
-                  ${t.text}
-                </span>`,
-            )
-            .join("")}
-        </div>
-
-        <h3 style="margin:0 0 4px;font-size:16px;font-weight:700;">
-          ${p.name || ""}
-        </h3>
-
-        <table width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <td style="font-size:10px;"><strong>Alk. →</strong> ${p.alcohol || ""}%</td>
-            <td align="right" style="font-size:10px;white-space:nowrap;">
-              ${p.volume || ""}
-            </td>
-          </tr>
-        </table>
-
-        ${renderPriceRow(p)}
-      </td>
-    </tr>
-  </table>
-</td>`;
-  };
-
-  const renderRow = (row: any[]) => `
-<table width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;">
-  <tr>${row.map((p, i) => renderCell(p, i, row.length)).join("")}</tr>
-</table>`;
-
-  return `
-<tr>
-  <td align="center" style="padding:32px 24px;">
-    <table width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;">
-      <tr><td>${renderRow(row1)}</td></tr>
-      ${row2.length ? `<tr><td style="padding-top:12px;">${renderRow(row2)}</td></tr>` : ""}
-    </table>
-  </td>
-</tr>`;
-}
+<!-- MOBILE -->
+<table width="100%" cellspacing="0" cellpadding="0" class="show-on-mobile">
+  <tr>
+    <td style="font-weight:700;padding-bottom:8px;">
+      ${
+        p.salePrice
+          ? `<span style="color:#FF4C4C;">${p.salePrice}</span>
+             <span style="margin-left:8px;font-size:12px;text-decoration:line-through;">
+               ${p.price || ""}
+             </span>`
+          : `${p.price || ""}`
+      }
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <a href="#"
+         style="
+           display:block;
+           width:36px;
+           height:36px;
+           line-height:36px;
+           background:#00C322;
+           border-radius:50%;
+           text-align:center;
+           font-size:20px;
+           font-weight:700;
+           color:#000;
+           text-decoration:none;
+         ">
+        +
+      </a>
+    </td>
+  </tr>
+</table>
+`;
 
 function generateCategoriesHTML(block: NewsletterBlock): string {
   const { content } = block;
