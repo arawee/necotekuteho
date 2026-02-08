@@ -206,10 +206,31 @@ function generateProductListHTML(block: NewsletterBlock): string {
   const tagBg = (c: string) => (c === "red" ? "#FF4C4C" : c === "green" ? "#00C322" : "#161616");
 
   const renderPriceRow = (p: any) => `
-  <table width="100%" cellspacing="0" cellpadding="0">
+  <table width="100%" cellspacing="0" cellpadding="0" dir="rtl">
     <tr>
-      <!-- PRICE -->
-      <td valign="middle" style="font-weight:700;">
+  
+      <!-- BUTTON CELL (comes first visually because RTL) -->
+      <td width="36" valign="middle" align="center" dir="ltr">
+        <a href="${escapeAttr(p.url || "#")}"
+           style="
+             display:block;
+             width:36px;
+             height:36px;
+             line-height:36px;
+             background:#00C322;
+             border-radius:50%;
+             text-align:center;
+             text-decoration:none;
+             font-size:20px;
+             font-weight:700;
+             color:#000;
+           ">
+          +
+        </a>
+      </td>
+  
+      <!-- PRICE CELL -->
+      <td valign="middle" style="font-weight:700;" dir="ltr">
         ${
           p.salePrice
             ? `<span style="color:#FF4C4C;">${p.salePrice}</span>
@@ -220,43 +241,6 @@ function generateProductListHTML(block: NewsletterBlock): string {
         }
       </td>
   
-      <!-- BUTTON CONTAINER (ANTI-GMAIL HACK) -->
-      <td valign="middle" align="right">
-        <table role="presentation"
-               cellspacing="0"
-               cellpadding="0"
-               border="0"
-               width="36"
-               align="right">
-          <tr>
-            <td width="36" height="36"
-                align="center"
-                valign="middle"
-                style="
-                  width:36px;
-                  height:36px;
-                  background:#00C322;
-                  border-radius:50%;
-                  line-height:36px;
-                  text-align:center;
-                ">
-              <a href="${escapeAttr(p.url || "#")}"
-                 style="
-                   display:block;
-                   width:36px;
-                   height:36px;
-                   line-height:36px;
-                   text-decoration:none;
-                   color:#000;
-                   font-size:20px;
-                   font-weight:700;
-                 ">
-                +
-              </a>
-            </td>
-          </tr>
-        </table>
-      </td>
     </tr>
   </table>
   `;
