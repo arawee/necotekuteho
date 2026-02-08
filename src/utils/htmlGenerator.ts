@@ -256,7 +256,18 @@ function generateProductListHTML(block: NewsletterBlock): string {
                    color:#000;
                    text-decoration:none;
                  ">
-                +
+                <span
+                  style="
+                    display:block;
+                    width:36px;
+                    height:36px;
+                    line-height:36px;
+                    font-size:18px;
+                    font-weight:700;
+                    text-align:center;
+                    mso-line-height-rule:exactly;
+                  "
+                >+</span>
               </a>
             </td>
           </tr>
