@@ -194,10 +194,6 @@ function generateProductListHTML(block: NewsletterBlock): string {
 
   const products = Array.isArray((content as any).products) ? (content as any).products : [];
 
-  const showViewAll = (content as any).showViewAll !== false;
-  const viewAllText = (content as any).viewAllText || "zobrazit vše";
-  const viewAllUrl = (content as any).viewAllUrl || "#";
-
   const COLS = 3;
   const MAX = 6;
   const TABLE_WIDTH = 600;
@@ -211,21 +207,19 @@ function generateProductListHTML(block: NewsletterBlock): string {
 
   const renderPriceRow = (p: any) => `
 <table width="100%" cellspacing="0" cellpadding="0" class="price-row">
-  <tr valign="middle">
-    <td style="font-weight:700;vertical-align:middle;">
+  <tr>
+    <td valign="middle" style="font-weight:700;">
       ${
         p.salePrice
-          ? `
-            <span style="color:#FF4C4C;">${p.salePrice}</span>
-            <span style="margin-left:8px;font-size:12px;font-weight:500;text-decoration:line-through;white-space:nowrap;">
-              ${p.price || ""}
-            </span>
-          `
+          ? `<span style="color:#FF4C4C;">${p.salePrice}</span>
+             <span style="margin-left:8px;font-size:12px;text-decoration:line-through;">
+               ${p.price || ""}
+             </span>`
           : `${p.price || ""}`
       }
     </td>
     <td width="36" align="right" valign="middle"
-        style="width:36px;min-width:36px;vertical-align:middle;">
+        style="width:36px;min-width:36px;">
       <a href="${escapeAttr(p.url || "#")}"
          style="
            display:block;
@@ -237,10 +231,8 @@ function generateProductListHTML(block: NewsletterBlock): string {
            text-align:center;
            font-size:20px;
            font-weight:700;
-           color:#000000;
+           color:#000;
            text-decoration:none;
-           padding:0;
-           margin:0;
          ">
         +
       </a>
@@ -257,27 +249,27 @@ function generateProductListHTML(block: NewsletterBlock): string {
     const padR = i === n - 1 ? "0" : `${GUTTER}px`;
 
     return `
-<td valign="top" width="${colPct}%" style="width:${colPct}%;padding:0 ${padR} 0 ${padL};">
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="table-layout:fixed;">
+<td width="${colPct}%" valign="top" style="padding:0 ${padR} 0 ${padL};">
+  <table width="100%" cellspacing="0" cellpadding="0">
     <tr>
       <td style="line-height:0;font-size:0;">
         ${
           p.image
-            ? `<img src="${escapeAttr(p.image)}" width="${innerW}" alt="${escapeAttr(p.name || "")}"
-                 style="display:block;width:100%;max-width:${innerW}px;height:auto;border:0;" />`
+            ? `<img src="${escapeAttr(p.image)}" width="${innerW}"
+                   style="display:block;width:100%;height:auto;border:0;" />`
             : `<div style="width:100%;padding-top:133.33%;background:#E5E5E5;"></div>`
         }
       </td>
     </tr>
     <tr>
       <td style="font-family:'JetBrains Mono',monospace;">
-        <div style="margin:8px 0;line-height:1;">
+        <div style="margin:8px 0;">
           ${(p.tags || [])
             .map(
               (t: any) =>
-                `<span style="display:inline-block;background:${tagBg(
-                  t.color,
-                )};color:#fff;font-size:10px;padding:6px 8px;margin:0 4px 4px 0;">${t.text}</span>`,
+                `<span style="background:${tagBg(t.color)};color:#fff;font-size:10px;padding:6px 8px;margin-right:4px;">
+                  ${t.text}
+                </span>`,
             )
             .join("")}
         </div>
@@ -303,52 +295,16 @@ function generateProductListHTML(block: NewsletterBlock): string {
   };
 
   const renderRow = (row: any[]) => `
-<table role="presentation" width="${TABLE_WIDTH}" class="wrap"
-       style="width:100%;max-width:${TABLE_WIDTH}px;table-layout:fixed;">
-  <tr>
-    ${row.map((p, i) => renderCell(p, i, row.length)).join("")}
-  </tr>
+<table width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;">
+  <tr>${row.map((p, i) => renderCell(p, i, row.length)).join("")}</tr>
 </table>`;
 
   return `
 <tr>
   <td align="center" style="padding:32px 24px;">
-    <table role="presentation" width="${TABLE_WIDTH}" class="wrap"
-           style="width:100%;max-width:${TABLE_WIDTH}px;">
-      <tr>
-        <td style="padding-bottom:16px;">
-          <table width="100%">
-            <tr>
-              <td><h2 style="margin:0;font-size:20px;">
-                ${content.title || "Mohlo by vám chutnat"}
-              </h2></td>
-              ${
-                showViewAll
-                  ? `<td align="right">
-                       <a href="${escapeAttr(viewAllUrl)}"
-                          style="font-size:14px;text-decoration:underline;">
-                         → ${viewAllText}
-                       </a>
-                     </td>`
-                  : ""
-              }
-            </tr>
-          </table>
-        </td>
-      </tr>
-
-      <tr class="hide-on-mobile"><td>${renderRow(row1)}</td></tr>
-      ${
-        row2.length
-          ? `<tr class="hide-on-mobile"><td style="padding-top:12px;">
-               ${renderRow(row2)}
-             </td></tr>`
-          : ""
-      }
-
-      <tr class="show-on-mobile">
-        <td>${items.map((p, i) => renderRow([p])).join("")}</td>
-      </tr>
+    <table width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;">
+      <tr><td>${renderRow(row1)}</td></tr>
+      ${row2.length ? `<tr><td style="padding-top:12px;">${renderRow(row2)}</td></tr>` : ""}
     </table>
   </td>
 </tr>`;
@@ -1754,16 +1710,7 @@ function getNewsletterCSS(): string {
       overflow: hidden;
       mso-hide: all;
     }
-    @media only screen and (max-width: 620px) {
-      table.price-row,
-      table.price-row tr,
-      table.price-row td {
-        width: auto !important;
-        min-width: 0 !important;
-        display: table-cell !important;
-        vertical-align: middle !important;
-      }
-    }
+
     /* Responsive - Mobile */
     @media only screen and (max-width: 620px) {
     /* Hide spacer cells used for centering/filling rows */
