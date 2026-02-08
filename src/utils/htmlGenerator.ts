@@ -14,7 +14,7 @@ const ICON_INLINE = (glyph: string, color: string, sizePx: number = 14) =>
   `<span style="display:inline-block;color:${color};font-size:${sizePx}px;font-weight:700;line-height:1;height:${sizePx}px;vertical-align:middle;text-decoration:none;mso-line-height-rule:exactly;">${glyph}</span>`;
 
 const ICON_CIRCLE = (glyph: string, color: string, boxPx: number = 36, sizePx: number = 16) =>
-  `<span class="icon-glyph" style="display:block;width:${boxPx}px;height:${boxPx}px;line-height:${boxPx}px;box-sizing:border-box;text-align:center;color:${color};font-size:${sizePx}px;font-weight:700;text-decoration:none;mso-line-height-rule:exactly;">${glyph}</span>`;
+  `<span style="display:block;width:${boxPx}px;height:${boxPx}px;line-height:${boxPx}px;text-align:center;color:${color};font-size:${sizePx}px;font-weight:700;text-decoration:none;mso-line-height-rule:exactly;position:relative;top:2px;">${glyph}</span>`;
 
 // Keep existing names for inline usage
 const ARROW_ICON_SVG = (color: string = "#00C322") => ICON_INLINE("→", color, 14);
@@ -191,16 +191,15 @@ function generateZichovecHeaderWithMenuHTML(block: NewsletterBlock): string {
 
 function generateProductListHTML(block: NewsletterBlock): string {
   const { content } = block;
-
   const products = Array.isArray((content as any).products) ? (content as any).products : [];
 
   const showViewAll = (content as any).showViewAll !== false;
   const viewAllText = (content as any).viewAllText || "zobrazit vše";
   const viewAllUrl = (content as any).viewAllUrl || "#";
 
+  const TABLE_WIDTH = 600;
   const COLS = 3;
   const MAX = 6;
-  const TABLE_WIDTH = 600;
   const GUTTER = 6;
 
   const items = products.slice(0, MAX);
@@ -209,32 +208,98 @@ function generateProductListHTML(block: NewsletterBlock): string {
 
   const tagBg = (c: string) => (c === "red" ? "#FF4C4C" : c === "green" ? "#00C322" : "#161616");
 
-  const renderCell = (p: any, i: number, n: number) => {
-    const colPct = 100 / n;
+  /* ---------- MOBILE CARD (DEFAULT) ---------- */
+  const renderMobileItem = (p: any) => `
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"
+       style="width:100%;max-width:${TABLE_WIDTH}px;table-layout:fixed;">
+  <tr>
+    <td style="line-height:0;font-size:0;">
+      ${
+        p.image
+          ? `<img src="${escapeAttr(p.image)}" width="${TABLE_WIDTH}"
+                 style="display:block;width:100%;max-width:${TABLE_WIDTH}px;height:auto;border:0;vertical-align:bottom;"
+                 alt="${escapeAttr(p.name || "")}" />`
+          : `<div style="width:100%;padding-top:133.33%;background:#E5E5E5;"></div>`
+      }
+    </td>
+  </tr>
+  <tr>
+    <td style="font-family:'JetBrains Mono',monospace;padding:0;">
+      <div style="margin:8px 0;line-height:1;">
+        ${(p.tags || [])
+          .map(
+            (t: any) =>
+              `<span style="display:inline-block;background:${tagBg(
+                t.color,
+              )};color:#fff;font-size:10px;padding:6px 8px;margin:0 4px 4px 0;">${t.text}</span>`,
+          )
+          .join("")}
+      </div>
 
-    // gaps between cols = (n-1) * 12
+      <h3 style="margin:0 0 4px;font-size:16px;font-weight:700;">${p.name || ""}</h3>
+
+      <table width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+          <td style="font-size:10px;"><strong>Alk. →</strong> ${p.alcohol || ""}%</td>
+          <td align="right" style="font-size:10px;white-space:nowrap;">${p.volume || ""}</td>
+        </tr>
+      </table>
+
+      <table width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+          <td style="font-weight:700;">
+            ${
+              p.salePrice
+                ? `<span style="color:#FF4C4C;">${p.salePrice}</span>
+                   <span style="margin-left:8px;font-size:12px;font-weight:500;text-decoration:line-through;">
+                     ${p.price || ""}
+                   </span>`
+                : `${p.price || ""}`
+            }
+          </td>
+          <td align="right">
+            <a href="${escapeAttr(p.url || "#")}"
+               style="display:inline-block;width:36px;height:36px;background:#00C322;border-radius:50%;
+                      line-height:36px;text-align:center;text-decoration:none;">
+              ${PLUS_ICON_CIRCLE("#000")}
+            </a>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+`;
+
+  /* ---------- DESKTOP GRID ---------- */
+  const renderDesktopRow = (row: any[]) => {
+    const n = row.length;
+    const colPct = 100 / n;
     const totalGaps = (n - 1) * (GUTTER * 2);
     const innerW = Math.floor((TABLE_WIDTH - totalGaps) / n);
 
-    const padL = i === 0 ? "0" : `${GUTTER}px`;
-    const padR = i === n - 1 ? "0" : `${GUTTER}px`;
-
     return `
-<td valign="top" width="${colPct}%" style="width:${colPct}%;padding:0 ${padR} 0 ${padL};">
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="table-layout:fixed;border-collapse:collapse;">
+<table role="presentation" width="${TABLE_WIDTH}" style="width:100%;max-width:${TABLE_WIDTH}px;table-layout:fixed;">
+  <tr>
+    ${row
+      .map(
+        (p, i) => `
+<td width="${colPct}%" style="padding:0 ${i === n - 1 ? 0 : GUTTER}px 0 ${i === 0 ? 0 : GUTTER}px;" valign="top">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
     <tr>
-      <td style="padding:0;margin:0;line-height:0;font-size:0;">
+      <td style="line-height:0;font-size:0;">
         ${
           p.image
-            ? `<img src="${escapeAttr(p.image)}" width="${innerW}" alt="${escapeAttr(p.name || "")}"
-                 style="display:block;width:100%;max-width:${innerW}px;height:auto;aspect-ratio:3/4;object-fit:cover;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;vertical-align:bottom;" />`
+            ? `<img src="${escapeAttr(p.image)}" width="${innerW}"
+                   style="display:block;width:100%;max-width:${innerW}px;height:auto;border:0;"
+                   alt="${escapeAttr(p.name || "")}" />`
             : `<div style="width:100%;padding-top:133.33%;background:#E5E5E5;"></div>`
         }
       </td>
     </tr>
     <tr>
-      <td style="font-family:'JetBrains Mono',monospace;padding:0;margin:0;">
-        <div style="margin:0 0 8px 0;padding:0;line-height:1;">
+      <td style="font-family:'JetBrains Mono',monospace;">
+        <div style="margin:8px 0;line-height:1;">
           ${(p.tags || [])
             .map(
               (t: any) =>
@@ -244,33 +309,20 @@ function generateProductListHTML(block: NewsletterBlock): string {
             )
             .join("")}
         </div>
-
-        <h3 style="margin:0 0 4px 0;font-size:16px;font-weight:700;">${p.name || ""}</h3>
-
-        <table width="100%" cellspacing="0" cellpadding="0">
+        <h3 style="margin:0 0 4px;font-size:16px;font-weight:700;">${p.name || ""}</h3>
+        <table width="100%">
           <tr>
             <td style="font-size:10px;"><strong>Alk. →</strong> ${p.alcohol || ""}%</td>
-            <td align="right" style="font-size:10px;width:72px;white-space:nowrap;">${p.volume || ""}</td>
+            <td align="right" style="font-size:10px;">${p.volume || ""}</td>
           </tr>
         </table>
-
-        <table width="100%" cellspacing="0" cellpadding="0">
+        <table width="100%">
           <tr>
-            <td style="font-weight:700;">
-              ${
-                p.salePrice
-                  ? `
-                    <span style="color:#FF4C4C;">${p.salePrice}</span>
-                    <span style="display:inline-block;margin-left:8px;color:#000000;font-size:12px;font-weight:500;text-decoration:line-through;white-space:nowrap;">
-                      ${p.price || ""}
-                    </span>
-                  `
-                  : `${p.price || ""}`
-              }
-            </td>
-            <td align="right" style="text-align:right;">
+            <td style="font-weight:700;">${p.salePrice || p.price || ""}</td>
+            <td align="right">
               <a href="${escapeAttr(p.url || "#")}"
-                 style="display:inline-block;width:36px;height:36px;background:#00C322;border-radius:50%;line-height:36px;text-align:center;white-space:nowrap;text-decoration:none;">
+                 style="display:inline-block;width:36px;height:36px;background:#00C322;border-radius:50%;
+                        line-height:36px;text-align:center;text-decoration:none;">
                 ${PLUS_ICON_CIRCLE("#000")}
               </a>
             </td>
@@ -279,143 +331,48 @@ function generateProductListHTML(block: NewsletterBlock): string {
       </td>
     </tr>
   </table>
-</td>`;
-  };
-
-  const renderRow = (row: any[], forceCols?: number) => {
-    if (!row.length) return "";
-    const n = forceCols ?? row.length;
-
-    const missing = forceCols ? Math.max(0, n - row.length) : 0;
-    const colPct = 100 / n;
-
-    return `
-<table role="presentation" width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;table-layout:fixed;">
-  <tr>
-    ${row.map((p, i) => renderCell(p, i, n)).join("")}
-    ${
-      missing
-        ? Array.from({ length: missing })
-            .map(() => `<td width="${colPct}%" style="width:${colPct}%;font-size:0;line-height:0;">&nbsp;</td>`)
-            .join("")
-        : ""
-    }
+</td>`,
+      )
+      .join("")}
   </tr>
 </table>`;
   };
 
-  // Mobile: 1 column list (prevents “missing images” caused by td.stack)
-  const mobileBlocks = items
-    .map(
-      (p: any, idx: number) => `
-      ${idx ? `<div style="height:12px;line-height:12px;font-size:0;">&nbsp;</div>` : ""}
-      <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap"
-             style="width:100%;max-width:600px;table-layout:fixed;">
-        <tr>
-          <td style="padding:0;">
-            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="table-layout:fixed;border-collapse:collapse;">
-              <tr>
-                <td style="padding:0;margin:0;line-height:0;font-size:0;">
-                  ${
-                    p.image
-                      ? `<img src="${escapeAttr(p.image)}" width="600" alt="${escapeAttr(p.name || "")}"
-                             style="display:block;width:100%;max-width:600px;height:auto;aspect-ratio:3/4;object-fit:cover;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;vertical-align:bottom;" />`
-                      : `<div style="width:100%;padding-top:133.33%;background:#E5E5E5;"></div>`
-                  }
-                </td>
-              </tr>
-              <tr>
-                <td style="font-family:'JetBrains Mono',monospace;padding:0;margin:0;">
-                  <div style="margin:0 0 8px 0;padding:0;line-height:1;">
-                    ${(p.tags || [])
-                      .map(
-                        (t: any) =>
-                          `<span style="display:inline-block;background:${tagBg(
-                            t.color,
-                          )};color:#fff;font-size:10px;padding:6px 8px;margin:0 4px 4px 0;">${t.text}</span>`,
-                      )
-                      .join("")}
-                  </div>
-
-                  <h3 style="margin:0 0 4px 0;font-size:16px;font-weight:700;">${p.name || ""}</h3>
-
-                  <table width="100%" cellspacing="0" cellpadding="0">
-                    <tr>
-                      <td style="font-size:10px;"><strong>Alk. →</strong> ${p.alcohol || ""}%</td>
-                      <td align="right" style="font-size:10px;width:72px;white-space:nowrap;">${p.volume || ""}</td>
-                    </tr>
-                  </table>
-
-                  <table width="100%" cellspacing="0" cellpadding="0" style="padding-top:1rem;">
-                    <tr>
-                      <td style="font-weight:700;">
-                        ${
-                          p.salePrice
-                            ? `
-                              <span style="color:#FF4C4C;">${p.salePrice}</span>
-                              <span style="display:inline-block;margin-left:8px;color:#000000;font-size:12px;font-weight:500;text-decoration:line-through;white-space:nowrap;">
-                                ${p.price || ""}
-                              </span>
-                            `
-                            : `${p.price || ""}`
-                        }
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style="padding-top:2rem;">
-                        <a href="${escapeAttr(p.url || "#")}"
-                           style="display:inline-block;width:36px;height:36px;background:#00C322;border-radius:50%;line-height:36px;text-align:center;white-space:nowrap;text-decoration:none;">
-                          ${PLUS_ICON_CIRCLE("#000")}
-                        </a>
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
-    `,
-    )
-    .join("");
-
   return `
 <tr>
   <td align="center" style="padding:32px 24px;">
-    <table role="presentation" width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;">
+    <table role="presentation" width="100%" style="max-width:${TABLE_WIDTH}px;">
       <tr>
         <td style="padding-bottom:16px;">
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+          <table width="100%">
             <tr>
-              <td width="100%" style="width:100%;">
-                <h2 style="margin:0;font-size:20px;">${content.title || "Mohlo by vám chutnat"}</h2>
-              </td>
-              <td width="1%" align="right" style="width:1%;text-align:right;white-space:nowrap;">
-                ${
-                  showViewAll
-                    ? `<a href="${escapeAttr(viewAllUrl)}" style="display:inline-block;font-size:14px;text-decoration:none;white-space:nowrap;mso-line-height-rule:exactly;"><span style="text-decoration:none;">→ </span><span style="text-decoration:underline;">${viewAllText}</span></a>`
-                    : ""
-                }
-              </td>
+              <td><h2 style="margin:0;font-size:20px;">${content.title || "Mohlo by vám chutnat"}</h2></td>
+              ${
+                showViewAll
+                  ? `<td align="right">
+                       <a href="${escapeAttr(viewAllUrl)}" style="font-size:14px;text-decoration:underline;">
+                         → ${viewAllText}
+                       </a>
+                     </td>`
+                  : ""
+              }
             </tr>
           </table>
         </td>
       </tr>
-      <tr>
-        <td>
-          <!-- Desktop -->
-          <div class="hide-on-mobile">
-            ${renderRow(row1 /* stretch */)}
-            ${row2.length ? `<div style="height:12px;line-height:12px;font-size:0;">&nbsp;</div>${renderRow(row2, 3)}` : ""}
-          </div>
 
-          <!-- Mobile -->
-          <div class="show-on-mobile">
-            ${mobileBlocks}
-          </div>
+      <!-- MOBILE (DEFAULT) -->
+      <tr class="mobile-only">
+        <td>
+          ${items.map(renderMobileItem).join(`<div style="height:12px;font-size:0;">&nbsp;</div>`)}
         </td>
       </tr>
+
+      <!-- DESKTOP -->
+      <tr class="desktop-only">
+        <td>${renderDesktopRow(row1)}</td>
+      </tr>
+      ${row2.length ? `<tr class="desktop-only"><td style="padding-top:12px;">${renderDesktopRow(row2)}</td></tr>` : ""}
     </table>
   </td>
 </tr>`;
@@ -821,7 +778,7 @@ function generateLocationsHTML(block: NewsletterBlock): string {
         <div style="margin-top:12px;">
           <a href="${escapeAttr(loc.primaryButtonUrl || "#")}"
              style="display:inline-block;width:36px;height:36px;border:1px solid #00C322;border-radius:50%;line-height:36px;text-align:center;text-decoration:none;">
-            ${ARROW_ICON_CIRCLE("#00C322")}
+            ${ARROW_ICON_SVG("#00C322")}
           </a>
         </div>
       </td>
@@ -1822,6 +1779,24 @@ function getNewsletterCSS(): string {
       mso-hide: all;
     }
 
+    /* Mobile-first visibility */
+    .mobile-only {
+      display: table-row;
+    }
+    .desktop-only {
+      display: none;
+    }
+    
+    /* Desktop override */
+    @media only screen and (min-width: 621px) {
+      .mobile-only {
+        display: none !important;
+      }
+      .desktop-only {
+        display: table-row !important;
+      }
+    }
+
     /* Responsive - Mobile */
     @media only screen and (max-width: 620px) {
     /* Hide spacer cells used for centering/filling rows */
@@ -1897,11 +1872,6 @@ function getNewsletterCSS(): string {
         display: block !important;
         width: 100% !important;
         padding-bottom: 24px !important;
-      }
-      /* Push icon glyphs down on mobile for better centering */
-      .icon-glyph {
-        padding-top: 4px !important;
-        line-height: 32px !important;
       }
     }
   `;
