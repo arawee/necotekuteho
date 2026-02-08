@@ -218,30 +218,30 @@ function generateProductListHTML(block: NewsletterBlock): string {
           : `${p.price || ""}`
       }
     </td>
+
+    <!-- THIS IS THE IMPORTANT PART -->
     <td valign="middle"
-    style="width:auto !important; min-width:0 !important; text-align:right;">
-      <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="right">
-        <tr>
-          <td>
-            <a href="#"
-               style="
-                 display:block;
-                 width:36px;
-                 height:36px;
-                 line-height:36px;
-                 background:#00C322;
-                 border-radius:50%;
-                 text-align:center;
-                 font-size:20px;
-                 font-weight:700;
-                 color:#000;
-                 text-decoration:none;
-               ">
-              +
-            </a>
-          </td>
-        </tr>
-      </table>
+        style="
+          width:auto !important;
+          min-width:0 !important;
+          text-align:right;
+        ">
+      <a href="#"
+         style="
+           display:inline-block;
+           width:36px;
+           height:36px;
+           line-height:36px;
+           background:#00C322;
+           border-radius:50%;
+           text-align:center;
+           font-size:20px;
+           font-weight:700;
+           color:#000;
+           text-decoration:none;
+         ">
+        +
+      </a>
     </td>
   </tr>
 </table>`;
