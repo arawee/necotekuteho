@@ -208,9 +208,8 @@ function generateProductListHTML(block: NewsletterBlock): string {
   const renderPriceRow = (p: any) => `
   <table width="100%" cellspacing="0" cellpadding="0">
     <tr>
-  
       <!-- PRICE -->
-      <td valign="middle" style="font-weight:700;white-space:nowrap;">
+      <td valign="middle" style="font-weight:700;">
         ${
           p.salePrice
             ? `<span style="color:#FF4C4C;">${p.salePrice}</span>
@@ -220,30 +219,49 @@ function generateProductListHTML(block: NewsletterBlock): string {
             : `${p.price || ""}`
         }
       </td>
-  
-      <!-- SPACER (THIS IS THE KEY) -->
+    
+      <!-- SPACER (THIS IS THE CRITICAL PART) -->
       <td width="100%" style="font-size:0;line-height:0;">&nbsp;</td>
-  
+    
       <!-- BUTTON -->
-      <td valign="middle" width="36" style="width:36px;">
-        <a href="${escapeAttr(p.url || "#")}"
-           style="
-             display:block;
-             width:36px;
-             height:36px;
-             line-height:36px;
-             background:#00C322;
-             border-radius:50%;
-             text-align:center;
-             text-decoration:none;
-             font-size:20px;
-             font-weight:700;
-             color:#000;
-           ">
-          +
-        </a>
+      <td valign="middle" width="36">
+        <table role="presentation"
+               width="36"
+               height="36"
+               cellspacing="0"
+               cellpadding="0"
+               border="0">
+          <tr>
+            <td
+              width="36"
+              height="36"
+              align="center"
+              valign="middle"
+              style="
+                width:36px;
+                height:36px;
+                background:#00C322;
+                border-radius:50%;
+                line-height:36px;
+                text-align:center;
+              ">
+              <a href="${escapeAttr(p.url || "#")}"
+                 style="
+                   display:block;
+                   width:36px;
+                   height:36px;
+                   line-height:36px;
+                   font-size:20px;
+                   font-weight:700;
+                   color:#000;
+                   text-decoration:none;
+                 ">
+                +
+              </a>
+            </td>
+          </tr>
+        </table>
       </td>
-  
     </tr>
   </table>
   `;
