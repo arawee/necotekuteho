@@ -14,7 +14,7 @@ const ICON_INLINE = (glyph: string, color: string, sizePx: number = 14) =>
   `<span style="display:inline-block;color:${color};font-size:${sizePx}px;font-weight:700;line-height:1;height:${sizePx}px;vertical-align:middle;text-decoration:none;mso-line-height-rule:exactly;">${glyph}</span>`;
 
 const ICON_CIRCLE = (glyph: string, color: string, boxPx: number = 36, sizePx: number = 16) =>
-  `<span style="display:block;width:${boxPx}px;height:${boxPx}px;line-height:${boxPx}px;text-align:center;color:${color};font-size:${sizePx}px;font-weight:700;text-decoration:none;mso-line-height-rule:exactly;position:relative;top:2px;">${glyph}</span>`;
+  `<span style="display:block;width:${boxPx}px;height:${boxPx}px;padding-top:4px;line-height:${boxPx - 4}px;box-sizing:border-box;text-align:center;color:${color};font-size:${sizePx}px;font-weight:700;text-decoration:none;mso-line-height-rule:exactly;">${glyph}</span>`;
 
 // Keep existing names for inline usage
 const ARROW_ICON_SVG = (color: string = "#00C322") => ICON_INLINE("→", color, 14);
@@ -254,7 +254,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
           </tr>
         </table>
 
-        <table width="100%" cellspacing="0" cellpadding="0">
+        <table width="100%" cellspacing="0" cellpadding="0" style="padding-top:1rem;">
           <tr>
             <td style="font-weight:700;">
               ${
@@ -268,7 +268,9 @@ function generateProductListHTML(block: NewsletterBlock): string {
                   : `${p.price || ""}`
               }
             </td>
-            <td align="right" style="text-align:right;">
+          </tr>
+          <tr>
+            <td style="padding-top:2rem;">
               <a href="${escapeAttr(p.url || "#")}"
                  style="display:inline-block;width:36px;height:36px;background:#00C322;border-radius:50%;line-height:36px;text-align:center;white-space:nowrap;text-decoration:none;">
                 ${PLUS_ICON_CIRCLE("#000")}
@@ -346,7 +348,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
                     </tr>
                   </table>
 
-                  <table width="100%" cellspacing="0" cellpadding="0">
+                  <table width="100%" cellspacing="0" cellpadding="0" style="padding-top:1rem;">
                     <tr>
                       <td style="font-weight:700;">
                         ${
@@ -362,7 +364,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
                       </td>
                     </tr>
                     <tr>
-                      <td style="padding-top:8px;">
+                      <td style="padding-top:2rem;">
                         <a href="${escapeAttr(p.url || "#")}"
                            style="display:inline-block;width:36px;height:36px;background:#00C322;border-radius:50%;line-height:36px;text-align:center;white-space:nowrap;text-decoration:none;">
                           ${PLUS_ICON_CIRCLE("#000")}
@@ -814,7 +816,7 @@ function generateLocationsHTML(block: NewsletterBlock): string {
         <div style="margin-top:12px;">
           <a href="${escapeAttr(loc.primaryButtonUrl || "#")}"
              style="display:inline-block;width:36px;height:36px;border:1px solid #00C322;border-radius:50%;line-height:36px;text-align:center;text-decoration:none;">
-            ${ARROW_ICON_SVG("#00C322")}
+            ${ARROW_ICON_CIRCLE("#00C322")}
           </a>
         </div>
       </td>
