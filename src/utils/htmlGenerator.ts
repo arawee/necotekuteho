@@ -206,7 +206,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
   const tagBg = (c: string) => (c === "red" ? "#FF4C4C" : c === "green" ? "#00C322" : "#161616");
 
   const renderPriceRow = (p: any) => `
-<table width="100%" cellspacing="0" cellpadding="0" class="price-row">
+<table width="100%" cellspacing="0" cellpadding="0">
   <tr>
     <td valign="middle" style="font-weight:700;">
       ${
@@ -218,24 +218,29 @@ function generateProductListHTML(block: NewsletterBlock): string {
           : `${p.price || ""}`
       }
     </td>
-    <td width="36" align="right" valign="middle"
-        style="width:36px;min-width:36px;">
-      <a href="${escapeAttr(p.url || "#")}"
-         style="
-           display:block;
-           width:36px;
-           height:36px;
-           line-height:36px;
-           background:#00C322;
-           border-radius:50%;
-           text-align:center;
-           font-size:20px;
-           font-weight:700;
-           color:#000;
-           text-decoration:none;
-         ">
-        +
-      </a>
+    <td valign="middle">
+      <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="right">
+        <tr>
+          <td>
+            <a href="#"
+               style="
+                 display:block;
+                 width:36px;
+                 height:36px;
+                 line-height:36px;
+                 background:#00C322;
+                 border-radius:50%;
+                 text-align:center;
+                 font-size:20px;
+                 font-weight:700;
+                 color:#000;
+                 text-decoration:none;
+               ">
+              +
+            </a>
+          </td>
+        </tr>
+      </table>
     </td>
   </tr>
 </table>`;
