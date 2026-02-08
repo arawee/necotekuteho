@@ -209,10 +209,47 @@ function generateProductListHTML(block: NewsletterBlock): string {
 
   const tagBg = (c: string) => (c === "red" ? "#FF4C4C" : c === "green" ? "#00C322" : "#161616");
 
+  const renderPriceRow = (p: any) => `
+<table width="100%" cellspacing="0" cellpadding="0" class="price-row">
+  <tr valign="middle">
+    <td style="font-weight:700;vertical-align:middle;">
+      ${
+        p.salePrice
+          ? `
+            <span style="color:#FF4C4C;">${p.salePrice}</span>
+            <span style="margin-left:8px;font-size:12px;font-weight:500;text-decoration:line-through;white-space:nowrap;">
+              ${p.price || ""}
+            </span>
+          `
+          : `${p.price || ""}`
+      }
+    </td>
+    <td width="36" align="right" valign="middle"
+        style="width:36px;min-width:36px;vertical-align:middle;">
+      <a href="${escapeAttr(p.url || "#")}"
+         style="
+           display:block;
+           width:36px;
+           height:36px;
+           line-height:36px;
+           background:#00C322;
+           border-radius:50%;
+           text-align:center;
+           font-size:20px;
+           font-weight:700;
+           color:#000000;
+           text-decoration:none;
+           padding:0;
+           margin:0;
+         ">
+        +
+      </a>
+    </td>
+  </tr>
+</table>`;
+
   const renderCell = (p: any, i: number, n: number) => {
     const colPct = 100 / n;
-
-    // gaps between cols = (n-1) * 12
     const totalGaps = (n - 1) * (GUTTER * 2);
     const innerW = Math.floor((TABLE_WIDTH - totalGaps) / n);
 
@@ -221,20 +258,20 @@ function generateProductListHTML(block: NewsletterBlock): string {
 
     return `
 <td valign="top" width="${colPct}%" style="width:${colPct}%;padding:0 ${padR} 0 ${padL};">
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="table-layout:fixed;border-collapse:collapse;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="table-layout:fixed;">
     <tr>
-      <td style="padding:0;margin:0;line-height:0;font-size:0;">
+      <td style="line-height:0;font-size:0;">
         ${
           p.image
             ? `<img src="${escapeAttr(p.image)}" width="${innerW}" alt="${escapeAttr(p.name || "")}"
-                 style="display:block;width:100%;max-width:${innerW}px;height:auto;aspect-ratio:3/4;object-fit:cover;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;vertical-align:bottom;" />`
+                 style="display:block;width:100%;max-width:${innerW}px;height:auto;border:0;" />`
             : `<div style="width:100%;padding-top:133.33%;background:#E5E5E5;"></div>`
         }
       </td>
     </tr>
     <tr>
-      <td style="font-family:'JetBrains Mono',monospace;padding:0;margin:0;">
-        <div style="margin:0 0 8px 0;padding:0;line-height:1;">
+      <td style="font-family:'JetBrains Mono',monospace;">
+        <div style="margin:8px 0;line-height:1;">
           ${(p.tags || [])
             .map(
               (t: any) =>
@@ -245,213 +282,73 @@ function generateProductListHTML(block: NewsletterBlock): string {
             .join("")}
         </div>
 
-        <h3 style="margin:0 0 4px 0;font-size:16px;font-weight:700;">${p.name || ""}</h3>
+        <h3 style="margin:0 0 4px;font-size:16px;font-weight:700;">
+          ${p.name || ""}
+        </h3>
 
         <table width="100%" cellspacing="0" cellpadding="0">
           <tr>
             <td style="font-size:10px;"><strong>Alk. →</strong> ${p.alcohol || ""}%</td>
-            <td align="right" style="font-size:10px;width:72px;white-space:nowrap;">${p.volume || ""}</td>
+            <td align="right" style="font-size:10px;white-space:nowrap;">
+              ${p.volume || ""}
+            </td>
           </tr>
         </table>
 
-        <table width="100%" cellspacing="0" cellpadding="0" class="no-stack">
-          <tr>
-            <td style="font-weight:700;">
-              ${
-                p.salePrice
-                  ? `
-                    <span style="color:#FF4C4C;">${p.salePrice}</span>
-                    <span style="display:inline-block;margin-left:8px;color:#000000;font-size:12px;font-weight:500;text-decoration:line-through;white-space:nowrap;">
-                      ${p.price || ""}
-                    </span>
-                  `
-                  : `${p.price || ""}`
-              }
-            </td>
-            <td width="1%" align="right"
-                style="white-space:nowrap;padding-top:16px;">
-              <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="right">
-                <tr>
-                  <td>
-                    <a href="${escapeAttr(p.url || "#")}"
-                       style="display:block;text-decoration:none;">
-                      <table role="presentation"
-                             width="36"
-                             height="36"
-                             cellspacing="0"
-                             cellpadding="0"
-                             border="0"
-                             style="background:#00C322;border-radius:50%;">
-                        <tr>
-                          <td align="center" valign="middle"
-                              style="line-height:0;font-size:0;padding-top:2px;">
-                            <span style="display:block;">
-                              ${PLUS_ICON_CIRCLE("#000")}
-                            </span>
-                          </td>
-                        </tr>
-                      </table>
-                    </a>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>
+        ${renderPriceRow(p)}
       </td>
     </tr>
   </table>
 </td>`;
   };
 
-  const renderRow = (row: any[], forceCols?: number) => {
-    if (!row.length) return "";
-    const n = forceCols ?? row.length;
-
-    const missing = forceCols ? Math.max(0, n - row.length) : 0;
-    const colPct = 100 / n;
-
-    return `
-<table role="presentation" width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;table-layout:fixed;">
+  const renderRow = (row: any[]) => `
+<table role="presentation" width="${TABLE_WIDTH}" class="wrap"
+       style="width:100%;max-width:${TABLE_WIDTH}px;table-layout:fixed;">
   <tr>
-    ${row.map((p, i) => renderCell(p, i, n)).join("")}
-    ${
-      missing
-        ? Array.from({ length: missing })
-            .map(() => `<td width="${colPct}%" style="width:${colPct}%;font-size:0;line-height:0;">&nbsp;</td>`)
-            .join("")
-        : ""
-    }
+    ${row.map((p, i) => renderCell(p, i, row.length)).join("")}
   </tr>
 </table>`;
-  };
-
-  // Mobile: 1 column list (prevents “missing images” caused by td.stack)
-  const mobileBlocks = items
-    .map(
-      (p: any, idx: number) => `
-      ${idx ? `<div style="height:12px;line-height:12px;font-size:0;">&nbsp;</div>` : ""}
-      <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" class="wrap"
-             style="width:100%;max-width:600px;table-layout:fixed;">
-        <tr>
-          <td style="padding:0;">
-            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="table-layout:fixed;border-collapse:collapse;">
-              <tr>
-                <td style="padding:0;margin:0;line-height:0;font-size:0;">
-                  ${
-                    p.image
-                      ? `<img src="${escapeAttr(p.image)}" width="600" alt="${escapeAttr(p.name || "")}"
-                             style="display:block;width:100%;max-width:600px;height:auto;aspect-ratio:3/4;object-fit:cover;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;vertical-align:bottom;" />`
-                      : `<div style="width:100%;padding-top:133.33%;background:#E5E5E5;"></div>`
-                  }
-                </td>
-              </tr>
-              <tr>
-                <td style="font-family:'JetBrains Mono',monospace;padding:0;margin:0;">
-                  <div style="margin:0 0 8px 0;padding:0;line-height:1;">
-                    ${(p.tags || [])
-                      .map(
-                        (t: any) =>
-                          `<span style="display:inline-block;background:${tagBg(
-                            t.color,
-                          )};color:#fff;font-size:10px;padding:6px 8px;margin:0 4px 4px 0;">${t.text}</span>`,
-                      )
-                      .join("")}
-                  </div>
-
-                  <h3 style="margin:0 0 4px 0;font-size:16px;font-weight:700;">${p.name || ""}</h3>
-
-                  <table width="100%" cellspacing="0" cellpadding="0">
-                    <tr>
-                      <td style="font-size:10px;"><strong>Alk. →</strong> ${p.alcohol || ""}%</td>
-                      <td align="right" style="font-size:10px;width:72px;white-space:nowrap;">${p.volume || ""}</td>
-                    </tr>
-                  </table>
-
-                  <table width="100%" cellspacing="0" cellpadding="0">
-                    <tr>
-                      <td style="font-weight:700;">
-                        ${
-                          p.salePrice
-                            ? `
-                              <span style="color:#FF4C4C;">${p.salePrice}</span>
-                              <span style="display:inline-block;margin-left:8px;color:#000000;font-size:12px;font-weight:500;text-decoration:line-through;white-space:nowrap;">
-                                ${p.price || ""}
-                              </span>
-                            `
-                            : `${p.price || ""}`
-                        }
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style="padding-top:16px;">
-                        <table role="presentation" cellspacing="0" cellpadding="0" border="0">
-                          <tr>
-                            <td>
-                              <a href="${escapeAttr(p.url || "#")}"
-                                 style="display:block;text-decoration:none;">
-                                <table role="presentation"
-                                       width="36"
-                                       height="36"
-                                       cellspacing="0"
-                                       cellpadding="0"
-                                       border="0"
-                                       style="background:#00C322;border-radius:50%;">
-                                  <tr>
-                                    <td align="center" valign="middle"
-                                        style="line-height:0;font-size:0;padding-top:2px;">
-                                      <span style="display:block;">
-                                        ${PLUS_ICON_CIRCLE("#000")}
-                                      </span>
-                                    </td>
-                                  </tr>
-                                </table>
-                              </a>
-                            </td>
-                          </tr>
-                        </table>
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
-    `,
-    )
-    .join("");
 
   return `
 <tr>
   <td align="center" style="padding:32px 24px;">
-    <table role="presentation" width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;">
+    <table role="presentation" width="${TABLE_WIDTH}" class="wrap"
+           style="width:100%;max-width:${TABLE_WIDTH}px;">
       <tr>
         <td style="padding-bottom:16px;">
-          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+          <table width="100%">
             <tr>
-              <td width="100%" style="width:100%;">
-                <h2 style="margin:0;font-size:20px;">${content.title || "Mohlo by vám chutnat"}</h2>
-              </td>
-              <td width="1%" align="right" style="width:1%;text-align:right;white-space:nowrap;">
-                ${
-                  showViewAll
-                    ? `<a href="${escapeAttr(viewAllUrl)}" style="display:inline-block;font-size:14px;text-decoration:none;white-space:nowrap;mso-line-height-rule:exactly;"><span style="text-decoration:none;">→ </span><span style="text-decoration:underline;">${viewAllText}</span></a>`
-                    : ""
-                }
-              </td>
+              <td><h2 style="margin:0;font-size:20px;">
+                ${content.title || "Mohlo by vám chutnat"}
+              </h2></td>
+              ${
+                showViewAll
+                  ? `<td align="right">
+                       <a href="${escapeAttr(viewAllUrl)}"
+                          style="font-size:14px;text-decoration:underline;">
+                         → ${viewAllText}
+                       </a>
+                     </td>`
+                  : ""
+              }
             </tr>
           </table>
         </td>
       </tr>
 
-      <!-- Desktop -->
-      <tr class="hide-on-mobile"><td>${renderRow(row1 /* stretch */)}</td></tr>
-      ${row2.length ? `<tr class="hide-on-mobile"><td style="padding-top:12px;">${renderRow(row2, 3)}</td></tr>` : ""}
+      <tr class="hide-on-mobile"><td>${renderRow(row1)}</td></tr>
+      ${
+        row2.length
+          ? `<tr class="hide-on-mobile"><td style="padding-top:12px;">
+               ${renderRow(row2)}
+             </td></tr>`
+          : ""
+      }
 
-      <!-- Mobile -->
-      <tr class="show-on-mobile"><td>${mobileBlocks}</td></tr>
+      <tr class="show-on-mobile">
+        <td>${items.map((p, i) => renderRow([p])).join("")}</td>
+      </tr>
     </table>
   </td>
 </tr>`;
@@ -1857,21 +1754,16 @@ function getNewsletterCSS(): string {
       overflow: hidden;
       mso-hide: all;
     }
-
     @media only screen and (max-width: 620px) {
-      table.no-stack,
-      table.no-stack tr,
-      table.no-stack td {
+      table.price-row,
+      table.price-row tr,
+      table.price-row td {
         width: auto !important;
         min-width: 0 !important;
-      }
-    
-      table.no-stack td {
         display: table-cell !important;
         vertical-align: middle !important;
       }
     }
-
     /* Responsive - Mobile */
     @media only screen and (max-width: 620px) {
     /* Hide spacer cells used for centering/filling rows */
