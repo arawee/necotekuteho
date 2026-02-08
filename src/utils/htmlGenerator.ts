@@ -265,6 +265,8 @@ function generateProductListHTML(block: NewsletterBlock): string {
                     font-size:18px;
                     font-weight:700;
                     text-align:center;
+                    position: relative;
+                    top: 1px;
                     mso-line-height-rule:exactly;
                   "
                 >+</span>
