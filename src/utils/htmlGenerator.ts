@@ -402,13 +402,20 @@ function generateProductListHTML(block: NewsletterBlock): string {
           </table>
         </td>
       </tr>
+      <tr>
+        <td>
+          <!-- Desktop -->
+          <div class="hide-on-mobile">
+            ${renderRow(row1 /* stretch */)}
+            ${row2.length ? `<div style="height:12px;line-height:12px;font-size:0;">&nbsp;</div>${renderRow(row2, 3)}` : ""}
+          </div>
 
-      <!-- Desktop -->
-      <tr class="hide-on-mobile"><td>${renderRow(row1 /* stretch */)}</td></tr>
-      ${row2.length ? `<tr class="hide-on-mobile"><td style="padding-top:12px;">${renderRow(row2, 3)}</td></tr>` : ""}
-
-      <!-- Mobile -->
-      <tr class="show-on-mobile"><td>${mobileBlocks}</td></tr>
+          <!-- Mobile -->
+          <div class="show-on-mobile">
+            ${mobileBlocks}
+          </div>
+        </td>
+      </tr>
     </table>
   </td>
 </tr>`;
