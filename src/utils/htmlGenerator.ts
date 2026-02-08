@@ -268,11 +268,29 @@ function generateProductListHTML(block: NewsletterBlock): string {
                   : `${p.price || ""}`
               }
             </td>
-            <td align="right" style="text-align:right;">
-              <a href="${escapeAttr(p.url || "#")}"
-                 style="display:inline-block;width:36px;height:36px;background:#00C322;border-radius:50%;line-height:36px;text-align:center;white-space:nowrap;text-decoration:none;">
-                ${PLUS_ICON_CIRCLE("#000")}
-              </a>
+            <td width="1%" align="right" style="white-space:nowrap;">
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="right">
+                <tr>
+                  <td>
+                    <a href="${escapeAttr(p.url || "#")}"
+                       style="text-decoration:none;display:block;">
+                      <table role="presentation"
+                             width="36"
+                             height="36"
+                             cellspacing="0"
+                             cellpadding="0"
+                             border="0"
+                             style="background:#00C322;border-radius:50%;">
+                        <tr>
+                          <td align="center" valign="middle" style="line-height:0;font-size:0;">
+                            ${PLUS_ICON_CIRCLE("#000")}
+                          </td>
+                        </tr>
+                      </table>
+                    </a>
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
         </table>
@@ -1813,30 +1831,6 @@ function getNewsletterCSS(): string {
       max-height: 0;
       overflow: hidden;
       mso-hide: all;
-    }
-
-    /* MOBILE FIRST */
-    .mobile-only {
-      max-height: none;
-      overflow: visible;
-    }
-    .desktop-only {
-      max-height: 0;
-      overflow: hidden;
-      mso-hide: all;
-    }
-    
-    /* DESKTOP OVERRIDE */
-    @media only screen and (min-width: 621px) {
-      .mobile-only {
-        max-height: 0 !important;
-        overflow: hidden !important;
-        mso-hide: all !important;
-      }
-      .desktop-only {
-        max-height: none !important;
-        overflow: visible !important;
-      }
     }
 
     /* Responsive - Mobile */
