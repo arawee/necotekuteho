@@ -27,8 +27,16 @@ const PLUS_ICON_CIRCLE = (color: string = "#000000") => ICON_CIRCLE("+", color, 
 // The Zichovec logo - hosted PNG with transparent background for email client compatibility
 const ZICHOVEC_LOGO_URL =
   "https://yzbjnjhrrvqcdwfdoksa.supabase.co/storage/v1/object/public/newsletter-images/images/zichovec-logo-transparent.png";
-const ZICHOVEC_LOGO_HTML = `<img src="${ZICHOVEC_LOGO_URL}" alt="ZICHOVEC" width="400" style="display:block;width:400px;max-width:100%;height:auto;margin:0 auto;border:0;outline:none;" />`;
-
+const ZICHOVEC_LOGO_HTML = `
+<a href="https://www.pivovarzichovec.cz/"
+   style="display:inline-block;text-decoration:none;border:0;">
+  <img
+    src="${ZICHOVEC_LOGO_URL}"
+    alt="ZICHOVEC"
+    width="400"
+    style="display:block;width:400px;max-width:100%;height:auto;margin:0 auto;border:0;outline:none;"
+  />
+</a>`;
 // Helper function to determine if a color is dark
 const isColorDark = (hexColor: string): boolean => {
   const hex = hexColor.replace("#", "");
@@ -297,11 +305,17 @@ function generateProductListHTML(block: NewsletterBlock): string {
     const totalGaps = (n - 1) * (GUTTER * 2);
     const innerW = Math.floor((TABLE_WIDTH - totalGaps) / n);
 
-    const padL = i === 0 ? "0" : `${GUTTER}px`;
-    const padR = i === n - 1 ? "0" : `${GUTTER}px`;
+    const pad =
+      n === 3
+        ? i === 0
+          ? "0 4px 0 8px" // left column
+          : i === 1
+            ? "0 4px" // middle column (4px / 4px)
+            : "0 8px 0 4px" // right column
+        : "0"; // fallback
 
     return `
-<td width="${colPct}%" valign="top" style="padding:0 ${padR} 0 ${padL};">
+<td width="${colPct}%" valign="top" style="padding:${pad};">
   <table width="100%" cellspacing="0" cellpadding="0">
     <tr>
       <td style="line-height:0;font-size:0;">
@@ -416,11 +430,17 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
     const totalGaps = (nInRow - 1) * GAP;
     const innerW = Math.floor((TABLE_WIDTH - totalGaps) / nInRow);
 
-    const padLeft = idx === 0 ? 0 : GUTTER;
-    const padRight = idx === nInRow - 1 ? 0 : GUTTER;
+    const pad =
+      n === 3
+        ? i === 0
+          ? "0 4px 0 8px" // left column
+          : i === 1
+            ? "0 4px" // middle column (4px / 4px)
+            : "0 8px 0 4px" // right column
+        : "0"; // fallback
 
     return `
-<td valign="top" width="${colPct}%" style="width:${colPct}%;padding:0 ${padRight}px 0 ${padLeft}px;">
+<td valign="top" width="${colPct}%" style="width:${colPct}%;padding:${pad};">
   <a href="${escapeAttr(c.url || "#")}" style="text-decoration:none;display:block;">
     <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;border-collapse:collapse;">
       <tr>
