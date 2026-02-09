@@ -14,7 +14,7 @@ const ICON_INLINE = (glyph: string, color: string, sizePx: number = 14) =>
   `<span style="display:inline-block;color:${color};font-size:${sizePx}px;font-weight:700;line-height:1;height:${sizePx}px;vertical-align:middle;text-decoration:none;mso-line-height-rule:exactly;">${glyph}</span>`;
 
 const ICON_CIRCLE = (glyph: string, color: string, boxPx: number = 36, sizePx: number = 16) =>
-  `<span style="display:block;width:${boxPx}px;height:${boxPx}px;line-height:${boxPx}px;text-align:center;color:${color};font-size:${sizePx}px;font-weight:700;text-decoration:none;mso-line-height-rule:exactly;position:relative;top:2px;">${glyph}</span>`;
+  `<span style="display:block;width:${boxPx}px;height:${boxPx}px;line-height:${boxPx}px;text-align:center;color:${color};font-size:${sizePx}px;font-weight:700;text-decoration:none;mso-line-height-rule:exactly;position:relative;top:4px;">${glyph}</span>`;
 
 // Keep existing names for inline usage
 const ARROW_ICON_SVG = (color: string = "#00C322") => ICON_INLINE("→", color, 14);
