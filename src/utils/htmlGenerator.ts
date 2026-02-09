@@ -587,14 +587,7 @@ function generateMistaHTML(block: NewsletterBlock): string {
     const totalGaps = (n - 1) * (GUTTER * 2);
     const innerW = Math.floor((TABLE_WIDTH - totalGaps) / n);
 
-    const pad =
-      n === 3
-        ? i === 0
-          ? "0 8px 0 0" // left column
-          : i === 1
-            ? "0 4px" // middle column
-            : "0 0 0 8px" // right column
-        : "0";
+    const pad = n === 2 ? (i === 0 ? "0 6px 0 0" : i === 1 ? "0 6px" : "0 0 0 6px") : "0";
 
     return `
 <td valign="top" width="${colPct}%" style="width:${colPct}%;padding:${pad};">
@@ -798,14 +791,7 @@ function generateLocationsHTML(block: NewsletterBlock): string {
     const totalGaps = (nInRow - 1) * GAP;
     const innerW = Math.floor((TABLE_WIDTH - totalGaps) / nInRow);
 
-    const pad =
-      nInRow === 3
-        ? idx === 0
-          ? "0 8px 0 0" // left column
-          : idx === 1
-            ? "0 4px" // middle column
-            : "0 0 0 8px" // right column
-        : "0";
+    const pad = nInRow === 2 ? (idx === 0 ? "0 6px 0 0" : "0 0 0 6px") : "0";
 
     return `
 <td valign="top" width="${colPct}%" style="width:${colPct}%;padding:${pad};">
@@ -829,10 +815,28 @@ function generateLocationsHTML(block: NewsletterBlock): string {
         <p style="margin:0 0 12px 0;font-size:12px;">${loc.weekendHours || ""}</p>
 
         <div style="margin-top:12px;">
-          <a href="${escapeAttr(loc.primaryButtonUrl || "#")}"
-             style="display:inline-block;width:36px;height:36px;border:1px solid #00C322;border-radius:50%;line-height:36px;text-align:center;text-decoration:none;">
-            ${ARROW_ICON_SVG("#00C322")}
-          </a>
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+            <tr>
+              <td
+                width="36"
+                height="36"
+                align="center"
+                valign="middle"
+                style="
+                  width:36px;
+                  height:36px;
+                  border:1px solid #00C322;
+                  border-radius:50%;
+                  line-height:36px;
+                  text-align:center;
+                ">
+                <a href="${escapeAttr(loc.primaryButtonUrl || "#")}"
+                   style="display:block;width:36px;height:36px;line-height:36px;text-decoration:none;">
+                  ${ARROW_ICON_CIRCLE("#00C322")}
+                </a>
+              </td>
+            </tr>
+          </table>
         </div>
       </td>
     </tr>
