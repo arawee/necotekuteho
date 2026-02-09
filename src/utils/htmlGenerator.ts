@@ -228,11 +228,17 @@ function generateProductListHTML(block: NewsletterBlock): string {
   const viewAllUrl = (content as any).viewAllUrl || "#";
 
   const viewAllHTML = showViewAll
-    ? `<a href="${escapeAttr(viewAllUrl)}"
-         style="display:inline-block;font-size:14px;text-decoration:none;white-space:nowrap;mso-line-height-rule:exactly;">
-         <span style="text-decoration:none;">→ </span>
-         <span style="text-decoration:underline;">${viewAllText}</span>
-       </a>`
+    ? `<table role="presentation" cellspacing="0" cellpadding="0" border="0">
+        <tr>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:14px;white-space:nowrap;">
+            <span>→ </span>
+            <a href="${escapeAttr(viewAllUrl)}"
+               style="color:inherit;text-decoration:underline;">
+              ${viewAllText}
+            </a>
+          </td>
+        </tr>
+      </table>`
     : "";
 
   const renderPriceRow = (p: any) => `
@@ -277,16 +283,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
                 text-align:center;
               ">
               <a href="${escapeAttr(p.url || "#")}"
-                 style="
-                   display:block;
-                   width:36px;
-                   height:36px;
-                   line-height:36px;
-                   font-size:20px;
-                   font-weight:700;
-                   color:#000;
-                   text-decoration:none;
-                 ">
+               style="color:#000;text-decoration:none;display:inline-block;">
                 <span
                   style="
                     display:block;
@@ -504,7 +501,17 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
   for (let i = 0; i < items.length; i += 2) mobileRows.push(items.slice(i, i + 2));
 
   const viewAllHTML = showViewAll
-    ? `<a href="${escapeAttr(viewAllUrl)}" style="display:inline-block;font-size:14px;text-decoration:none;white-space:nowrap;mso-line-height-rule:exactly;"><span style="text-decoration:none;">→ </span><span style="text-decoration:underline;">${viewAllText}</span></a>`
+    ? `<table role="presentation" cellspacing="0" cellpadding="0" border="0">
+        <tr>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:14px;white-space:nowrap;">
+            <span style="text-decoration:none;">→ </span>
+            <a href="${escapeAttr(viewAllUrl)}"
+               style="color:inherit;text-decoration:underline;">
+              ${viewAllText}
+            </a>
+          </td>
+        </tr>
+      </table>`
     : "";
 
   return `<!-- Kategorie -->
@@ -1124,9 +1131,26 @@ function generatePromoBoxHTML(block: NewsletterBlock): string {
             <table role="presentation" border="0" cellspacing="0" cellpadding="0" style="margin-bottom:24px;">
               ${featuresHTML}
             </table>
-            <a href="${box.buttonUrl || "#"}" style="display:inline-block;width:auto;white-space:nowrap;padding:12px 24px;border:1px solid ${borderColor};color:${textColor};font-size:14px;text-decoration:none;line-height:1;">
-              ${box.buttonText}
-            </a>
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+              <tr>
+                <td
+                  align="center"
+                  style="
+                    padding:12px 24px;
+                    border:1px solid ${borderColor};
+                    font-family:'JetBrains Mono',monospace;
+                    font-size:14px;
+                    color:${textColor};
+                    white-space:nowrap;
+                  "
+                >
+                  <a href="${box.buttonUrl || "#"}"
+                     style="color:${textColor};text-decoration:none;display:inline-block;">
+                    ${box.buttonText}
+                  </a>
+                </td>
+              </tr>
+            </table>
           </td>
         </tr>
       </table>
@@ -1641,10 +1665,26 @@ function generatePoziceHTML(block: NewsletterBlock): string {
           <td style="padding:16px;font-family:'JetBrains Mono',monospace;">
             <h4 style="margin:0 0 12px 0;font-size:16px;font-weight:700;color:${textColor};">${p.title}</h4>
             <p style="margin:0 0 1rem 0;font-size:12px;color:${textColor};">${p.description}</p>
-            <a href="${p.buttonUrl || "#"}" style="display:inline-block;padding:12px 24px;border:1px solid ${borderColor};color:${textColor};font-size:12px;text-decoration:none;line-height:1;mso-line-height-rule:exactly;white-space:nowrap;width:auto;">
-              ${ARROW_ICON_SVG(borderColor)}
-              <span style="display:inline-block;vertical-align:middle;margin-left:8px;line-height:1;">${p.buttonText}</span>
-            </a>
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+              <tr>
+                <td
+                  style="
+                    padding:12px 24px;
+                    border:1px solid ${borderColor};
+                    font-family:'JetBrains Mono',monospace;
+                    font-size:12px;
+                    color:${textColor};
+                    white-space:nowrap;
+                  "
+                >
+                  <a href="${p.buttonUrl || "#"}"
+                     style="color:${textColor};text-decoration:none;display:inline-block;">
+                    ${ARROW_ICON_SVG(borderColor)}
+                    <span style="margin-left:8px;">${p.buttonText}</span>
+                  </a>
+                </td>
+              </tr>
+            </table>
           </td>
         </tr>
       </table>
