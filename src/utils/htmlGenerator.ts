@@ -13,29 +13,19 @@ const escapeAttr = (v: any) =>
 const ICON_INLINE = (glyph: string, color: string, sizePx: number = 14) =>
   `<span style="display:inline-block;color:${color};font-size:${sizePx}px;font-weight:700;line-height:1;height:${sizePx}px;vertical-align:middle;text-decoration:none;mso-line-height-rule:exactly;">${glyph}</span>`;
 
-const ICON_CIRCLE = (glyph: string, color: string, boxPx: number = 36, sizePx: number = 16) => `
-<table role="presentation" width="${boxPx}" height="${boxPx}" cellspacing="0" cellpadding="0" border="0">
-  <tr>
-    <td
-      align="center"
-      valign="middle"
-      style="
-        width:${boxPx}px;
-        height:${boxPx}px;
-        padding-top:2px; /* ← THIS is the vertical correction */
-        font-size:${sizePx}px;
-        font-weight:700;
-        color:${color};
-        line-height:1;
-        text-align:center;
-        mso-line-height-rule:exactly;
-      "
-    >
-      ${glyph}
-    </td>
-  </tr>
-</table>
-`;
+const ICON_CIRCLE = (glyph: string, color: string, _boxPx: number = 36, sizePx: number = 16) =>
+  `<span
+    style="
+      display:inline-block;
+      font-size:${sizePx}px;
+      font-weight:700;
+      color:${color};
+      line-height:1;
+      padding-top:4px; /* ← THIS is the vertical correction */
+      mso-line-height-rule:exactly;
+    "
+  >${glyph}</span>`;
+
 // Keep existing names for inline usage
 const ARROW_ICON_SVG = (color: string = "#00C322") => ICON_INLINE("→", color, 14);
 const PLUS_ICON_SVG = (color: string = "#000000") => ICON_INLINE("+", color, 14);
@@ -453,10 +443,10 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
     const pad =
       nInRow === 3
         ? idx === 0
-          ? "0 4px 0 0" // left column
+          ? "0 8px 0 0" // left column
           : idx === 1
             ? "0 4px" // middle column
-            : "0 0 0 4px" // right column
+            : "0 0 0 8px" // right column
         : "0";
 
     return `
@@ -600,10 +590,10 @@ function generateMistaHTML(block: NewsletterBlock): string {
     const pad =
       n === 3
         ? i === 0
-          ? "0 4px 0 0" // left column
+          ? "0 8px 0 0" // left column
           : i === 1
             ? "0 4px" // middle column
-            : "0 0 0 4px" // right column
+            : "0 0 0 8px" // right column
         : "0";
 
     return `
@@ -811,10 +801,10 @@ function generateLocationsHTML(block: NewsletterBlock): string {
     const pad =
       nInRow === 3
         ? idx === 0
-          ? "0 4px 0 0" // left column
+          ? "0 8px 0 0" // left column
           : idx === 1
             ? "0 4px" // middle column
-            : "0 0 0 4px" // right column
+            : "0 0 0 8px" // right column
         : "0";
 
     return `
