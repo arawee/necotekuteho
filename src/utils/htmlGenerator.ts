@@ -219,23 +219,6 @@ function generateProductListHTML(block: NewsletterBlock): string {
 
   const renderPriceRow = (p: any) => `
   <table width="100%" cellspacing="0" cellpadding="0">
-
-    <tr>
-      <td style="padding-bottom:1rem;">
-        <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
-          <tr>
-            <td width="100%" style="width:100%;font-family:'JetBrains Mono',monospace;">
-              <h2 style="margin:0;font-size:20px;font-weight:700;color:#212121;">
-                ${content.title || "Vyber si to pravé pro tebe"}
-              </h2>
-            </td>
-            <td width="1%" align="right" style="width:1%;text-align:right;white-space:nowrap;">
-              ${viewAllHTML}
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
     
     <tr>
       <!-- PRICE -->
@@ -381,6 +364,24 @@ function generateProductListHTML(block: NewsletterBlock): string {
 <tr>
   <td align="center" style="padding:32px 24px;">
     <table width="${TABLE_WIDTH}" class="wrap" style="width:100%;max-width:${TABLE_WIDTH}px;">
+    
+      <tr>
+        <td style="padding-bottom:1rem;">
+          <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+            <tr>
+              <td width="100%" style="width:100%;font-family:'JetBrains Mono',monospace;">
+                <h2 style="margin:0;font-size:20px;font-weight:700;color:#212121;">
+                  ${content.title || "Vyber si to pravé pro tebe"}
+                </h2>
+              </td>
+              <td width="1%" align="right" style="width:1%;text-align:right;white-space:nowrap;">
+                ${viewAllHTML}
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    
       <tr><td>${renderRow(row1)}</td></tr>
       ${row2.length ? `<tr><td style="padding-top:12px;">${renderRow(row2)}</td></tr>` : ""}
     </table>
