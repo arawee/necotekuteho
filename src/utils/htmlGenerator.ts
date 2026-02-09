@@ -21,7 +21,7 @@ const ICON_CIRCLE = (glyph: string, color: string, _boxPx: number = 36, sizePx: 
       font-weight:700;
       color:${color};
       line-height:1;
-      padding-top:4px; /* ← THIS is the vertical correction */
+      padding-top:10px; /* ← THIS is the vertical correction */
       mso-line-height-rule:exactly;
     "
   >${glyph}</span>`;
