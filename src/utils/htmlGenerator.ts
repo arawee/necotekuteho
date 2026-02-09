@@ -308,10 +308,10 @@ function generateProductListHTML(block: NewsletterBlock): string {
     const pad =
       n === 3
         ? i === 0
-          ? "0 4px 0 8px" // left column
+          ? "0 4px 0 0" // left column
           : i === 1
             ? "0 4px" // middle column (4px / 4px)
-            : "0 8px 0 4px" // right column
+            : "0 0 0 4px" // right column
         : "0"; // fallback
 
     return `
@@ -433,10 +433,10 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
     const pad =
       nInRow === 3
         ? idx === 0
-          ? "0 4px 0 8px" // left column
+          ? "0 4px 0 0" // left column
           : idx === 1
             ? "0 4px" // middle column
-            : "0 8px 0 4px" // right column
+            : "0 0 0 4px" // right column
         : "0";
 
     return `
@@ -577,11 +577,17 @@ function generateMistaHTML(block: NewsletterBlock): string {
     const totalGaps = (n - 1) * (GUTTER * 2);
     const innerW = Math.floor((TABLE_WIDTH - totalGaps) / n);
 
-    const padL = i === 0 ? "0" : `${GUTTER}px`;
-    const padR = i === n - 1 ? "0" : `${GUTTER}px`;
+    const pad =
+      nInRow === 3
+        ? i === 0
+          ? "0 4px 0 0" // left column
+          : i === 1
+            ? "0 4px" // middle column
+            : "0 0 0 4px" // right column
+        : "0";
 
     return `
-<td valign="top" width="${colPct}%" style="width:${colPct}%;padding:0 ${padR} 0 ${padL};">
+<td valign="top" width="${colPct}%" style="width:${colPct}%;padding:${pad};">
   <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;table-layout:fixed;">
     <tr>
       <td>
@@ -782,11 +788,17 @@ function generateLocationsHTML(block: NewsletterBlock): string {
     const totalGaps = (nInRow - 1) * GAP;
     const innerW = Math.floor((TABLE_WIDTH - totalGaps) / nInRow);
 
-    const padLeft = idx === 0 ? 0 : GUTTER;
-    const padRight = idx === nInRow - 1 ? 0 : GUTTER;
+    const pad =
+      nInRow === 3
+        ? idx === 0
+          ? "0 4px 0 0" // left column
+          : idx === 1
+            ? "0 4px" // middle column
+            : "0 0 0 4px" // right column
+        : "0";
 
     return `
-<td valign="top" width="${colPct}%" style="width:${colPct}%;padding:0 ${padRight}px 0 ${padLeft}px;">
+<td valign="top" width="${colPct}%" style="width:${colPct}%;padding:${pad};">
   <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%"
          style="width:100%;background:#F4F4F4;table-layout:fixed;">
     <tr>
