@@ -218,7 +218,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
     : "";
 
   const renderPriceRow = (p: any) => `
-  <table width="100%" cellspacing="0" cellpadding="0">
+  <table width="100%" cellspacing="0" cellpadding="0" style="margin-top:0.5rem;">
     
     <tr>
       <!-- PRICE -->
@@ -278,8 +278,8 @@ function generateProductListHTML(block: NewsletterBlock): string {
                     font-size:18px;
                     font-weight:700;
                     text-align:center;
-                    position: relative;
-                    top: 1px;
+                    position:relative;
+                    top:3px;
                     mso-line-height-rule:exactly;
                   "
                 >+</span>
@@ -315,7 +315,7 @@ function generateProductListHTML(block: NewsletterBlock): string {
     </tr>
     <tr>
       <td style="font-family:'JetBrains Mono',monospace;">
-        <div style="margin:2px 0 8px 0;">
+        <div style="margin:0 0 8px 0;">
           ${(p.tags || [])
             .map(
               (t: any) =>
