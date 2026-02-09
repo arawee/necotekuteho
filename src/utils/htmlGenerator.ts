@@ -431,13 +431,13 @@ function generateCategoriesHTML(block: NewsletterBlock): string {
     const innerW = Math.floor((TABLE_WIDTH - totalGaps) / nInRow);
 
     const pad =
-      n === 3
-        ? i === 0
+      nInRow === 3
+        ? idx === 0
           ? "0 4px 0 8px" // left column
-          : i === 1
-            ? "0 4px" // middle column (4px / 4px)
+          : idx === 1
+            ? "0 4px" // middle column
             : "0 8px 0 4px" // right column
-        : "0"; // fallback
+        : "0";
 
     return `
 <td valign="top" width="${colPct}%" style="width:${colPct}%;padding:${pad};">
