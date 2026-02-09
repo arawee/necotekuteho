@@ -578,7 +578,7 @@ function generateMistaHTML(block: NewsletterBlock): string {
     const innerW = Math.floor((TABLE_WIDTH - totalGaps) / n);
 
     const pad =
-      nInRow === 3
+      n === 3
         ? i === 0
           ? "0 4px 0 0" // left column
           : i === 1
