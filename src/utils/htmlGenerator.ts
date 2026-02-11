@@ -1366,11 +1366,11 @@ function generateArticleTextHTML(block: NewsletterBlock): string {
         <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="left" style="display:inline;">
           <tr>
             <td style="background-color:#F4F4F4;padding:16px;font-family:'JetBrains Mono',monospace;font-size:14px;">
-              ${hasDate ? `<div style="margin-bottom:4px;"><span style="font-weight:500;">Datum →</span> <span style="color:#666;">${date}</span></div>` : ""}
-              ${hasAuthor ? `<div style="margin-bottom:4px;"><span style="font-weight:500;">Autor →</span> <span style="color:#666;">${author}</span></div>` : ""}
+              ${hasDate ? `<div style="margin-bottom:4px;"><span style="font-weight:500;">Datum &rarr;&nbsp;</span><span style="color:#666;">${date}</span></div>` : ""}
+              ${hasAuthor ? `<div style="margin-bottom:4px;"><span style="font-weight:500;">Autor &rarr;&nbsp;</span><span style="color:#666;">${author}</span></div>` : ""}
               ${
                 hasTags
-                  ? `<div style="margin-bottom:4px;"><span style="font-weight:500;">Tag →</span> <span style="color:#666;text-decoration:underline;">${tags
+                  ? `<div style="margin-bottom:4px;"><span style="font-weight:500;">Tag &rarr;&nbsp;</span><span style="color:#666;text-decoration:underline;">${tags
                       .filter((t: any) => t.text && t.text.trim() !== "")
                       .map(
                         (t: any) =>
@@ -1381,7 +1381,7 @@ function generateArticleTextHTML(block: NewsletterBlock): string {
               }
               ${
                 hasShares
-                  ? `<div><span style="font-weight:500;">Sdílet →</span> <span style="color:#666;text-decoration:underline;">${validShareLinks
+                  ? `<div><span style="font-weight:500;">Sdílet &rarr;&nbsp;</span><span style="color:#666;text-decoration:underline;">${validShareLinks
                       .map((s: any) => `<a href="${s.url}" style="color:#666;text-decoration:underline;">${s.text}</a>`)
                       .join(", ")}</span></div>`
                   : ""
