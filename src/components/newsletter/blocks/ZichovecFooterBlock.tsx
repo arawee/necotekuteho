@@ -107,10 +107,34 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
     onUpdate({ ...block.content, columns: newColumns } as any);
   };
 
+  const addColumnLink = (colIdx: number) => {
+    const newColumns = [...columns];
+    newColumns[colIdx] = { ...newColumns[colIdx], links: [...newColumns[colIdx].links, { text: 'Nový odkaz', url: '#' }] };
+    onUpdate({ ...block.content, columns: newColumns } as any);
+  };
+
+  const deleteColumnLink = (colIdx: number, linkIdx: number) => {
+    const newColumns = [...columns];
+    newColumns[colIdx] = { ...newColumns[colIdx], links: newColumns[colIdx].links.filter((_, i) => i !== linkIdx) };
+    onUpdate({ ...block.content, columns: newColumns } as any);
+    setEditingColumn(null);
+  };
+
   const updateSocial = (idx: number, field: keyof FooterLink, value: string) => {
     const newSocials = [...socials];
     newSocials[idx] = { ...newSocials[idx], [field]: value };
     onUpdate({ ...block.content, socials: newSocials } as any);
+  };
+
+  const addSocial = () => {
+    const newSocials = [...socials, { text: 'Nová síť', url: '#' }];
+    onUpdate({ ...block.content, socials: newSocials } as any);
+  };
+
+  const deleteSocial = (idx: number) => {
+    const newSocials = socials.filter((_, i) => i !== idx);
+    onUpdate({ ...block.content, socials: newSocials } as any);
+    setEditingSocial(null);
   };
 
   return (
@@ -149,6 +173,12 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
                   {social.text}
                 </span>
               ))}
+              <span
+                className="cursor-pointer opacity-50 hover:opacity-100"
+                style={{ color: '#212121', fontSize: '16px' }}
+                onClick={addSocial}
+                title="Přidat sociální síť"
+              >+</span>
             </div>
           </div>
 
@@ -180,6 +210,12 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
                     {link.text}
                   </span>
                 ))}
+                <span
+                  className="cursor-pointer opacity-50 hover:opacity-100"
+                  style={{ color: '#212121', fontSize: '16px' }}
+                  onClick={() => addColumnLink(colIdx)}
+                  title="Přidat odkaz"
+                >+</span>
               </div>
             </div>
           ))}
@@ -228,6 +264,12 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
                   onChange={(e) => updateColumn(editingColumn.colIdx, editingColumn.linkIdx, 'url', e.target.value)}
                 />
               </div>
+              <button
+                className="text-sm text-red-600 hover:text-red-800 underline"
+                onClick={() => editingColumn && deleteColumnLink(editingColumn.colIdx, editingColumn.linkIdx)}
+              >
+                Smazat odkaz
+              </button>
             </div>
           )}
         </DialogContent>
@@ -255,6 +297,12 @@ export const ZichovecFooterBlock = ({ block, onUpdate }: ZichovecFooterBlockProp
                   onChange={(e) => updateSocial(editingSocial, 'url', e.target.value)}
                 />
               </div>
+              <button
+                className="text-sm text-red-600 hover:text-red-800 underline"
+                onClick={() => editingSocial !== null && deleteSocial(editingSocial)}
+              >
+                Smazat sociální síť
+              </button>
             </div>
           )}
         </DialogContent>
