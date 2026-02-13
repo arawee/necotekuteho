@@ -1,39 +1,64 @@
 
+# Cloudflare R2 Image Storage Migration
 
-## Fix Plan: Header Alignment, Icon Positioning, and Mobile Button Layout
+## Overview
+Move all image uploads from the current storage to Cloudflare R2 (zero egress fees). This involves creating a backend function to proxy uploads/deletes to R2, updating the frontend upload hooks, and swapping hardcoded image URLs.
 
-### 1. Replicate Product List header pattern across all blocks
+## What You Need to Do First (Cloudflare Setup)
+1. Create a free Cloudflare account at cloudflare.com (if you don't have one)
+2. Enable R2 in the Cloudflare dashboard
+3. Create an R2 bucket (e.g. `newsletter-images`)
+4. Set the bucket to **public** (Settings > Public access > allow)
+5. Note down your **R2 public URL** (e.g. `https://pub-xxxxx.r2.dev` or a custom domain)
+6. Create an **R2 API token** (R2 > Manage R2 API Tokens > Create):
+   - Permissions: Object Read & Write
+   - Note the **Access Key ID** and **Secret Access Key**
+   - Note your **Cloudflare Account ID**
 
-The Product List header works perfectly because its header table does **not** use `table-layout:fixed`, and its "zobrazit vse" link uses `display:inline-block`. The other five blocks all have `table-layout:fixed` on the header table, which forces the `width:1%` column to literally 6px, pushing the link outside the container.
+You'll then provide these 4 secrets to Lovable when prompted.
 
-**Changes in `src/utils/htmlGenerator.ts`:**
+## Technical Implementation
 
-- **Kategorie** (line 512): Remove `table-layout:fixed;` from the header table style, change viewAllHTML anchor from `display:block` to `display:inline-block`
-- **Mista** (line 731): Remove `table-layout:fixed;` from the header table style, change viewAllHTML anchor from `display:block` to `display:inline-block`
-- **Lokace** (line 905): Remove `table-layout:fixed;` from the header table style, change viewAllHTML anchor from `display:block` to `display:inline-block`
-- **Blog** (line 1028): Remove `table-layout:fixed;` from the header table style, change viewAllHTML anchor from `display:block` to `display:inline-block`
-- **Pozice** (line 1670): Remove `table-layout:fixed;` from the header table style, change viewAllHTML anchor from `display:block` to `display:inline-block`
+### Step 1: Store R2 credentials as secrets
+Add 4 secrets:
+- `R2_ACCESS_KEY_ID`
+- `R2_SECRET_ACCESS_KEY`  
+- `R2_ACCOUNT_ID`
+- `R2_PUBLIC_URL` (the public bucket URL)
 
-Each block's viewAllHTML will also be updated to match the Product List format exactly:
-```html
-<a href="..." style="display:inline-block;font-size:14px;text-decoration:none;white-space:nowrap;mso-line-height-rule:exactly;">
-  <span style="text-decoration:none;">--> </span>
-  <span style="text-decoration:underline;">zobrazit vse</span>
-</a>
-```
+### Step 2: Create `upload-image` edge function
+A new backend function that:
+- Accepts image files via POST (multipart form data)
+- Validates file type and size
+- Uploads to R2 using the S3-compatible API
+- Returns the public URL
+- Also supports DELETE to remove images
+- Handles CORS and authentication
 
-### 2. Bump icon vertical offset from 1px to 2px
+### Step 3: Update `useImageUpload.ts`
+- Replace direct storage upload with a call to the new `upload-image` edge function
+- The returned URL will point to R2 instead of the current storage
+- Keep the metadata save to the database (updating `public_url` to the R2 URL)
 
-In `ICON_CIRCLE` (line 17), change `top:1px` to `top:2px` so the glyphs inside circular buttons are better centered on mobile.
+### Step 4: Update `svg-upload.tsx`
+- Same approach: upload SVGs via the edge function to R2 instead of the `svg-icons` bucket
 
-### 3. Product List: move + button below price on mobile, align left
+### Step 5: Update hardcoded URLs
+These files contain hardcoded storage URLs that need to be pointed to R2 (after re-uploading the static assets):
+- `src/utils/htmlGenerator.ts` - logo URL, 4 benefit icon URLs
+- `src/components/newsletter/blocks/BenefitsBlock.tsx` - 4 benefit icon URLs
 
-In the mobile `mobileBlocks` section of `generateProductListHTML` (around line 350-371), restructure the price/button area so the green + button appears on a new row below the price, aligned to the left, instead of being in the same row aligned right.
+### Step 6: Migrate existing images
+- Existing 266 images in the current storage will keep working at their current URLs
+- New uploads will go to R2
+- Optionally, you can re-upload the static assets (logo, benefit icons) to R2 and update the URLs
 
-### 4. Blog: align the green arrow button to the left on mobile
+## What Won't Change
+- Database schema (newsletters, uploaded_images tables) stays the same
+- UI components (ImageUpload, SvgUpload) keep the same interface
+- Newsletter builder workflow is identical from the user's perspective
 
-The Blog block currently has `text-align:right` on the arrow button container (line 985). This stays for desktop, but in the mobile rendering we need to ensure the arrow is left-aligned. Since Blog doesn't have a separate mobile template (it reuses the same cells), we'll add a left-aligned wrapper or change the alignment to left for the arrow button div.
-
-### Technical Details
-
-All five header table changes follow the same pattern -- removing one CSS property (`table-layout:fixed`) and switching the anchor display from `block` to `inline-block` with the exact same markup as the Product List. This is a minimal, targeted fix that directly replicates the working pattern.
+## Result
+- All new image uploads go to Cloudflare R2 with zero egress fees
+- Existing images continue to work from their current URLs
+- No visible change for users of the newsletter builder
