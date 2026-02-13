@@ -39,46 +39,50 @@ export const useImageUpload = () => {
     setProgress(0);
 
     try {
-      // Generate unique filename
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-      const filePath = `images/${fileName}`;
-
-      // Upload to Supabase Storage
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('newsletter-images')
-        .upload(filePath, file, {
-          cacheControl: '3600',
-          upsert: false
-        });
-
-      if (uploadError) {
-        throw uploadError;
-      }
-
-      // Get public URL
-      const { data: urlData } = supabase.storage
-        .from('newsletter-images')
-        .getPublicUrl(filePath);
-
-      // Get current user
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
+      // Get auth token
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
         throw new Error('Musíte být přihlášeni');
       }
 
-      // Save metadata to database (using type assertion as table exists but types may not be synced)
+      setProgress(20);
+
+      // Upload via edge function to R2
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('folder', 'images');
+
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/upload-image`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${session.access_token}`,
+          },
+          body: formData,
+        }
+      );
+
+      setProgress(70);
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.error || 'Upload failed');
+      }
+
+      const result = await response.json();
+
+      // Save metadata to database
       const { error: dbError } = await (supabase
         .from('uploaded_images' as any)
         .insert({
-          filename: fileName,
-          original_name: file.name,
-          file_size: file.size,
-          mime_type: file.type,
-          storage_path: filePath,
-          public_url: urlData.publicUrl,
-          user_id: user.id
+          filename: result.fileName,
+          original_name: result.originalName,
+          file_size: result.fileSize,
+          mime_type: result.mimeType,
+          storage_path: result.path,
+          public_url: result.url,
+          user_id: session.user.id
         }) as any);
 
       if (dbError) {
@@ -93,8 +97,8 @@ export const useImageUpload = () => {
       });
 
       return {
-        url: urlData.publicUrl,
-        path: filePath
+        url: result.url,
+        path: result.path
       };
 
     } catch (error: any) {
@@ -113,15 +117,29 @@ export const useImageUpload = () => {
 
   const deleteImage = async (path: string): Promise<boolean> => {
     try {
-      const { error } = await supabase.storage
-        .from('newsletter-images')
-        .remove([path]);
-
-      if (error) {
-        throw error;
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        throw new Error('Musíte být přihlášeni');
       }
 
-      // Remove from database (using type assertion as table exists but types may not be synced)
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/upload-image`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${session.access_token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ path }),
+        }
+      );
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.error || 'Delete failed');
+      }
+
+      // Remove from database
       await (supabase
         .from('uploaded_images' as any)
         .delete()
