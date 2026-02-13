@@ -143,7 +143,7 @@ Deno.serve(async (req) => {
     const R2_SECRET_ACCESS_KEY = Deno.env.get("R2_SECRET_ACCESS_KEY")!;
     const R2_ACCOUNT_ID = Deno.env.get("R2_ACCOUNT_ID")!;
     const R2_PUBLIC_URL = Deno.env.get("R2_PUBLIC_URL")!;
-    const BUCKET = "newsletter-images";
+    const BUCKET = "pivovar-zichovec";
 
     if (req.method === "POST") {
       const formData = await req.formData();
