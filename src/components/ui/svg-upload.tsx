@@ -26,36 +26,45 @@ export const SvgUpload = ({
     setProgress(0);
 
     try {
-      // Generate unique filename
-      const fileExt = 'svg';
-      const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
-      const filePath = fileName;
-
-      // Upload to Supabase Storage
-      const { error: uploadError } = await supabase.storage
-        .from('svg-icons')
-        .upload(filePath, file);
-
-      if (uploadError) {
-        console.error('Upload error:', uploadError);
+      // Get auth token
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        console.error('Not authenticated');
         return null;
       }
 
-      setProgress(50);
+      setProgress(20);
 
-      // Get public URL
-      const { data: urlData } = supabase.storage
-        .from('svg-icons')
-        .getPublicUrl(filePath);
+      // Upload via edge function to R2
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('folder', 'svg-icons');
 
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/upload-image`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${session.access_token}`,
+          },
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        const err = await response.json();
+        console.error('Upload error:', err);
+        return null;
+      }
+
+      const result = await response.json();
       setProgress(75);
 
-      // Fetch the SVG content
-      const response = await fetch(urlData.publicUrl);
-      const svgContent = await response.text();
+      // Fetch the SVG content from the public URL
+      const svgResponse = await fetch(result.url);
+      const svgContent = await svgResponse.text();
 
       setProgress(100);
-
       return svgContent;
     } catch (error) {
       console.error('Error uploading SVG:', error);
